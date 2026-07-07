@@ -13,16 +13,22 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> A1: create `packages/core/src/filename.ts` (pure filename module — legacy
-> conventions, see checklist A1 notes below) + `test/filename.test.ts`.
-> Then `npm test && npm run typecheck && npm run build`, commit, push.
+> A2: create `packages/core/src/sidecar.ts` (txt serializer per plan 04 §3
+> exact layout + json serializer = TweetRecord + sidecar_version + saved
+> filenames + chosen media URLs; support `partial` records with the
+> `# (partial - reconstructed from DOM)` marker) + `test/sidecar.test.ts`
+> (note_tweet long text, multiline, partial records). Export from
+> packages/core/src/index.ts. Then npm test/typecheck/build, commit, push.
 
 ## Checklist
 
 State: `todo` | `doing` | `done <sha>`
 
 ### MILESTONE A — save layer, core parts (plan 04)
-- [ ] **A1** `todo` — packages/core filename module.
+- [x] **A1** `done` (sha: see commit "core: filename module") —
+      packages/core/src/filename.ts + test/filename.test.ts (21 tests).
+      Also exports mediaBasename/sidecarBasename/tweetFileStem/
+      sanitizeForFilename/standaloneRelativePath from @twmd/core.
       Conventions (verified against src/js/main_react.user.js):
       `<screen_name>-<tweet_id>-<YYYYMMDD_hhmmss>-{img|gif|vid}<N>.<ext>`;
       timestamp = tweet creation time, LOCAL timezone, format_date-style
