@@ -13,19 +13,13 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> D1 (milestones A+B+C DONE): replace the app/src/downloader.js M1 stub
-> with the real M2 queue (plan 06 §4): ≤2 concurrent, 500–1500 ms jittered
-> gaps, GETs shaped by server.latestTemplate() headers (already sanitized —
-> NEVER add cookies), retry 3× with backoff then state archive_failed,
-> 404/410 → db.markDeleted + archive_failed if nothing saved. Then D2:
-> app/src/disk-writer.js — <archive_root>/<screen_name>/<core mediaBasename>
-> via planMediaDownload/sidecarTxt from @twmd/core, sha256 dedupe through
-> db.findFileBySha/recordFile, bulk runs (D3) →
-> <archive_root>/_runs/<YYYYMMDD>-<label>/. Unit-test with an injectable
-> fetch. Also add the extension-side observation-only chrome.webRequest
-> template capture (extension/background/request-template.js, "webRequest"
-> permission via build.mjs) + content polling → sendRequestTemplate.
-> Then npm test/typecheck/build → commit, push.
+> All milestones A–D DONE. Remaining, in order: (1) write
+> docs/plans/step-3b5-handoff.md (style of step-2-handoff.md: what landed,
+> data flow for the 3a/4 agents, manual Chrome walkthrough for the owner,
+> known gaps); (2) ONLY if time remains, stretch S1: dom-selectors.js
+> candidate lists + ui-buttons.js injection framework, clearly marked
+> UNVERIFIED-AGAINST-LIVE-DOM. Every commit: npm test && npm run typecheck
+> && npm run build, push to claude/twitter-media-archiver-cucc56.
 
 ## Checklist
 
@@ -110,14 +104,32 @@ State: `todo` | `doing` | `done <sha>`
       hello-required close 4003, kill-app/buffer/restart/replay, cap 200).
 
 ### MILESTONE D — companion app M2 (plan 06 §4)
-- [ ] **D1** `todo` — 'archive' frames → download queue: ≤2 concurrent,
-      500–1500 ms jittered gaps, CDN GETs shaped by latest request_template
-      frame (observation-only chrome.webRequest capture in extension for
-      this), NO cookies ever, retry 3×/backoff then archive_failed.
-- [ ] **D2** `todo` — disk writer: <archive_root>/<screen_name>/<core
-      filenames>, sidecars via core serializers, sha256 dedupe into files
-      table, 404/410 → deleted=1.
-- [ ] **D3** `todo` — bulk_begin/bulk_end → <archive_root>/_runs/<date>-<label>/.
+- [x] **D1** `done` (commit "app: M2 downloader") — app/src/downloader.js:
+      ≤2 concurrent workers, jittered gap after EVERY request (default
+      500–1500 ms, injectable), headers from latest request_template with a
+      second credential-strip (defense in depth — Cookie can never pass),
+      retry 3× exponential backoff → archive_failed, non-CDN hosts refused
+      outright (isAllowedCdnUrl: pbs/video.twimg.com ONLY). Extension side:
+      extension/background/request-template.js (observation-only
+      chrome.webRequest.onSendHeaders WITHOUT 'extraHeaders' so Chrome
+      itself omits Cookie/Authorization; values never logged) + "webRequest"
+      permission via build.mjs + content polls 'twmd-template' port every
+      5 min and forwards via sendRequestTemplate when connected.
+- [x] **D2** `done` (same commit) — app/src/disk-writer.js:
+      <archive_root>/<screen_name>/<core mediaBasename> + sidecars from the
+      SAME core serializers as standalone mode; sha256 dedupe via files
+      table (UNIQUE) — identical bytes never written twice; 404/410 walks
+      the photo fallback chain then db.markDeleted (Decision 18);
+      media-less tweets still archive their sidecar.
+- [x] **D3** `done` (same commit) — bulk runs route to
+      <archive_root>/_runs/<YYYYMMDD>-<sanitized label>/; run registry
+      kept past bulk_end for late frames. test/app-downloader.test.ts
+      (10 tests: archive e2e on real files, dedupe, 404 chain+deleted,
+      retry, exhaustion, bulk routing, CDN-only refusal, concurrency ≤2,
+      text-only sidecar, hostile dir names). scripts/fake-extension.mjs
+      replays fixture records over real ws against a running app —
+      verified live: 109 records → 106 posts, tombstone → deleted=1,
+      FTS search working.
 
 ### STRETCH (only if A–D green)
 - [ ] **S1** `todo` — step 3a scaffolding ONLY: dom-selectors.js candidate
@@ -146,4 +158,17 @@ State: `todo` | `doing` | `done <sha>`
 
 ## SURPRISES
 
-- (none yet)
+- **Legacy background.js answers every unknown sendMessage type
+  synchronously with {result:'NG'}** (src/js/background.js default case),
+  which closes the response channel before async work can reply. All new
+  SW communication therefore uses chrome.runtime.connect PORTS
+  ('twmd-save', 'twmd-template') — do the same for any future addition.
+- **Plan 06 §2 had no frame for tombstones** though §3 requires captured
+  tombstones to set deleted=1. Added a `tombstone` frame
+  `{event: TombstoneEvent}` (ext→app); plan 06 updated in the same commit.
+- **TS infers overly-narrow types from JS default parameter values**
+  (e.g. `run = null` → type null) even with checkJs off, because tests
+  import the JS from TS. Pattern used: inline JSDoc casts like
+  `run = /** @type {any} */ (null)`.
+- npm workspaces: `app` added to root package.json workspaces;
+  better-sqlite3 installed with working FTS5 in this environment.

@@ -11,6 +11,7 @@ import { loadConfig } from './config.js';
 import { openDb } from './db.js';
 import { createAppServer } from './server.js';
 import { createDownloader } from './downloader.js';
+import { createDiskWriter } from './disk-writer.js';
 
 function timestamp() {
   return new Date().toISOString().replace('T', ' ').slice(0, 19);
@@ -41,7 +42,7 @@ log(`library: ${config.db_path}`, db.stats());
 
 const downloader = createDownloader({
   db,
-  archiveRoot: config.archive_root,
+  writer: createDiskWriter({ db, archiveRoot: config.archive_root }),
   getTemplate: () => server.latestTemplate(),
   log,
   onStatusChange: (patch) => {

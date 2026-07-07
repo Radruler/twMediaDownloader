@@ -63,6 +63,12 @@ try {
 catch (error) {
     console.log(error);
 }
+try {
+    importScripts('js/request-template.js');
+}
+catch (error) {
+    console.log(error);
+}
 `;
 
 async function copyStatic() {
@@ -75,8 +81,12 @@ async function copyStatic() {
   const manifest = JSON.parse(await readFile(path.join(srcDir, 'manifest.json'), 'utf8'));
   manifest.content_scripts = [...(manifest.content_scripts ?? []), ...CAPTURE_CONTENT_SCRIPTS];
   // Save layer (plan 04): chrome.downloads needs the "downloads" permission.
-  if (!(manifest.permissions ?? []).includes('downloads')) {
-    manifest.permissions = [...(manifest.permissions ?? []), 'downloads'];
+  // App link (plan 06): "webRequest" for OBSERVATION-ONLY header capture on
+  // the media CDNs (no blocking, no modification — see request-template.js).
+  for (const permission of ['downloads', 'webRequest']) {
+    if (!(manifest.permissions ?? []).includes(permission)) {
+      manifest.permissions = [...(manifest.permissions ?? []), permission];
+    }
   }
   await writeFile(path.join(distDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
   await writeFile(path.join(distDir, 'background-wrapper.js'), BACKGROUND_WRAPPER);
@@ -87,6 +97,7 @@ const bundleOptions = {
     { in: path.join(root, 'extension/content/page-interceptor.js'), out: 'page-interceptor' },
     { in: path.join(root, 'extension/content/index.js'), out: 'capture' },
     { in: path.join(root, 'extension/background/save-worker.js'), out: 'save-worker' },
+    { in: path.join(root, 'extension/background/request-template.js'), out: 'request-template' },
   ],
   outdir: path.join(distDir, 'js'),
   bundle: true,

@@ -69,6 +69,35 @@ const appClient = createAppClient({
 appClient.start();
 TweetCache.onUpdate((tweetId, record) => appClient.sendSeen(record));
 
+// Forward the browser's observed media-request shape to the app (plan 06
+// request_template; captured observation-only in the background worker).
+const TEMPLATE_POLL_MS = 5 * 60 * 1000;
+
+function forwardRequestTemplate() {
+  if (!appClient.state.connected) return;
+  try {
+    const port = chrome.runtime.connect({ name: 'twmd-template' });
+    port.onMessage.addListener((message) => {
+      if (message && message.type === 'template' && message.template) {
+        appClient.sendRequestTemplate(message.template.headers, message.template.observed_at);
+      }
+      try {
+        port.disconnect();
+      } catch (e) {
+        /* already gone */
+      }
+    });
+    port.postMessage({ type: 'get_template' });
+  } catch (e) {
+    /* extension context gone (page unloading) — next poll retries */
+  }
+}
+
+if (appClient.state.enabled) {
+  setTimeout(forwardRequestTemplate, 10_000);
+  setInterval(forwardRequestTemplate, TEMPLATE_POLL_MS);
+}
+
 document.addEventListener('twmd:graphql', (event) => {
   try {
     const message = JSON.parse(event.detail);
