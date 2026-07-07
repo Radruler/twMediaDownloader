@@ -13,13 +13,13 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> All milestones A–D DONE. Remaining, in order: (1) write
-> docs/plans/step-3b5-handoff.md (style of step-2-handoff.md: what landed,
-> data flow for the 3a/4 agents, manual Chrome walkthrough for the owner,
-> known gaps); (2) ONLY if time remains, stretch S1: dom-selectors.js
-> candidate lists + ui-buttons.js injection framework, clearly marked
-> UNVERIFIED-AGAINST-LIVE-DOM. Every commit: npm test && npm run typecheck
-> && npm run build, push to claude/twitter-media-archiver-cucc56.
+> Milestones A–D + handoff DONE. Only the stretch remains: S1 —
+> extension/content/dom-selectors.js (candidate selector lists per UI
+> surface, all marked UNVERIFIED-AGAINST-LIVE-DOM) + ui-buttons.js
+> (injection framework skeleton: MutationObserver, idempotent per-tweet
+> marking, calls saveTweet on click). NO selector may be presented as
+> trusted; the owner tests against live x.com. Every commit: npm test &&
+> npm run typecheck && npm run build, push.
 
 ## Checklist
 
@@ -137,8 +137,9 @@ State: `todo` | `doing` | `done <sha>`
       UNVERIFIED-AGAINST-LIVE-DOM.
 
 ### End-of-work obligations
-- [ ] docs/plans/step-3b5-handoff.md written (style of step-2-handoff.md).
-- [ ] NEXT ACTION above kept precise at every commit.
+- [x] docs/plans/step-3b5-handoff.md written (style of step-2-handoff.md;
+      includes the owner's manual Chrome walkthrough).
+- [x] NEXT ACTION above kept precise at every commit.
 
 ## Verification expectations
 - A/C/D: unit tests (vitest at root). App ingest tested against
