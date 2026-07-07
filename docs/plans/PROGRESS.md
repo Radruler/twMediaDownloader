@@ -13,13 +13,16 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> A2 (A3 already done): create `packages/core/src/sidecar.ts` (txt
-> serializer per plan 04 §3 exact layout + json serializer = TweetRecord +
-> sidecar_version + saved filenames + chosen media URLs via
-> planMediaDownload; support `partial` records with the
-> `# (partial - reconstructed from DOM)` marker) + `test/sidecar.test.ts`
-> (note_tweet long text, multiline, partial records). Export from
-> packages/core/src/index.ts. Then npm test/typecheck/build, commit, push.
+> B1+B2 (milestone A DONE): add "downloads" permission via build.mjs
+> manifest step (src/manifest.json untouched); create
+> extension/background/save-worker.js (minimal SW addition handling
+> {type:'twmd-save', items:[{url|dataUrl, filename}]} →
+> chrome.downloads.download conflictAction 'uniquify') and
+> extension/content/save.js (tweetId → TweetCache.get → planMediaDownload
+> → fetch bytes plain GET no headers → blob→dataURL → runtime.sendMessage;
+> sidecar txt via data: URL; paths via standaloneRelativePath). Wire
+> __twmdDebug.save(tweetId) into extension/content/index.js (B4). Bundle
+> via build.mjs. Then npm test/typecheck/build, commit, push.
 
 ## Checklist
 
@@ -39,12 +42,13 @@ State: `todo` | `doing` | `done <sha>`
       sanitization of screen_name (and any other injected segment).
       Exhaustive unit tests: emoji/RTL/multiline/hostile names, reserved
       device names, dots/spaces at end.
-- [ ] **A2** `todo` — packages/core sidecar serializers.
-      `.txt` exact layout plan 04 §3 (post URL first line, verbatim
-      multi-line text, `key: value` block, UTF-8, LF). `.json` =
-      TweetRecord + sidecar_version + saved filenames + chosen media URLs.
-      Tests incl. note_tweet long text and partial/DOM-fallback records
-      (partial → `# (partial - reconstructed from DOM)` marker).
+- [x] **A2** `done` (commit "core: sidecar serializers") —
+      packages/core/src/sidecar.ts: sidecarTxt (plan 04 §3 layout — URL
+      first line, partial marker line 2 when set, verbatim multiline text,
+      aligned key: value block, optional lines omitted when empty, LF, one
+      trailing newline), sidecarJsonObject/sidecarJsonText
+      (sidecar_version=1, partial, saved_files, media_urls via
+      planMediaDownload, full record). test/sidecar.test.ts (13 tests).
 - [x] **A3** `done` (commit "core: media-url helpers") — done BEFORE A2
       because the sidecar embeds chosen media URLs.
       packages/core/src/media-url.ts: imageUrlForSize (REPLACES trailing

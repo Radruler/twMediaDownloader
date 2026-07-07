@@ -12,6 +12,16 @@ export type {
 export { normalizePayload, tweetIdFromEntryId } from './graphql-normalize.ts';
 export type { MediaPrefix, SidecarFormat, TweetNameParts } from './filename.ts';
 export type { MediaDownloadPlan } from './media-url.ts';
+export type { SidecarJson, SidecarOptions } from './sidecar.ts';
+export {
+  PARTIAL_MARKER,
+  SIDECAR_VERSION,
+  formatSidecarDate,
+  sidecarJsonObject,
+  sidecarJsonText,
+  sidecarTxt,
+  statusUrl,
+} from './sidecar.ts';
 export {
   IMAGE_SIZE_FALLBACKS,
   extensionFromUrl,
