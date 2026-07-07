@@ -1,0 +1,211 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "Likes",
+    "covers": [
+      "TweetWithVisibilityResults wrapper (unwrap .tweet)",
+      "possibly_sensitive: true (is_sensitive must be recorded, never gates anything — Decision 4)",
+      "video media on a sensitive tweet",
+      "tweet whose views are disabled (views.count absent -> null)"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "user": {
+      "result": {
+        "__typename": "User",
+        "timeline_v2": {
+          "timeline": {
+            "instructions": [
+              {
+                "type": "TimelineAddEntries",
+                "entries": [
+                  {
+                    "entryId": "tweet-1800000000000000030",
+                    "sortIndex": "1800000000000000030",
+                    "content": {
+                      "entryType": "TimelineTimelineItem",
+                      "__typename": "TimelineTimelineItem",
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "TweetWithVisibilityResults",
+                            "tweet": {
+                              "rest_id": "1800000000000000030",
+                              "core": {
+                                "user_results": {
+                                  "result": {
+                                    "__typename": "User",
+                                    "rest_id": "9000000004",
+                                    "core": {
+                                      "name": "Synth Sensitive",
+                                      "screen_name": "synth_nsfw"
+                                    },
+                                    "legacy": { "followers_count": 9001 }
+                                  }
+                                }
+                              },
+                              "edit_control": {
+                                "edit_tweet_ids": ["1800000000000000030"],
+                                "is_edit_eligible": false,
+                                "edits_remaining": "5"
+                              },
+                              "views": { "count": "555000", "state": "EnabledWithCount" },
+                              "legacy": {
+                                "bookmark_count": 40,
+                                "created_at": "Tue Jun 25 23:59:59 +0000 2024",
+                                "conversation_id_str": "1800000000000000030",
+                                "entities": {
+                                  "hashtags": [],
+                                  "media": [
+                                    {
+                                      "id_str": "1800000000000000230",
+                                      "media_key": "7_1800000000000000230",
+                                      "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1800000000000000230/pu/img/SYN-SENS01.jpg",
+                                      "type": "video",
+                                      "url": "https://t.co/MEDSENS1",
+                                      "indices": [16, 39],
+                                      "display_url": "pic.x.com/synSENS01",
+                                      "expanded_url": "https://x.com/synth_nsfw/status/1800000000000000030/video/1"
+                                    }
+                                  ],
+                                  "symbols": [],
+                                  "urls": [],
+                                  "user_mentions": []
+                                },
+                                "extended_entities": {
+                                  "media": [
+                                    {
+                                      "id_str": "1800000000000000230",
+                                      "media_key": "7_1800000000000000230",
+                                      "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/1800000000000000230/pu/img/SYN-SENS01.jpg",
+                                      "type": "video",
+                                      "url": "https://t.co/MEDSENS1",
+                                      "indices": [16, 39],
+                                      "display_url": "pic.x.com/synSENS01",
+                                      "expanded_url": "https://x.com/synth_nsfw/status/1800000000000000030/video/1",
+                                      "ext_media_availability": { "status": "Available" },
+                                      "original_info": { "height": 1080, "width": 608, "focus_rects": [] },
+                                      "sizes": { "large": { "h": 1080, "w": 608, "resize": "fit" } },
+                                      "video_info": {
+                                        "aspect_ratio": [9, 16],
+                                        "duration_millis": 14500,
+                                        "variants": [
+                                          {
+                                            "content_type": "application/x-mpegURL",
+                                            "url": "https://video.twimg.com/ext_tw_video/1800000000000000230/pu/pl/SYN-SENS01.m3u8?tag=12"
+                                          },
+                                          {
+                                            "bitrate": 632000,
+                                            "content_type": "video/mp4",
+                                            "url": "https://video.twimg.com/ext_tw_video/1800000000000000230/pu/vid/avc1/320x568/SYN-SENS01-lo.mp4?tag=12"
+                                          },
+                                          {
+                                            "bitrate": 2176000,
+                                            "content_type": "video/mp4",
+                                            "url": "https://video.twimg.com/ext_tw_video/1800000000000000230/pu/vid/avc1/608x1080/SYN-SENS01-hi.mp4?tag=12"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                "favorite_count": 1200,
+                                "full_text": "viewer warning… https://t.co/MEDSENS1",
+                                "is_quote_status": false,
+                                "lang": "en",
+                                "possibly_sensitive": true,
+                                "possibly_sensitive_editable": true,
+                                "quote_count": 5,
+                                "reply_count": 20,
+                                "retweet_count": 100,
+                                "user_id_str": "9000000004",
+                                "id_str": "1800000000000000030"
+                              }
+                            },
+                            "limitedActionResults": {
+                              "limited_actions": [
+                                {
+                                  "action": "Reply",
+                                  "prompt": {
+                                    "__typename": "CtaLimitedActionPrompt",
+                                    "content": { "text": "Who can reply?" }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "entryId": "tweet-1800000000000000031",
+                    "sortIndex": "1800000000000000031",
+                    "content": {
+                      "entryType": "TimelineTimelineItem",
+                      "__typename": "TimelineTimelineItem",
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1800000000000000031",
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000000002",
+                                  "legacy": {
+                                    "id_str": "9000000002",
+                                    "name": "Synth Two",
+                                    "screen_name": "synth_two"
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1800000000000000031"],
+                              "is_edit_eligible": true,
+                              "edits_remaining": "5"
+                            },
+                            "views": { "state": "Enabled" },
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "created_at": "Mon Jun 24 06:00:00 +0000 2024",
+                              "conversation_id_str": "1800000000000000031",
+                              "entities": {
+                                "hashtags": [],
+                                "symbols": [],
+                                "urls": [],
+                                "user_mentions": []
+                              },
+                              "favorite_count": 3,
+                              "full_text": "a liked text-only post, nothing to see here",
+                              "is_quote_status": false,
+                              "lang": "en",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "user_id_str": "9000000002",
+                              "id_str": "1800000000000000031"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

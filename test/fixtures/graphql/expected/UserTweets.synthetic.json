@@ -1,0 +1,170 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000010",
+      "created_at_ms": 1717232400000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000001",
+        "screen_name": "synthfan",
+        "name": "Synth Fan"
+      },
+      "full_text": "Pinned banner",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000010",
+      "edit_initial_id_str": "1800000000000000010",
+      "counts": {
+        "replies": 0,
+        "retweets": 3,
+        "likes": 10,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 777
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000110",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-PIN001.jpg",
+          "alt_text": "Pinned photo alt text",
+          "video_variants": [],
+          "width": 1000,
+          "height": 1000,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000012",
+      "created_at_ms": 1719770100000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000003",
+        "screen_name": "synth_orig",
+        "name": "Synth Original"
+      },
+      "full_text": "Original content worth resharing today",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000012",
+      "edit_initial_id_str": "1800000000000000012",
+      "counts": {
+        "replies": 3,
+        "retweets": 8,
+        "likes": 55,
+        "quotes": 2,
+        "bookmarks": 12,
+        "views": 31337
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000112",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-ORIG01.jpg",
+          "alt_text": "Original photo alt",
+          "video_variants": [],
+          "width": 1600,
+          "height": 900,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000011",
+      "created_at_ms": 1719770400000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000001",
+        "screen_name": "synthfan",
+        "name": "Synth Fan"
+      },
+      "full_text": "RT @synth_orig: Original content worth resharing today",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "synth_orig"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "1800000000000000012",
+      "conversation_id_str": "1800000000000000011",
+      "edit_initial_id_str": "1800000000000000011",
+      "counts": {
+        "replies": 0,
+        "retweets": 8,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": null
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000112",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-ORIG01.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1600,
+          "height": 900,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000013",
+      "created_at_ms": 1719649800000,
+      "lang": "ja",
+      "user": {
+        "id_str": "9000000001",
+        "screen_name": "synthfan",
+        "name": "Synth Fan"
+      },
+      "full_text": "#朝活 #テスト きょうもフィクスチャを書く",
+      "urls": [],
+      "hashtags": [
+        "朝活",
+        "テスト"
+      ],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000013",
+      "edit_initial_id_str": "1800000000000000013",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 2,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 42
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

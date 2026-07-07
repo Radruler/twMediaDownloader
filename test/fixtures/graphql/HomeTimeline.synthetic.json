@@ -1,0 +1,147 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "HomeTimeline",
+    "covers": [
+      "home.home_timeline_urt envelope",
+      "user fields ONLY in user result .core (2025 shape)",
+      "user fields ONLY in user result .legacy (older shape)",
+      "large view count parsed from string"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "home": {
+      "home_timeline_urt": {
+        "instructions": [
+          {
+            "type": "TimelineAddEntries",
+            "entries": [
+              {
+                "entryId": "tweet-1800000000000000060",
+                "sortIndex": "1800000000000000060",
+                "content": {
+                  "entryType": "TimelineTimelineItem",
+                  "__typename": "TimelineTimelineItem",
+                  "itemContent": {
+                    "itemType": "TimelineTweet",
+                    "__typename": "TimelineTweet",
+                    "tweetDisplayType": "Tweet",
+                    "tweet_results": {
+                      "result": {
+                        "__typename": "Tweet",
+                        "rest_id": "1800000000000000060",
+                        "core": {
+                          "user_results": {
+                            "result": {
+                              "__typename": "User",
+                              "rest_id": "9000000006",
+                              "core": {
+                                "created_at": "Wed Jan 15 00:00:00 +0000 2025",
+                                "name": "Core Only User",
+                                "screen_name": "core_only"
+                              },
+                              "legacy": {
+                                "followers_count": 10,
+                                "profile_image_url_https": "https://pbs.twimg.com/profile_images/2/core_only_normal.jpg"
+                              }
+                            }
+                          }
+                        },
+                        "edit_control": {
+                          "edit_tweet_ids": ["1800000000000000060"],
+                          "is_edit_eligible": true,
+                          "edits_remaining": "5"
+                        },
+                        "views": { "count": "2400000", "state": "EnabledWithCount" },
+                        "legacy": {
+                          "bookmark_count": 3,
+                          "created_at": "Tue Jul 02 07:07:07 +0000 2024",
+                          "conversation_id_str": "1800000000000000060",
+                          "entities": {
+                            "hashtags": [],
+                            "symbols": [],
+                            "urls": [],
+                            "user_mentions": []
+                          },
+                          "favorite_count": 11,
+                          "full_text": "user object with core-only name/screen_name (2025 shape)",
+                          "is_quote_status": false,
+                          "lang": "en",
+                          "quote_count": 0,
+                          "reply_count": 0,
+                          "retweet_count": 1,
+                          "user_id_str": "9000000006",
+                          "id_str": "1800000000000000060"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "entryId": "tweet-1800000000000000061",
+                "sortIndex": "1800000000000000061",
+                "content": {
+                  "entryType": "TimelineTimelineItem",
+                  "__typename": "TimelineTimelineItem",
+                  "itemContent": {
+                    "itemType": "TimelineTweet",
+                    "__typename": "TimelineTweet",
+                    "tweetDisplayType": "Tweet",
+                    "tweet_results": {
+                      "result": {
+                        "__typename": "Tweet",
+                        "rest_id": "1800000000000000061",
+                        "core": {
+                          "user_results": {
+                            "result": {
+                              "__typename": "User",
+                              "rest_id": "9000000007",
+                              "legacy": {
+                                "id_str": "9000000007",
+                                "name": "Legacy Only User",
+                                "screen_name": "legacy_only",
+                                "followers_count": 20
+                              }
+                            }
+                          }
+                        },
+                        "edit_control": {
+                          "edit_tweet_ids": ["1800000000000000061"],
+                          "is_edit_eligible": false,
+                          "edits_remaining": "5"
+                        },
+                        "views": { "state": "Enabled" },
+                        "legacy": {
+                          "bookmark_count": 0,
+                          "created_at": "Tue Jul 02 08:08:08 +0000 2024",
+                          "conversation_id_str": "1800000000000000061",
+                          "entities": {
+                            "hashtags": [],
+                            "symbols": [],
+                            "urls": [],
+                            "user_mentions": []
+                          },
+                          "favorite_count": 0,
+                          "full_text": "user object with legacy-only name/screen_name (older shape)",
+                          "is_quote_status": false,
+                          "lang": "en",
+                          "quote_count": 0,
+                          "reply_count": 0,
+                          "retweet_count": 0,
+                          "user_id_str": "9000000007",
+                          "id_str": "1800000000000000061"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

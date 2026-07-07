@@ -1,0 +1,150 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "Bookmarks",
+    "covers": [
+      "bookmark_timeline_v2 envelope",
+      "note_tweet long-form post: note text preferred over truncated legacy full_text",
+      "url expansion inside note_tweet entity_set",
+      "media still read from legacy.extended_entities on a note tweet"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "bookmark_timeline_v2": {
+      "timeline": {
+        "instructions": [
+          {
+            "type": "TimelineAddEntries",
+            "entries": [
+              {
+                "entryId": "tweet-1800000000000000040",
+                "sortIndex": "1800000000000000040",
+                "content": {
+                  "entryType": "TimelineTimelineItem",
+                  "__typename": "TimelineTimelineItem",
+                  "itemContent": {
+                    "itemType": "TimelineTweet",
+                    "__typename": "TimelineTweet",
+                    "tweetDisplayType": "Tweet",
+                    "tweet_results": {
+                      "result": {
+                        "__typename": "Tweet",
+                        "rest_id": "1800000000000000040",
+                        "core": {
+                          "user_results": {
+                            "result": {
+                              "__typename": "User",
+                              "rest_id": "9000000005",
+                              "core": {
+                                "name": "Synth Longform",
+                                "screen_name": "synth_writer"
+                              },
+                              "legacy": { "followers_count": 5432 }
+                            }
+                          }
+                        },
+                        "note_tweet": {
+                          "is_expandable": true,
+                          "note_tweet_results": {
+                            "result": {
+                              "id": "Tm90ZVR3ZWV0OjE4MDAwMDAwMDAwMDAwMDAwNDA=",
+                              "text": "This is a synthetic long-form post that goes well past 280 characters. It exists to prove that the normalizer prefers note_tweet text over the truncated legacy full_text, expands links like https://t.co/NOTEURL01 in place, and keeps reading hashtags such as #longform from the note entity_set. The end of the note has no trailing media link to strip — media links only appear in the legacy text.",
+                              "entity_set": {
+                                "hashtags": [
+                                  { "indices": [258, 267], "text": "longform" }
+                                ],
+                                "symbols": [],
+                                "urls": [
+                                  {
+                                    "display_url": "example.com/long-form-arti…",
+                                    "expanded_url": "https://example.com/long-form-article",
+                                    "url": "https://t.co/NOTEURL01",
+                                    "indices": [190, 213]
+                                  }
+                                ],
+                                "user_mentions": []
+                              },
+                              "richtext": { "richtext_tags": [] },
+                              "media": { "inline_media": [] }
+                            }
+                          }
+                        },
+                        "edit_control": {
+                          "edit_tweet_ids": ["1800000000000000040"],
+                          "is_edit_eligible": true,
+                          "edits_remaining": "5"
+                        },
+                        "views": { "count": "8080", "state": "EnabledWithCount" },
+                        "legacy": {
+                          "bookmark_count": 77,
+                          "bookmarked": true,
+                          "created_at": "Wed Jun 26 14:14:14 +0000 2024",
+                          "conversation_id_str": "1800000000000000040",
+                          "entities": {
+                            "hashtags": [],
+                            "media": [
+                              {
+                                "id_str": "1800000000000000240",
+                                "media_key": "3_1800000000000000240",
+                                "media_url_https": "https://pbs.twimg.com/media/SYN-NOTE01.jpg",
+                                "type": "photo",
+                                "url": "https://t.co/MEDNOTE1",
+                                "indices": [117, 140],
+                                "display_url": "pic.x.com/synNOTE01",
+                                "expanded_url": "https://x.com/synth_writer/status/1800000000000000040/photo/1"
+                              }
+                            ],
+                            "symbols": [],
+                            "urls": [],
+                            "user_mentions": []
+                          },
+                          "extended_entities": {
+                            "media": [
+                              {
+                                "id_str": "1800000000000000240",
+                                "media_key": "3_1800000000000000240",
+                                "media_url_https": "https://pbs.twimg.com/media/SYN-NOTE01.jpg",
+                                "type": "photo",
+                                "url": "https://t.co/MEDNOTE1",
+                                "indices": [117, 140],
+                                "display_url": "pic.x.com/synNOTE01",
+                                "expanded_url": "https://x.com/synth_writer/status/1800000000000000040/photo/1",
+                                "ext_alt_text": "Header illustration for the long-form post",
+                                "original_info": { "height": 675, "width": 1200, "focus_rects": [] },
+                                "sizes": { "large": { "h": 675, "w": 1200, "resize": "fit" } }
+                              }
+                            ]
+                          },
+                          "favorite_count": 300,
+                          "full_text": "This is a synthetic long-form post that goes well past 280 characters. It exists to prove that the norm… https://t.co/MEDNOTE1",
+                          "is_quote_status": false,
+                          "lang": "en",
+                          "quote_count": 9,
+                          "reply_count": 12,
+                          "retweet_count": 45,
+                          "user_id_str": "9000000005",
+                          "id_str": "1800000000000000040"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "entryId": "cursor-bottom-1800000000000000039",
+                "sortIndex": "0",
+                "content": {
+                  "entryType": "TimelineTimelineCursor",
+                  "__typename": "TimelineTimelineCursor",
+                  "value": "SYNTHETIC_CURSOR_VALUE",
+                  "cursorType": "Bottom"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

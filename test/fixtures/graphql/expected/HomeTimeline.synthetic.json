@@ -1,0 +1,67 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000060",
+      "created_at_ms": 1719904027000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000006",
+        "screen_name": "core_only",
+        "name": "Core Only User"
+      },
+      "full_text": "user object with core-only name/screen_name (2025 shape)",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000060",
+      "edit_initial_id_str": "1800000000000000060",
+      "counts": {
+        "replies": 0,
+        "retweets": 1,
+        "likes": 11,
+        "quotes": 0,
+        "bookmarks": 3,
+        "views": 2400000
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "HomeTimeline",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000061",
+      "created_at_ms": 1719907688000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000007",
+        "screen_name": "legacy_only",
+        "name": "Legacy Only User"
+      },
+      "full_text": "user object with legacy-only name/screen_name (older shape)",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000061",
+      "edit_initial_id_str": "1800000000000000061",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": null
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "HomeTimeline",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

@@ -1,0 +1,237 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "UserMedia",
+    "covers": [
+      "profile-grid module entry (TimelineAddEntries with content.items[])",
+      "TimelineAddToModule pagination (moduleItems[])",
+      "animated_gif media (bitrate-0 mp4 variant)",
+      "photo without alt text"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "user": {
+      "result": {
+        "__typename": "User",
+        "timeline_v2": {
+          "timeline": {
+            "instructions": [
+              { "type": "TimelineClearCache" },
+              {
+                "type": "TimelineAddEntries",
+                "entries": [
+                  {
+                    "entryId": "profile-grid-0",
+                    "sortIndex": "1800000000000000020",
+                    "content": {
+                      "entryType": "TimelineTimelineModule",
+                      "__typename": "TimelineTimelineModule",
+                      "displayType": "VerticalGrid",
+                      "items": [
+                        {
+                          "entryId": "profile-grid-0-tweet-1800000000000000020",
+                          "item": {
+                            "itemContent": {
+                              "itemType": "TimelineTweet",
+                              "__typename": "TimelineTweet",
+                              "tweetDisplayType": "MediaGrid",
+                              "tweet_results": {
+                                "result": {
+                                  "__typename": "Tweet",
+                                  "rest_id": "1800000000000000020",
+                                  "core": {
+                                    "user_results": {
+                                      "result": {
+                                        "__typename": "User",
+                                        "rest_id": "9000000001",
+                                        "core": {
+                                          "name": "Synth Fan",
+                                          "screen_name": "synthfan"
+                                        },
+                                        "legacy": { "followers_count": 123 }
+                                      }
+                                    }
+                                  },
+                                  "edit_control": {
+                                    "edit_tweet_ids": ["1800000000000000020"],
+                                    "is_edit_eligible": false,
+                                    "edits_remaining": "5"
+                                  },
+                                  "views": { "count": "2001", "state": "EnabledWithCount" },
+                                  "legacy": {
+                                    "bookmark_count": 0,
+                                    "created_at": "Fri Jun 28 21:12:00 +0000 2024",
+                                    "conversation_id_str": "1800000000000000020",
+                                    "entities": {
+                                      "hashtags": [],
+                                      "media": [
+                                        {
+                                          "id_str": "1800000000000000220",
+                                          "media_key": "16_1800000000000000220",
+                                          "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/SYN-GIF001.jpg",
+                                          "type": "animated_gif",
+                                          "url": "https://t.co/MEDGIF01",
+                                          "indices": [10, 33],
+                                          "display_url": "pic.x.com/synGIF001",
+                                          "expanded_url": "https://x.com/synthfan/status/1800000000000000020/photo/1"
+                                        }
+                                      ],
+                                      "symbols": [],
+                                      "urls": [],
+                                      "user_mentions": []
+                                    },
+                                    "extended_entities": {
+                                      "media": [
+                                        {
+                                          "id_str": "1800000000000000220",
+                                          "media_key": "16_1800000000000000220",
+                                          "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/SYN-GIF001.jpg",
+                                          "type": "animated_gif",
+                                          "url": "https://t.co/MEDGIF01",
+                                          "indices": [10, 33],
+                                          "display_url": "pic.x.com/synGIF001",
+                                          "expanded_url": "https://x.com/synthfan/status/1800000000000000020/photo/1",
+                                          "ext_alt_text": "Looping synthetic animation",
+                                          "original_info": { "height": 270, "width": 480, "focus_rects": [] },
+                                          "sizes": { "large": { "h": 270, "w": 480, "resize": "fit" } },
+                                          "video_info": {
+                                            "aspect_ratio": [16, 9],
+                                            "variants": [
+                                              {
+                                                "bitrate": 0,
+                                                "content_type": "video/mp4",
+                                                "url": "https://video.twimg.com/tweet_video/SYN-GIF001.mp4"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "favorite_count": 15,
+                                    "full_text": "gif check https://t.co/MEDGIF01",
+                                    "is_quote_status": false,
+                                    "lang": "en",
+                                    "quote_count": 0,
+                                    "reply_count": 1,
+                                    "retweet_count": 2,
+                                    "user_id_str": "9000000001",
+                                    "id_str": "1800000000000000020"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "entryId": "cursor-bottom-1800000000000000019",
+                    "sortIndex": "0",
+                    "content": {
+                      "entryType": "TimelineTimelineCursor",
+                      "__typename": "TimelineTimelineCursor",
+                      "value": "SYNTHETIC_CURSOR_VALUE",
+                      "cursorType": "Bottom"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "TimelineAddToModule",
+                "moduleEntryId": "profile-grid-0",
+                "prepend": false,
+                "moduleItems": [
+                  {
+                    "entryId": "profile-grid-0-tweet-1800000000000000021",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "MediaGrid",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1800000000000000021",
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000000001",
+                                  "core": {
+                                    "name": "Synth Fan",
+                                    "screen_name": "synthfan"
+                                  },
+                                  "legacy": { "followers_count": 123 }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1800000000000000021"],
+                              "is_edit_eligible": true,
+                              "edits_remaining": "5"
+                            },
+                            "views": { "count": "88", "state": "EnabledWithCount" },
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "created_at": "Thu Jun 27 10:00:00 +0000 2024",
+                              "conversation_id_str": "1800000000000000021",
+                              "entities": {
+                                "hashtags": [],
+                                "media": [
+                                  {
+                                    "id_str": "1800000000000000221",
+                                    "media_key": "3_1800000000000000221",
+                                    "media_url_https": "https://pbs.twimg.com/media/SYN-BIG001.jpg",
+                                    "type": "photo",
+                                    "url": "https://t.co/MEDBIG01",
+                                    "indices": [9, 32],
+                                    "display_url": "pic.x.com/synBIG001",
+                                    "expanded_url": "https://x.com/synthfan/status/1800000000000000021/photo/1"
+                                  }
+                                ],
+                                "symbols": [],
+                                "urls": [],
+                                "user_mentions": []
+                              },
+                              "extended_entities": {
+                                "media": [
+                                  {
+                                    "id_str": "1800000000000000221",
+                                    "media_key": "3_1800000000000000221",
+                                    "media_url_https": "https://pbs.twimg.com/media/SYN-BIG001.jpg",
+                                    "type": "photo",
+                                    "url": "https://t.co/MEDBIG01",
+                                    "indices": [9, 32],
+                                    "display_url": "pic.x.com/synBIG001",
+                                    "expanded_url": "https://x.com/synthfan/status/1800000000000000021/photo/1",
+                                    "original_info": { "height": 4096, "width": 4096, "focus_rects": [] },
+                                    "sizes": { "large": { "h": 2048, "w": 2048, "resize": "fit" } }
+                                  }
+                                ]
+                              },
+                              "favorite_count": 4,
+                              "full_text": "big photo https://t.co/MEDBIG01",
+                              "is_quote_status": false,
+                              "lang": "en",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "user_id_str": "9000000001",
+                              "id_str": "1800000000000000021"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

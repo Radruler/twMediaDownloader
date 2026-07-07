@@ -1,0 +1,55 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000040",
+      "created_at_ms": 1719411254000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000005",
+        "screen_name": "synth_writer",
+        "name": "Synth Longform"
+      },
+      "full_text": "This is a synthetic long-form post that goes well past 280 characters. It exists to prove that the normalizer prefers note_tweet text over the truncated legacy full_text, expands links like https://example.com/long-form-article in place, and keeps reading hashtags such as #longform from the note entity_set. The end of the note has no trailing media link to strip — media links only appear in the legacy text.",
+      "urls": [
+        {
+          "short": "https://t.co/NOTEURL01",
+          "expanded": "https://example.com/long-form-article"
+        }
+      ],
+      "hashtags": [
+        "longform"
+      ],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000040",
+      "edit_initial_id_str": "1800000000000000040",
+      "counts": {
+        "replies": 12,
+        "retweets": 45,
+        "likes": 300,
+        "quotes": 9,
+        "bookmarks": 77,
+        "views": 8080
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000240",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-NOTE01.jpg",
+          "alt_text": "Header illustration for the long-form post",
+          "video_variants": [],
+          "width": 1200,
+          "height": 675,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "Bookmarks",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

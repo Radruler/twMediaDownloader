@@ -1,0 +1,19 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "TweetResultByRestId",
+    "covers": [
+      "TweetUnavailable result outside a timeline: no entryId, so tombstone tweet_id is null",
+      "tombstone with no tombstone.text (reason field only)"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "tweetResult": {
+      "result": {
+        "__typename": "TweetUnavailable",
+        "reason": "Protected"
+      }
+    }
+  }
+}

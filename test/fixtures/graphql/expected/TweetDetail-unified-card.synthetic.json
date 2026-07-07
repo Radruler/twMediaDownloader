@@ -1,0 +1,53 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000080",
+      "created_at_ms": 1720018800000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000008",
+        "screen_name": "synth_ads",
+        "name": "Synth Advertiser"
+      },
+      "full_text": "Check out this product! https://example.com/product",
+      "urls": [
+        {
+          "short": "https://t.co/CARDURL1",
+          "expanded": "https://example.com/product"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000080",
+      "edit_initial_id_str": "1800000000000000080",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 1,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 123456
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000280",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-CARD01.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 800,
+          "height": 418,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

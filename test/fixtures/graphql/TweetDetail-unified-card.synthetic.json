@@ -1,0 +1,112 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "TweetDetail",
+    "covers": [
+      "tweet with NO extended_entities/entities media — media only inside the JSON-encoded unified_card binding value (ported from src/js/media_extractor.js)",
+      "card.legacy.binding_values array form with component_objects.media_1 selection"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "threaded_conversation_with_injections_v2": {
+      "instructions": [
+        {
+          "type": "TimelineAddEntries",
+          "entries": [
+            {
+              "entryId": "tweet-1800000000000000080",
+              "sortIndex": "1800000000000000080",
+              "content": {
+                "entryType": "TimelineTimelineItem",
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "itemType": "TimelineTweet",
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "1800000000000000080",
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000000008",
+                            "core": {
+                              "name": "Synth Advertiser",
+                              "screen_name": "synth_ads"
+                            },
+                            "legacy": { "followers_count": 50000 }
+                          }
+                        }
+                      },
+                      "card": {
+                        "rest_id": "card://1800000000000000080",
+                        "legacy": {
+                          "binding_values": [
+                            {
+                              "key": "unified_card",
+                              "value": {
+                                "type": "STRING",
+                                "string_value": "{\"type\":\"image_website\",\"media_entities\":{\"1800000000000000280\":{\"id_str\":\"1800000000000000280\",\"media_key\":\"3_1800000000000000280\",\"media_url_https\":\"https://pbs.twimg.com/media/SYN-CARD01.jpg\",\"type\":\"photo\",\"original_info\":{\"width\":800,\"height\":418}}},\"component_objects\":{\"media_1\":{\"type\":\"media\",\"data\":{\"id\":\"1800000000000000280\",\"destination\":\"browser_1\"}}}}"
+                              }
+                            },
+                            {
+                              "key": "card_url",
+                              "value": {
+                                "type": "STRING",
+                                "string_value": "https://t.co/CARDURL1",
+                                "scribe_key": "card_url"
+                              }
+                            }
+                          ],
+                          "name": "unified_card",
+                          "url": "card://1800000000000000080"
+                        }
+                      },
+                      "edit_control": {
+                        "edit_tweet_ids": ["1800000000000000080"],
+                        "is_edit_eligible": false,
+                        "edits_remaining": "5"
+                      },
+                      "views": { "count": "123456", "state": "EnabledWithCount" },
+                      "legacy": {
+                        "bookmark_count": 0,
+                        "created_at": "Wed Jul 03 15:00:00 +0000 2024",
+                        "conversation_id_str": "1800000000000000080",
+                        "entities": {
+                          "hashtags": [],
+                          "symbols": [],
+                          "urls": [
+                            {
+                              "display_url": "example.com/product",
+                              "expanded_url": "https://example.com/product",
+                              "url": "https://t.co/CARDURL1",
+                              "indices": [24, 47]
+                            }
+                          ],
+                          "user_mentions": []
+                        },
+                        "favorite_count": 1,
+                        "full_text": "Check out this product! https://t.co/CARDURL1",
+                        "is_quote_status": false,
+                        "lang": "en",
+                        "possibly_sensitive": false,
+                        "quote_count": 0,
+                        "reply_count": 0,
+                        "retweet_count": 0,
+                        "user_id_str": "9000000008",
+                        "id_str": "1800000000000000080"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

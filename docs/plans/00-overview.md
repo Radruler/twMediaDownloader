@@ -116,21 +116,28 @@ Steps 3a, 3b, and 5 are the maximum safe parallel width (three agents) once step
 
 ## Module contract (agree on this before parallel work)
 
-All plans reference this interface; implement it in `src/js/tweet-cache.js` (or `src/lib/tweet-cache.ts` if 01's tooling lands first):
+All plans reference this interface. **Implemented in step 2 (2026-07):** the cache lives in
+`extension/content/tweet-cache.js`; the authoritative `TweetRecord`/`TombstoneEvent` types live in
+`packages/core/src/tweet-record.ts` (TS, Decision 1) and the normalizer in
+`packages/core/src/graphql-normalize.ts`.
 
 ```js
 // Isolated-world singleton, populated by the interceptor bridge.
-TweetCache.get(tweetId)         // -> TweetRecord | null   (synchronous, in-memory)
-TweetCache.onUpdate(cb)         // cb(tweetId, TweetRecord) — fired as page traffic arrives
+TweetCache.get(tweetId)         // -> TweetRecord | null   (synchronous, in-memory; LRU-touches)
+TweetCache.onUpdate(cb)         // cb(tweetId, TweetRecord) — fired as page traffic arrives;
+                                //   returns an unsubscribe function
 TweetCache.stats()              // { size, hitRate } for debugging
+// (TweetCache.put(record) exists for the bridge; consumers read only.)
 
 // TweetRecord (normalized from GraphQL tweet_results.result):
 {
-  id_str, created_at_ms, lang,
+  id_str, created_at_ms, lang,  // created_at_ms falls back to snowflake-derived time, null if underivable
   user: { id_str, screen_name, name },
   full_text,                    // note_tweet (long-form) text when present, else legacy full_text, entities expanded
   urls: [{ short, expanded }], hashtags: [], mentions: [],
   in_reply_to_status_id_str, quoted_status_id_str, conversation_id_str,
+  retweeted_status_id_str,      // step-2 addition: set on the outer RT record; inner tweet cached under its own id
+  edit_initial_id_str,          // step-2 addition: edit_control initial id — plan 06's post_key (Decision 17)
   counts: { replies, retweets, likes, quotes, bookmarks, views },
   is_sensitive,
   media: [{
@@ -138,13 +145,17 @@ TweetCache.stats()              // { size, hitRate } for debugging
     media_key, index,           // 1-based position in tweet
     image_url,                  // pbs.twimg.com base (no size suffix)
     alt_text,
-    video_variants: [{ bitrate, content_type, url }],  // for video/gif
+    video_variants: [{ bitrate, content_type, url }],  // for video/gif; bitrate null for HLS entries
     width, height, duration_ms,
   }],
   source_op,                    // GraphQL operation that produced it (TweetDetail, UserMedia, …)
   captured_at_ms,
 }
 ```
+
+The normalizer also emits **tombstone events** (plan 02 §3 / Decision 18):
+`{ tweet_id, entry_id, typename, text, source_op, captured_at_ms }` — `tweet_id` derived from the
+timeline entryId when possible, null otherwise (e.g. a tombstoned `TweetResultByRestId`).
 
 ## Ground rules for all work
 

@@ -1,0 +1,97 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000020",
+      "created_at_ms": 1719609120000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000001",
+        "screen_name": "synthfan",
+        "name": "Synth Fan"
+      },
+      "full_text": "gif check",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000020",
+      "edit_initial_id_str": "1800000000000000020",
+      "counts": {
+        "replies": 1,
+        "retweets": 2,
+        "likes": 15,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 2001
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "animated_gif",
+          "media_key": "16_1800000000000000220",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/tweet_video_thumb/SYN-GIF001.jpg",
+          "alt_text": "Looping synthetic animation",
+          "video_variants": [
+            {
+              "bitrate": 0,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/tweet_video/SYN-GIF001.mp4"
+            }
+          ],
+          "width": 480,
+          "height": 270,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000021",
+      "created_at_ms": 1719482400000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000001",
+        "screen_name": "synthfan",
+        "name": "Synth Fan"
+      },
+      "full_text": "big photo",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000021",
+      "edit_initial_id_str": "1800000000000000021",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 4,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 88
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000221",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-BIG001.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 4096,
+          "height": 4096,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

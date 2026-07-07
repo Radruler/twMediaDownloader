@@ -1,0 +1,79 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000051",
+      "created_at_ms": 1718914820000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000003",
+        "screen_name": "synth_orig",
+        "name": "Synth Original"
+      },
+      "full_text": "the original gem :)",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000051",
+      "edit_initial_id_str": "1800000000000000051",
+      "counts": {
+        "replies": 15,
+        "retweets": 200,
+        "likes": 900,
+        "quotes": 30,
+        "bookmarks": 21,
+        "views": 70000
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1800000000000000251",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/SYN-QUO001.jpg",
+          "alt_text": "The quoted gem",
+          "video_variants": [],
+          "width": 1024,
+          "height": 768,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "SearchTimeline",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000050",
+      "created_at_ms": 1718968271000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000001",
+        "screen_name": "synthfan",
+        "name": "Synth Fan"
+      },
+      "full_text": "Quoting this gem",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "1800000000000000051",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000050",
+      "edit_initial_id_str": "1800000000000000050",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 6,
+        "quotes": 0,
+        "bookmarks": 2,
+        "views": 404
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "SearchTimeline",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

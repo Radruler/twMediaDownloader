@@ -1,0 +1,367 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "UserTweets",
+    "covers": [
+      "TimelinePinEntry (pinned tweet)",
+      "plain retweet: outer RT record + inner tweet cached separately (retweeted_status_result recursion)",
+      "text-only tweet (no media), lang ja",
+      "cursor entries ignored"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "user": {
+      "result": {
+        "__typename": "User",
+        "timeline_v2": {
+          "timeline": {
+            "instructions": [
+              { "type": "TimelineClearCache" },
+              {
+                "type": "TimelinePinEntry",
+                "entry": {
+                  "entryId": "tweet-1800000000000000010",
+                  "sortIndex": "1",
+                  "content": {
+                    "entryType": "TimelineTimelineItem",
+                    "__typename": "TimelineTimelineItem",
+                    "itemContent": {
+                      "itemType": "TimelineTweet",
+                      "__typename": "TimelineTweet",
+                      "tweetDisplayType": "Tweet",
+                      "tweet_results": {
+                        "result": {
+                          "__typename": "Tweet",
+                          "rest_id": "1800000000000000010",
+                          "core": {
+                            "user_results": {
+                              "result": {
+                                "__typename": "User",
+                                "rest_id": "9000000001",
+                                "core": {
+                                  "name": "Synth Fan",
+                                  "screen_name": "synthfan"
+                                },
+                                "legacy": { "followers_count": 123 }
+                              }
+                            }
+                          },
+                          "edit_control": {
+                            "edit_tweet_ids": ["1800000000000000010"],
+                            "is_edit_eligible": true,
+                            "edits_remaining": "5"
+                          },
+                          "views": { "count": "777", "state": "EnabledWithCount" },
+                          "legacy": {
+                            "bookmark_count": 1,
+                            "created_at": "Sat Jun 01 09:00:00 +0000 2024",
+                            "conversation_id_str": "1800000000000000010",
+                            "entities": {
+                              "hashtags": [],
+                              "media": [
+                                {
+                                  "id_str": "1800000000000000110",
+                                  "media_key": "3_1800000000000000110",
+                                  "media_url_https": "https://pbs.twimg.com/media/SYN-PIN001.jpg",
+                                  "type": "photo",
+                                  "url": "https://t.co/MEDPIN01",
+                                  "indices": [14, 37],
+                                  "display_url": "pic.x.com/synPIN001",
+                                  "expanded_url": "https://x.com/synthfan/status/1800000000000000010/photo/1"
+                                }
+                              ],
+                              "symbols": [],
+                              "urls": [],
+                              "user_mentions": []
+                            },
+                            "extended_entities": {
+                              "media": [
+                                {
+                                  "id_str": "1800000000000000110",
+                                  "media_key": "3_1800000000000000110",
+                                  "media_url_https": "https://pbs.twimg.com/media/SYN-PIN001.jpg",
+                                  "type": "photo",
+                                  "url": "https://t.co/MEDPIN01",
+                                  "indices": [14, 37],
+                                  "display_url": "pic.x.com/synPIN001",
+                                  "expanded_url": "https://x.com/synthfan/status/1800000000000000010/photo/1",
+                                  "ext_alt_text": "Pinned photo alt text",
+                                  "original_info": { "height": 1000, "width": 1000, "focus_rects": [] },
+                                  "sizes": { "large": { "h": 1000, "w": 1000, "resize": "fit" } }
+                                }
+                              ]
+                            },
+                            "favorite_count": 10,
+                            "full_text": "Pinned banner https://t.co/MEDPIN01",
+                            "is_quote_status": false,
+                            "lang": "en",
+                            "quote_count": 0,
+                            "reply_count": 0,
+                            "retweet_count": 3,
+                            "user_id_str": "9000000001",
+                            "id_str": "1800000000000000010"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "TimelineAddEntries",
+                "entries": [
+                  {
+                    "entryId": "tweet-1800000000000000011",
+                    "sortIndex": "1800000000000000011",
+                    "content": {
+                      "entryType": "TimelineTimelineItem",
+                      "__typename": "TimelineTimelineItem",
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1800000000000000011",
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000000001",
+                                  "core": {
+                                    "name": "Synth Fan",
+                                    "screen_name": "synthfan"
+                                  },
+                                  "legacy": { "followers_count": 123 }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1800000000000000011"],
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "views": { "state": "Enabled" },
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "created_at": "Sun Jun 30 18:00:00 +0000 2024",
+                              "conversation_id_str": "1800000000000000011",
+                              "entities": {
+                                "hashtags": [],
+                                "media": [
+                                  {
+                                    "id_str": "1800000000000000112",
+                                    "media_key": "3_1800000000000000112",
+                                    "media_url_https": "https://pbs.twimg.com/media/SYN-ORIG01.jpg",
+                                    "type": "photo",
+                                    "url": "https://t.co/MEDORIG1",
+                                    "indices": [55, 78],
+                                    "display_url": "pic.x.com/synORIG01",
+                                    "expanded_url": "https://x.com/synth_orig/status/1800000000000000012/photo/1",
+                                    "source_status_id_str": "1800000000000000012",
+                                    "source_user_id_str": "9000000003"
+                                  }
+                                ],
+                                "symbols": [],
+                                "urls": [],
+                                "user_mentions": [
+                                  {
+                                    "id_str": "9000000003",
+                                    "name": "Synth Original",
+                                    "screen_name": "synth_orig",
+                                    "indices": [3, 14]
+                                  }
+                                ]
+                              },
+                              "extended_entities": {
+                                "media": [
+                                  {
+                                    "id_str": "1800000000000000112",
+                                    "media_key": "3_1800000000000000112",
+                                    "media_url_https": "https://pbs.twimg.com/media/SYN-ORIG01.jpg",
+                                    "type": "photo",
+                                    "url": "https://t.co/MEDORIG1",
+                                    "indices": [55, 78],
+                                    "display_url": "pic.x.com/synORIG01",
+                                    "expanded_url": "https://x.com/synth_orig/status/1800000000000000012/photo/1",
+                                    "source_status_id_str": "1800000000000000012",
+                                    "source_user_id_str": "9000000003",
+                                    "original_info": { "height": 900, "width": 1600, "focus_rects": [] },
+                                    "sizes": { "large": { "h": 900, "w": 1600, "resize": "fit" } }
+                                  }
+                                ]
+                              },
+                              "favorite_count": 0,
+                              "full_text": "RT @synth_orig: Original content worth resharing today https://t.co/MEDORIG1",
+                              "is_quote_status": false,
+                              "lang": "en",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 8,
+                              "retweeted_status_result": {
+                                "result": {
+                                  "__typename": "Tweet",
+                                  "rest_id": "1800000000000000012",
+                                  "core": {
+                                    "user_results": {
+                                      "result": {
+                                        "__typename": "User",
+                                        "rest_id": "9000000003",
+                                        "core": {
+                                          "name": "Synth Original",
+                                          "screen_name": "synth_orig"
+                                        },
+                                        "legacy": {
+                                          "name": "Synth Original",
+                                          "screen_name": "synth_orig"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "edit_control": {
+                                    "edit_tweet_ids": ["1800000000000000012"],
+                                    "is_edit_eligible": true,
+                                    "edits_remaining": "5"
+                                  },
+                                  "views": { "count": "31337", "state": "EnabledWithCount" },
+                                  "legacy": {
+                                    "bookmark_count": 12,
+                                    "created_at": "Sun Jun 30 17:55:00 +0000 2024",
+                                    "conversation_id_str": "1800000000000000012",
+                                    "entities": {
+                                      "hashtags": [],
+                                      "media": [
+                                        {
+                                          "id_str": "1800000000000000112",
+                                          "media_key": "3_1800000000000000112",
+                                          "media_url_https": "https://pbs.twimg.com/media/SYN-ORIG01.jpg",
+                                          "type": "photo",
+                                          "url": "https://t.co/MEDORIG1",
+                                          "indices": [39, 62],
+                                          "display_url": "pic.x.com/synORIG01",
+                                          "expanded_url": "https://x.com/synth_orig/status/1800000000000000012/photo/1"
+                                        }
+                                      ],
+                                      "symbols": [],
+                                      "urls": [],
+                                      "user_mentions": []
+                                    },
+                                    "extended_entities": {
+                                      "media": [
+                                        {
+                                          "id_str": "1800000000000000112",
+                                          "media_key": "3_1800000000000000112",
+                                          "media_url_https": "https://pbs.twimg.com/media/SYN-ORIG01.jpg",
+                                          "type": "photo",
+                                          "url": "https://t.co/MEDORIG1",
+                                          "indices": [39, 62],
+                                          "display_url": "pic.x.com/synORIG01",
+                                          "expanded_url": "https://x.com/synth_orig/status/1800000000000000012/photo/1",
+                                          "ext_alt_text": "Original photo alt",
+                                          "original_info": { "height": 900, "width": 1600, "focus_rects": [] },
+                                          "sizes": { "large": { "h": 900, "w": 1600, "resize": "fit" } }
+                                        }
+                                      ]
+                                    },
+                                    "favorite_count": 55,
+                                    "full_text": "Original content worth resharing today https://t.co/MEDORIG1",
+                                    "is_quote_status": false,
+                                    "lang": "en",
+                                    "quote_count": 2,
+                                    "reply_count": 3,
+                                    "retweet_count": 8,
+                                    "user_id_str": "9000000003",
+                                    "id_str": "1800000000000000012"
+                                  }
+                                }
+                              },
+                              "user_id_str": "9000000001",
+                              "id_str": "1800000000000000011"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "entryId": "tweet-1800000000000000013",
+                    "sortIndex": "1800000000000000013",
+                    "content": {
+                      "entryType": "TimelineTimelineItem",
+                      "__typename": "TimelineTimelineItem",
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1800000000000000013",
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000000001",
+                                  "core": {
+                                    "name": "Synth Fan",
+                                    "screen_name": "synthfan"
+                                  },
+                                  "legacy": { "followers_count": 123 }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1800000000000000013"],
+                              "is_edit_eligible": true,
+                              "edits_remaining": "5"
+                            },
+                            "views": { "count": "42", "state": "EnabledWithCount" },
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "created_at": "Sat Jun 29 08:30:00 +0000 2024",
+                              "conversation_id_str": "1800000000000000013",
+                              "entities": {
+                                "hashtags": [
+                                  { "indices": [0, 5], "text": "朝活" },
+                                  { "indices": [6, 12], "text": "テスト" }
+                                ],
+                                "symbols": [],
+                                "urls": [],
+                                "user_mentions": []
+                              },
+                              "favorite_count": 2,
+                              "full_text": "#朝活 #テスト きょうもフィクスチャを書く",
+                              "is_quote_status": false,
+                              "lang": "ja",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "user_id_str": "9000000001",
+                              "id_str": "1800000000000000013"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "entryId": "cursor-bottom-1800000000000000000",
+                    "sortIndex": "0",
+                    "content": {
+                      "entryType": "TimelineTimelineCursor",
+                      "__typename": "TimelineTimelineCursor",
+                      "value": "SYNTHETIC_CURSOR_VALUE",
+                      "cursorType": "Bottom"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

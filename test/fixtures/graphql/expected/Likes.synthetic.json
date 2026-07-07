@@ -1,0 +1,95 @@
+{
+  "tweets": [
+    {
+      "id_str": "1800000000000000030",
+      "created_at_ms": 1719359999000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000004",
+        "screen_name": "synth_nsfw",
+        "name": "Synth Sensitive"
+      },
+      "full_text": "viewer warning…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000030",
+      "edit_initial_id_str": "1800000000000000030",
+      "counts": {
+        "replies": 20,
+        "retweets": 100,
+        "likes": 1200,
+        "quotes": 5,
+        "bookmarks": 40,
+        "views": 555000
+      },
+      "is_sensitive": true,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "7_1800000000000000230",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/ext_tw_video_thumb/1800000000000000230/pu/img/SYN-SENS01.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/ext_tw_video/1800000000000000230/pu/pl/SYN-SENS01.m3u8?tag=12"
+            },
+            {
+              "bitrate": 632000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/ext_tw_video/1800000000000000230/pu/vid/avc1/320x568/SYN-SENS01-lo.mp4?tag=12"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/ext_tw_video/1800000000000000230/pu/vid/avc1/608x1080/SYN-SENS01-hi.mp4?tag=12"
+            }
+          ],
+          "width": 608,
+          "height": 1080,
+          "duration_ms": 14500
+        }
+      ],
+      "source_op": "Likes",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1800000000000000031",
+      "created_at_ms": 1719208800000,
+      "lang": "en",
+      "user": {
+        "id_str": "9000000002",
+        "screen_name": "synth_two",
+        "name": "Synth Two"
+      },
+      "full_text": "a liked text-only post, nothing to see here",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1800000000000000031",
+      "edit_initial_id_str": "1800000000000000031",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 3,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": null
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "Likes",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

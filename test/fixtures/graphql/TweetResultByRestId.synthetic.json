@@ -1,0 +1,108 @@
+{
+  "__fixture": {
+    "synthetic": true,
+    "op": "TweetResultByRestId",
+    "covers": [
+      "single-tweet envelope (data.tweetResult.result, no timeline instructions)",
+      "EDITED tweet: edit_control_initial nesting -> edit_initial_id_str points at the first version (Decision 17)",
+      "in_reply_to fields populated"
+    ],
+    "note": "SYNTHETIC fixture, hand-written 2026-07 from best-known payload shapes. Replace with a redacted real capture per docs/CAPTURE_FIXTURES.md."
+  },
+  "data": {
+    "tweetResult": {
+      "result": {
+        "__typename": "Tweet",
+        "rest_id": "1800000000000000071",
+        "core": {
+          "user_results": {
+            "result": {
+              "__typename": "User",
+              "rest_id": "9000000001",
+              "core": {
+                "name": "Synth Fan",
+                "screen_name": "synthfan"
+              },
+              "legacy": { "followers_count": 123 }
+            }
+          }
+        },
+        "edit_control": {
+          "edit_control_initial": {
+            "edit_tweet_ids": ["1800000000000000070", "1800000000000000071"],
+            "editable_until_msecs": "1719844496000",
+            "is_edit_eligible": true,
+            "edits_remaining": "4"
+          }
+        },
+        "previous_counts": {
+          "bookmark_count": 0,
+          "favorite_count": 1,
+          "quote_count": 0,
+          "reply_count": 0,
+          "retweet_count": 0
+        },
+        "views": { "count": "150", "state": "EnabledWithCount" },
+        "legacy": {
+          "bookmark_count": 1,
+          "created_at": "Mon Jul 01 13:05:00 +0000 2024",
+          "conversation_id_str": "1800000000000000001",
+          "entities": {
+            "hashtags": [],
+            "media": [
+              {
+                "id_str": "1800000000000000270",
+                "media_key": "3_1800000000000000270",
+                "media_url_https": "https://pbs.twimg.com/media/SYN-EDIT01.jpg",
+                "type": "photo",
+                "url": "https://t.co/MEDEDIT1",
+                "indices": [30, 53],
+                "display_url": "pic.x.com/synEDIT01",
+                "expanded_url": "https://x.com/synthfan/status/1800000000000000071/photo/1"
+              }
+            ],
+            "symbols": [],
+            "urls": [],
+            "user_mentions": [
+              {
+                "id_str": "9000000002",
+                "name": "Synth Two",
+                "screen_name": "synth_two",
+                "indices": [0, 10]
+              }
+            ]
+          },
+          "extended_entities": {
+            "media": [
+              {
+                "id_str": "1800000000000000270",
+                "media_key": "3_1800000000000000270",
+                "media_url_https": "https://pbs.twimg.com/media/SYN-EDIT01.jpg",
+                "type": "photo",
+                "url": "https://t.co/MEDEDIT1",
+                "indices": [30, 53],
+                "display_url": "pic.x.com/synEDIT01",
+                "expanded_url": "https://x.com/synthfan/status/1800000000000000071/photo/1",
+                "ext_alt_text": "Photo attached to the edited version",
+                "original_info": { "height": 500, "width": 500, "focus_rects": [] },
+                "sizes": { "large": { "h": 500, "w": 500, "resize": "fit" } }
+              }
+            ]
+          },
+          "favorite_count": 2,
+          "full_text": "@synth_two fixed the typo now https://t.co/MEDEDIT1",
+          "in_reply_to_screen_name": "synth_two",
+          "in_reply_to_status_id_str": "1800000000000000002",
+          "in_reply_to_user_id_str": "9000000002",
+          "is_quote_status": false,
+          "lang": "en",
+          "quote_count": 0,
+          "reply_count": 0,
+          "retweet_count": 0,
+          "user_id_str": "9000000001",
+          "id_str": "1800000000000000071"
+        }
+      }
+    }
+  }
+}
