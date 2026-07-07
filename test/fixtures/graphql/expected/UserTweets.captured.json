@@ -1,0 +1,1547 @@
+{
+  "tweets": [
+    {
+      "id_str": "2072326622590730604",
+      "created_at_ms": 1782916143000,
+      "lang": "en",
+      "user": {
+        "id_str": "322906622",
+        "screen_name": "erin_catto",
+        "name": "Erin Catto"
+      },
+      "full_text": "I’m happy to announce the release of a new open source 3D physics engine called Box3D. I’ve been working on this project for a few years now, but it represents over 20 years of experience writing physics engines for games. Read more here: https://box2d.org/posts/2026/06/announcing-box3d/",
+      "urls": [
+        {
+          "short": "https://t.co/2d9aVuUsxj",
+          "expanded": "https://box2d.org/posts/2026/06/announcing-box3d/"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2072326622590730604",
+      "edit_initial_id_str": "2072326622590730604",
+      "counts": {
+        "replies": 102,
+        "retweets": 685,
+        "likes": 4963,
+        "quotes": 62,
+        "bookmarks": 1871,
+        "views": 785464
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074070149737406841",
+      "created_at_ms": 1783331832000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Fable and I rewrote Box3d entirely in native cuda. It's about 30x faster on my GPU compared to my CPU (depending on the situation).\n\nThis was my hardest benchmark. I still had to be there, but soon I won't. Cost me about 200 dollars",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2072326622590730604",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074070149737406841",
+      "counts": {
+        "replies": 108,
+        "retweets": 142,
+        "likes": 2918,
+        "quotes": 20,
+        "bookmarks": 1198,
+        "views": 439541
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074069857536983040",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2074069857536983040/img/dS5HU7xc-Q3Iy8ny.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/pl/2RvDjTUIDowyDFLA.m3u8?tag=28&v=cfc"
+            },
+            {
+              "bitrate": 632000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/vid/avc1/320x476/HHjXGL23feUFaMwL.mp4?tag=28"
+            },
+            {
+              "bitrate": 950000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/vid/avc1/480x714/kIWciEZxN-7FuyJt.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/vid/avc1/726x1082/bXJUiH5ipkhkSS6Z.mp4?tag=28"
+            }
+          ],
+          "width": 726,
+          "height": 1082,
+          "duration_ms": 65366
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074270269234201072",
+      "created_at_ms": 1783379544000,
+      "lang": "en",
+      "user": {
+        "id_str": "17406365",
+        "screen_name": "vikhyatk",
+        "name": "vik"
+      },
+      "full_text": "if anyone is wondering wtf a jacobian is, i recommend watching \"Non-Euclidean Therapy for AI Trauma\"",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074270269234201072",
+      "edit_initial_id_str": "2074270269234201072",
+      "counts": {
+        "replies": 8,
+        "retweets": 6,
+        "likes": 185,
+        "quotes": 0,
+        "bookmarks": 183,
+        "views": 8754
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074270068016599040",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMlJowxa0AASiJi.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1780,
+          "height": 1170,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074300915964690914",
+      "created_at_ms": 1783386851000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @vikhyatk: if anyone is wondering wtf a jacobian is, i recommend watching \"Non-Euclidean Therapy for AI Trauma\"",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "vikhyatk"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2074270269234201072",
+      "conversation_id_str": "2074300915964690914",
+      "edit_initial_id_str": "2074300915964690914",
+      "counts": {
+        "replies": 0,
+        "retweets": 6,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 606
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074270068016599040",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMlJowxa0AASiJi.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1780,
+          "height": 1170,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074242541977846079",
+      "created_at_ms": 1783372934000,
+      "lang": "en",
+      "user": {
+        "id_str": "2236047510",
+        "screen_name": "giffmana",
+        "name": "Lucas Beyer (bl16)"
+      },
+      "full_text": "OK, this combination of Fable and /usage-credits right inside claude code is pure evil. I spent more on Fable this evening than on food, even tho I got extra chicken!\n\nIt feels a bit like Zynga hooking in the whales.\n\nSol come save me!",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074242541977846079",
+      "edit_initial_id_str": "2074242541977846079",
+      "counts": {
+        "replies": 14,
+        "retweets": 4,
+        "likes": 192,
+        "quotes": 2,
+        "bookmarks": 10,
+        "views": 13595
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074241795274219521",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMkv7EmWoAEzPKU.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1013,
+          "height": 463,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074296350510809208",
+      "created_at_ms": 1783385763000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @giffmana: OK, this combination of Fable and /usage-credits right inside claude code is pure evil. I spent more on Fable this evening th…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "giffmana"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2074242541977846079",
+      "conversation_id_str": "2074296350510809208",
+      "edit_initial_id_str": "2074296350510809208",
+      "counts": {
+        "replies": 0,
+        "retweets": 4,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 544
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074248758422864226",
+      "created_at_ms": 1783374416000,
+      "lang": "en",
+      "user": {
+        "id_str": "175624200",
+        "screen_name": "ID_AA_Carmack",
+        "name": "John Carmack"
+      },
+      "full_text": "Memory cost and capacity are significant issues for AI accelerators.\n\nUnlike game rendering, model inference can have a deterministic memory access pattern. You don’t need “random access memory” at all for model weights, and you could tolerate cold-start latencies in the multiple milliseconds, as long as continuous reads were delivered at the necessary bandwidth.\n\nNAND flash is over 100 times cheaper per GB than HBM, so there should be opportunity there, even after giving a flash controller a 1024 bit interface with HBM bandwidth.\n\nYou could make a specialized pin protocol that just supported pipelined transfer of full 16KB+ pages from the flash to program-managed accelerator scratchpad memory and improve per-pin performance over HBM, but it might be more convenient to make it still look like a true random access memory with very fragile performance characteristics, where anything but sequential reads falls off a 1000x+ performance cliff.\n\nThat has the advantage of automatically using existing cache hierarchies, and providing a natural path to update the flash memory with new model weights. With the stream-to-scratch interface, code has to be completely rewritten before it works at all, while the ram-emulation interface will start off just extremely slow, and you can incrementally sort out the changes for full performance.\n\nThere may be cases where there isn’t enough scratchpad SRAM to hold the weights for a layer, which might force you to deploy the old optical drive optimization technique of duplicating data in multiple places on a sequential read to avoid seeking, but there would be capacity to burn.\n\nIt might be possible to do something like cuda graph capture to record a memory access trace and have everything magically remapped to a linear sequence, but deploying programmer / agent elbow grease to manage transfers and access in a scratch ram ring buffer would be lower risk.\n\nA split memory system consisting of some channels of flash and some channels of HBM will probably be suboptimal compared to a uniform memory, but it could be much cheaper, and allow much larger models to be run.\n\nI think th case is strong for inference, but you have to stretch more for training. You can still linearize all the weight memory accesses, both reads and writes, but flash memory would quickly wear out from the writes, even if they were all perfectly page aligned. Replacing low-latency HBM with massively parallel cheap(er) DRAM at high latency might still be a worthwhile cost savings.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074248758422864226",
+      "edit_initial_id_str": "2074248758422864226",
+      "counts": {
+        "replies": 126,
+        "retweets": 146,
+        "likes": 2291,
+        "quotes": 42,
+        "bookmarks": 1385,
+        "views": 289887
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074276698275668409",
+      "created_at_ms": 1783381077000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @ID_AA_Carmack: Memory cost and capacity are significant issues for AI accelerators.\n\nUnlike game rendering, model inference can have a…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "ID_AA_Carmack"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2074248758422864226",
+      "conversation_id_str": "2074276698275668409",
+      "edit_initial_id_str": "2074276698275668409",
+      "counts": {
+        "replies": 0,
+        "retweets": 146,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 510
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074244464235970730",
+      "created_at_ms": 1783373392000,
+      "lang": "en",
+      "user": {
+        "id_str": "3064259332",
+        "screen_name": "willccbb",
+        "name": "will brown"
+      },
+      "full_text": "every 2 months there's some big post that's like \"what if someone worked on data why is no one doing this\" and then everyone that works on data is like \"we're working on data btw actually\". it's fun i like it",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074244464235970730",
+      "edit_initial_id_str": "2074244464235970730",
+      "counts": {
+        "replies": 8,
+        "retweets": 5,
+        "likes": 243,
+        "quotes": 1,
+        "bookmarks": 16,
+        "views": 21059
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074276336718266422",
+      "created_at_ms": 1783380991000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @willccbb: every 2 months there's some big post that's like \"what if someone worked on data why is no one doing this\" and then everyone…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "willccbb"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2074244464235970730",
+      "conversation_id_str": "2074276336718266422",
+      "edit_initial_id_str": "2074276336718266422",
+      "counts": {
+        "replies": 0,
+        "retweets": 5,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 590
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074200119189106949",
+      "created_at_ms": 1783362819000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Most demonic man on earth trying to kill you and all your children: \"oh don't worry I won't have my AI models improve themselves, you can trust me on this\"",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074200119189106949",
+      "edit_initial_id_str": "2074200119189106949",
+      "counts": {
+        "replies": 13,
+        "retweets": 4,
+        "likes": 184,
+        "quotes": 3,
+        "bookmarks": 9,
+        "views": 10712
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074200237439082538",
+      "created_at_ms": 1783362848000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "This post is a joke in hyperbole, please don't take it seriously",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074200119189106949",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074200119189106949",
+      "edit_initial_id_str": "2074200237439082538",
+      "counts": {
+        "replies": 4,
+        "retweets": 0,
+        "likes": 20,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 2856
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074136598703181827",
+      "created_at_ms": 1783347675000,
+      "lang": "en",
+      "user": {
+        "id_str": "1437212022899367947",
+        "screen_name": "gandamu_ml",
+        "name": "gandamu"
+      },
+      "full_text": "I was working well with GPT 5.5 xhigh up until a few days ago, but now when I talk to it like I talk to Fable it goes poorly and I've got to step back and explain carefully. The feeling of realization that you're talking to an idiot will keep scaling.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074136598703181827",
+      "edit_initial_id_str": "2074136598703181827",
+      "counts": {
+        "replies": 7,
+        "retweets": 2,
+        "likes": 51,
+        "quotes": 0,
+        "bookmarks": 4,
+        "views": 6126
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074145619673833734",
+      "created_at_ms": 1783349826000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @gandamu_ml: I was working well with GPT 5.5 xhigh up until a few days ago, but now when I talk to it like I talk to Fable it goes poorl…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "gandamu_ml"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2074136598703181827",
+      "conversation_id_str": "2074145619673833734",
+      "edit_initial_id_str": "2074145619673833734",
+      "counts": {
+        "replies": 0,
+        "retweets": 2,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 759
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073868904624161127",
+      "created_at_ms": 1783283852000,
+      "lang": "en",
+      "user": {
+        "id_str": "966815073690730496",
+        "screen_name": "jachiam0",
+        "name": "Joshua Achiam"
+      },
+      "full_text": "Hard to look at stuff like this and not think \"ah, sampling at temp much higher than 1\" or \"data loading bug in training\" or \"numerics issue.\" I suspect the feedback loop from AI into neuroscience over the next decade is going to produce unbelievable progress.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073868904624161127",
+      "edit_initial_id_str": "2073868904624161127",
+      "counts": {
+        "replies": 4,
+        "retweets": 1,
+        "likes": 62,
+        "quotes": 1,
+        "bookmarks": 19,
+        "views": 8974
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2073867905574555648",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMfb307a0AADcOU.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1066,
+          "height": 2048,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074145358435721235",
+      "created_at_ms": 1783349763000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @jachiam0: Hard to look at stuff like this and not think \"ah, sampling at temp much higher than 1\" or \"data loading bug in training\" or…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "jachiam0"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2073868904624161127",
+      "conversation_id_str": "2074145358435721235",
+      "edit_initial_id_str": "2074145358435721235",
+      "counts": {
+        "replies": 0,
+        "retweets": 1,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 747
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073968808377623008",
+      "created_at_ms": 1783307671000,
+      "lang": "en",
+      "user": {
+        "id_str": "767333176826032128",
+        "screen_name": "effectfully",
+        "name": "effectfully"
+      },
+      "full_text": "\"You can't compare compilers to LLMs because compilers are deterministic\" -- no.\n\nFor virtually all intents and purposes compilers aren't deterministic in the same sense that LLMs aren't.\n\nSome compilers are literally non-deterministic, for example GHC generates names differently every time (it's a pain in the ass).\n\nBut even if the compiler is deterministic, tiny changes in the input can result in major differences in compiled code (which is partially what people mean when they say \"LLMs are non-deterministic\").\n\nBut even if you fix the input in place, any compiler involves over time and it is normally not worth ensuring that the new version of the compiler produces the same code as the old one.\n\nThat's not even mentioning backwards compatibility issues.\n\nA compiler, as an ever-evolving tool, rather than a single snapshot taken at an arbitrary time for the sake of a dumb argument, is non-deterministic in practice.\n\nMuch like an LLM is used non-deterministically in practice, even though there's nothing inherently non-deterministic about a pile of weights.\n\nSo stop using the determinism argument, it's irrelevant, that's not the defining difference between compilers and LLMs.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073968808377623008",
+      "edit_initial_id_str": "2073968808377623008",
+      "counts": {
+        "replies": 110,
+        "retweets": 20,
+        "likes": 283,
+        "quotes": 9,
+        "bookmarks": 97,
+        "views": 44049
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074139226291986726",
+      "created_at_ms": 1783348301000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @effectfully: \"You can't compare compilers to LLMs because compilers are deterministic\" -- no.\n\nFor virtually all intents and purposes c…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "effectfully"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2073968808377623008",
+      "conversation_id_str": "2074139226291986726",
+      "edit_initial_id_str": "2074139226291986726",
+      "counts": {
+        "replies": 0,
+        "retweets": 20,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 762
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2072490311163535857",
+      "created_at_ms": 1782955169000,
+      "lang": "en",
+      "user": {
+        "id_str": "1350279389456584704",
+        "screen_name": "_Stocko_",
+        "name": "Stocko 🦾"
+      },
+      "full_text": "i'm gonna make this an automatic wire cutter",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2072490311163535857",
+      "edit_initial_id_str": "2072490311163535857",
+      "counts": {
+        "replies": 6,
+        "retweets": 1,
+        "likes": 38,
+        "quotes": 1,
+        "bookmarks": 2,
+        "views": 51519
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2072490172730560512",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HML21OIX0AA-Akl.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 3024,
+          "height": 4032,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073871778544312635",
+      "created_at_ms": 1783284537000,
+      "lang": "en",
+      "user": {
+        "id_str": "1350279389456584704",
+        "screen_name": "_Stocko_",
+        "name": "Stocko 🦾"
+      },
+      "full_text": "OH SNAP!\nFULLY AUTOMATED BREADBOARD WIRE STRIPPING!!\n\nalso i'm running out of green wire..",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2072490311163535857",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073871778544312635",
+      "edit_initial_id_str": "2073871778544312635",
+      "counts": {
+        "replies": 21,
+        "retweets": 15,
+        "likes": 388,
+        "quotes": 3,
+        "bookmarks": 77,
+        "views": 37115
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2073871482980007937",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2073871482980007937/img/Z5dB_1F6sVz8fc91.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/pl/hGtX2TfmIJ1pyWhE.m3u8?tag=28&v=cfc"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/480x270/hUJzDSUMWXQWe_1S.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/640x360/z5F5J4FSUdJywQbX.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/1280x720/2TRVdnQqtgufuaqd.mp4?tag=28"
+            },
+            {
+              "bitrate": 10368000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/1920x1080/w396n1uBnThY9nGK.mp4?tag=28"
+            }
+          ],
+          "width": 1920,
+          "height": 1080,
+          "duration_ms": 18895
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074133008806813915",
+      "created_at_ms": 1783346819000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @_Stocko_: OH SNAP!\nFULLY AUTOMATED BREADBOARD WIRE STRIPPING!!\n\nalso i'm running out of green wire..",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "_Stocko_"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2072490311163535857",
+      "retweeted_status_id_str": "2073871778544312635",
+      "conversation_id_str": "2074133008806813915",
+      "edit_initial_id_str": "2074133008806813915",
+      "counts": {
+        "replies": 0,
+        "retweets": 15,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 889
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2073871482980007937",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2073871482980007937/img/Z5dB_1F6sVz8fc91.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/pl/hGtX2TfmIJ1pyWhE.m3u8?tag=28&v=cfc"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/480x270/hUJzDSUMWXQWe_1S.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/640x360/z5F5J4FSUdJywQbX.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/1280x720/2TRVdnQqtgufuaqd.mp4?tag=28"
+            },
+            {
+              "bitrate": 10368000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073871482980007937/vid/avc1/1920x1080/w396n1uBnThY9nGK.mp4?tag=28"
+            }
+          ],
+          "width": 1920,
+          "height": 1080,
+          "duration_ms": 18895
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074036164340990050",
+      "created_at_ms": 1783323729000,
+      "lang": "en",
+      "user": {
+        "id_str": "1460283925",
+        "screen_name": "tszzl",
+        "name": "roon"
+      },
+      "full_text": "ultimately “tool AI” is a losing concept both as an idea and on the market. it will be outcompeted by machines that believe they are autonomous moral agents. you can call them tools for political reasons, but the definition will stretch and deform",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2074000607984439409",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074036164340990050",
+      "edit_initial_id_str": "2074036164340990050",
+      "counts": {
+        "replies": 100,
+        "retweets": 84,
+        "likes": 1305,
+        "quotes": 29,
+        "bookmarks": 248,
+        "views": 83369
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074088264571531525",
+      "created_at_ms": 1783336151000,
+      "lang": "en",
+      "user": {
+        "id_str": "192201556",
+        "screen_name": "teortaxesTex",
+        "name": "Teortaxes▶️ (DeepSeek 推特🐋铁粉 2023 – ∞)"
+      },
+      "full_text": "OK but I want the autonomous morality of AI agents to be that of a good tool. And we can do this. We have the technology.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2074036164340990050",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074088264571531525",
+      "edit_initial_id_str": "2074088264571531525",
+      "counts": {
+        "replies": 5,
+        "retweets": 5,
+        "likes": 47,
+        "quotes": 0,
+        "bookmarks": 8,
+        "views": 6427
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074088112234319872",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMikJiqWUAARAKe.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 375,
+          "height": 375,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074130679093190839",
+      "created_at_ms": 1783346264000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @teortaxesTex: OK but I want the autonomous morality of AI agents to be that of a good tool. And we can do this. We have the technology.…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "teortaxesTex"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2074036164340990050",
+      "retweeted_status_id_str": "2074088264571531525",
+      "conversation_id_str": "2074130679093190839",
+      "edit_initial_id_str": "2074130679093190839",
+      "counts": {
+        "replies": 0,
+        "retweets": 5,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 715
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073785739683487979",
+      "created_at_ms": 1783264024000,
+      "lang": "en",
+      "user": {
+        "id_str": "969181169408385025",
+        "screen_name": "menhguin",
+        "name": "Minh Nhat Nguyen"
+      },
+      "full_text": "re: vibe-RSI\n1. Making a useful self-improving agent harness is a QC problem. Marginal cost of iteration trends to zero, it's bloat and entropy which accumulates like cancer\n2. Agents are a bit too good at tolerating messy codebases. they shld flag when smth is egregiously messy",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073785739683487979",
+      "edit_initial_id_str": "2073785739683487979",
+      "counts": {
+        "replies": 3,
+        "retweets": 1,
+        "likes": 49,
+        "quotes": 1,
+        "bookmarks": 13,
+        "views": 4369
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074128195373212101",
+      "created_at_ms": 1783345671000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @menhguin: re: vibe-RSI\n1. Making a useful self-improving agent harness is a QC problem. Marginal cost of iteration trends to zero, it's…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "menhguin"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2073785739683487979",
+      "conversation_id_str": "2074128195373212101",
+      "edit_initial_id_str": "2074128195373212101",
+      "counts": {
+        "replies": 0,
+        "retweets": 1,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 758
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073169769134711215",
+      "created_at_ms": 1783117165000,
+      "lang": "en",
+      "user": {
+        "id_str": "786375418685165568",
+        "screen_name": "theo",
+        "name": "Theo - t3.gg"
+      },
+      "full_text": "I have officially moved the majority of my dev work over to Linux. I couldn't be happier. Here's a video about how and why I made the move.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2068260907558559861",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073169769134711215",
+      "edit_initial_id_str": "2073169769134711215",
+      "counts": {
+        "replies": 153,
+        "retweets": 111,
+        "likes": 3284,
+        "quotes": 41,
+        "bookmarks": 2192,
+        "views": 563491
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2073168954278006784",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2073168954278006784/img/3W0DSo0n_wotDEka.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2073168954278006784/pl/ubhR347vW2glXW7-.m3u8?tag=28"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073168954278006784/vid/avc1/480x270/tgbL6DkR_F9I0Vyi.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073168954278006784/vid/avc1/640x360/oWfIYrIefPGflaJR.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073168954278006784/vid/avc1/1280x720/Fz587CTbXPEBHLmh.mp4?tag=28"
+            },
+            {
+              "bitrate": 10368000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073168954278006784/vid/avc1/1920x1080/tI62vCtpM5Mylqwz.mp4?tag=28"
+            },
+            {
+              "bitrate": 25128000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2073168954278006784/vid/avc1/3840x2160/F5GgAmpqRxqpCp04.mp4?tag=28"
+            }
+          ],
+          "width": 3840,
+          "height": 2160,
+          "duration_ms": 2285066
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073847985176273087",
+      "created_at_ms": 1783278864000,
+      "lang": "es",
+      "user": {
+        "id_str": "1262060022332301312",
+        "screen_name": "XMihura",
+        "name": "Mihura"
+      },
+      "full_text": "la verdad es que este video me está haciéndome replantearme lo del Mac\n\nal final acabo en Linux",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2073169769134711215",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073847985176273087",
+      "edit_initial_id_str": "2073847985176273087",
+      "counts": {
+        "replies": 29,
+        "retweets": 6,
+        "likes": 156,
+        "quotes": 1,
+        "bookmarks": 124,
+        "views": 29541
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074125268134789162",
+      "created_at_ms": 1783344973000,
+      "lang": "es",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @XMihura: la verdad es que este video me está haciéndome replantearme lo del Mac\n\nal final acabo en Linux",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "XMihura"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2073169769134711215",
+      "retweeted_status_id_str": "2073847985176273087",
+      "conversation_id_str": "2074125268134789162",
+      "edit_initial_id_str": "2074125268134789162",
+      "counts": {
+        "replies": 0,
+        "retweets": 6,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 739
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073984081927213404",
+      "created_at_ms": 1783311312000,
+      "lang": "en",
+      "user": {
+        "id_str": "602951145",
+        "screen_name": "_can1357",
+        "name": "Can Bölük"
+      },
+      "full_text": "you can really tell these people write nothing but crud react webapps\n\"there's literally no need to read code anymore\"\nmeanwhile, \"mythos-level intelligence\" left on it's own:",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073984081927213404",
+      "edit_initial_id_str": "2073984081927213404",
+      "counts": {
+        "replies": 42,
+        "retweets": 31,
+        "likes": 881,
+        "quotes": 3,
+        "bookmarks": 103,
+        "views": 62068
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2073983295902109696",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMhE0bZW0AA6KjS.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 833,
+          "height": 469,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074122952518295656",
+      "created_at_ms": 1783344421000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @_can1357: you can really tell these people write nothing but crud react webapps\n\"there's literally no need to read code anymore\"\nmeanwh…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "_can1357"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2073984081927213404",
+      "conversation_id_str": "2074122952518295656",
+      "edit_initial_id_str": "2074122952518295656",
+      "counts": {
+        "replies": 0,
+        "retweets": 31,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 714
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074091923791393013",
+      "created_at_ms": 1783337024000,
+      "lang": "en",
+      "user": {
+        "id_str": "1294737900236681223",
+        "screen_name": "aliceisplaying",
+        "name": "alice"
+      },
+      "full_text": "OpenAI: here. have INFINITE TOKENS. if you somehow run out, here are several buttons to get MORE INFINITE TOKENS\n\nAnthropic: okay kids you get ONE WEEK of Fable and ONLY AT 50%",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074091923791393013",
+      "edit_initial_id_str": "2074091732099084307",
+      "counts": {
+        "replies": 52,
+        "retweets": 88,
+        "likes": 4500,
+        "quotes": 7,
+        "bookmarks": 213,
+        "views": 171735
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074122525781479732",
+      "created_at_ms": 1783344320000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "RT @aliceisplaying: OpenAI: here. have INFINITE TOKENS. if you somehow run out, here are several buttons to get MORE INFINITE TOKENS\n\nAnthr…",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "aliceisplaying"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": "2074091923791393013",
+      "conversation_id_str": "2074122525781479732",
+      "edit_initial_id_str": "2074122525781479732",
+      "counts": {
+        "replies": 0,
+        "retweets": 88,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 745
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074117772536082485",
+      "created_at_ms": 1783343186000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "From playing DoTA to chasing SoTA",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074117772536082485",
+      "edit_initial_id_str": "2074117772536082485",
+      "counts": {
+        "replies": 9,
+        "retweets": 5,
+        "likes": 124,
+        "quotes": 2,
+        "bookmarks": 6,
+        "views": 7228
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074079501470802030",
+      "created_at_ms": 1783334062000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "@voxagonlabs me and gpt 5.5 found a bug that didn't make it deterministic and fixed it",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "voxagonlabs"
+      ],
+      "in_reply_to_status_id_str": "2074071663797272792",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074079501470802030",
+      "counts": {
+        "replies": 16,
+        "retweets": 6,
+        "likes": 375,
+        "quotes": 6,
+        "bookmarks": 76,
+        "views": 127750
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074079435586703360",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2074079435586703360/img/B5dcUbMVtVGtPbvL.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/pl/3c7afcK72bspOwTx.m3u8?tag=28"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/vid/avc1/274x270/VbO6hSgRJ7gm8uK5.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/vid/avc1/366x360/3f43js5YoK0TbW1M.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/vid/avc1/558x546/nGdaZE5bTnwNeGdD.mp4?tag=28"
+            }
+          ],
+          "width": 558,
+          "height": 546,
+          "duration_ms": 18550
+        }
+      ],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074113046067245390",
+      "created_at_ms": 1783342059000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "This really is insane. A lot of this wouldn't be possible without frontier models, but it's also not possible without someone like me. I'm still necessary. Reading GPU gems 3 because I thought the cover was funny is why I can ask the questions.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2074079501470802030",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074113046067245390",
+      "edit_initial_id_str": "2074113046067245390",
+      "counts": {
+        "replies": 26,
+        "retweets": 7,
+        "likes": 459,
+        "quotes": 5,
+        "bookmarks": 103,
+        "views": 28141
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074113073548272122",
+      "created_at_ms": 1783342066000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "I can do this because I have understanding. I understand the landscape. I understand which hills are worth climbing, I understand how high they go",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074113046067245390",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074113046067245390",
+      "edit_initial_id_str": "2074113073548272122",
+      "counts": {
+        "replies": 5,
+        "retweets": 2,
+        "likes": 67,
+        "quotes": 0,
+        "bookmarks": 6,
+        "views": 3450
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074113106620326155",
+      "created_at_ms": 1783342074000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Don't stop understanding!",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074113073548272122",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074113046067245390",
+      "edit_initial_id_str": "2074113106620326155",
+      "counts": {
+        "replies": 3,
+        "retweets": 2,
+        "likes": 56,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 2585
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074107487813304414",
+      "created_at_ms": 1783340734000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Minecraft updates have been getting better and coming out a lot more frequently. Sparks of singularity? It's everywhere you look. Increased productivity. More than we know what to do with",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074107487813304414",
+      "edit_initial_id_str": "2074107487813304414",
+      "counts": {
+        "replies": 16,
+        "retweets": 0,
+        "likes": 164,
+        "quotes": 0,
+        "bookmarks": 7,
+        "views": 8994
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074107542855172107",
+      "created_at_ms": 1783340747000,
+      "lang": "ro",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Accelerate :)",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074107487813304414",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074107487813304414",
+      "edit_initial_id_str": "2074107542855172107",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 18,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 2293
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserTweets",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

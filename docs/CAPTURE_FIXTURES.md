@@ -1,12 +1,19 @@
 # Capturing real GraphQL fixtures from x.com
 
 The normalizer (`packages/core/src/graphql-normalize.ts`) is tested against
-fixtures in `test/fixtures/graphql/`. **Everything there today is synthetic**
-(hand-written from best-known payload shapes; each file says so in its
-`__fixture` marker). The agents that wrote them cannot log into x.com, so
-this step is yours: capture real payloads while browsing normally, redact
-them, and drop them in. When a real capture disagrees with a synthetic
+fixtures in `test/fixtures/graphql/`. Fixtures are either **real captures**
+(`*.captured.json` — each file's `__fixture` marker says when/how) or
+**synthetic** (`*.synthetic.json`, hand-written from best-known payload
+shapes). The agents that wrote the synthetics cannot log into x.com, so
+capturing is the owner's job: capture real payloads while browsing normally,
+redact them, and drop them in. When a real capture disagrees with a synthetic
 fixture, the real one wins — fix the normalizer, not the capture.
+
+**Status 2026-07-07:** real captures landed for `TweetDetail` (incl.
+note_tweet, quote-RT, animated_gif, unified_card), `UserTweets` (pin,
+RT-of-quote), `UserMedia`, `Likes`, and an empty `Bookmarks`. Still wanted:
+`SearchTimeline`, `HomeTimeline`, a thread containing a deleted reply
+(tombstone), and a non-empty `Bookmarks`.
 
 Nothing in this workflow issues any request to X. The extension only saves
 copies of responses the page fetched on its own.

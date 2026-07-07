@@ -1,0 +1,46 @@
+{
+  "__fixture": {
+    "synthetic": false,
+    "op": "Bookmarks",
+    "captured_at": "2026-07-07",
+    "covers": [
+      "real EMPTY bookmarks timeline: cursors only, zero tweets — normalizer must return empty results"
+    ],
+    "note": "REAL capture from x.com via DevTools (owner-provided, response body unmodified except cursor values redacted)."
+  },
+  "data": {
+    "bookmark_timeline_v2": {
+      "timeline": {
+        "instructions": [
+          {
+            "entries": [
+              {
+                "content": {
+                  "__typename": "TimelineTimelineCursor",
+                  "cursorType": "Top",
+                  "entryType": "TimelineTimelineCursor",
+                  "value": "REDACTED_CURSOR"
+                },
+                "entryId": "cursor-top-1870024720254709262",
+                "sortIndex": "1870024720254709262"
+              },
+              {
+                "content": {
+                  "__typename": "TimelineTimelineCursor",
+                  "cursorType": "Bottom",
+                  "entryType": "TimelineTimelineCursor",
+                  "stopOnEmptyResponse": true,
+                  "value": "REDACTED_CURSOR"
+                },
+                "entryId": "cursor-bottom-1870024720254709260",
+                "sortIndex": "1870024720254709260"
+              }
+            ],
+            "type": "TimelineAddEntries"
+          }
+        ],
+        "responseObjects": {}
+      }
+    }
+  }
+}

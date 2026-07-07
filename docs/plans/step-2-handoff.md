@@ -81,11 +81,14 @@ page's own fetch/XHR ▶ page-interceptor (MAIN) ▶ CustomEvent 'twmd:graphql'
 
 ## Known gaps / debts
 
-1. **All fixtures are synthetic.** The plan's "live-site verification pass"
-   could not run from this environment (no x.com login; and issuing requests
-   is forbidden anyway). The owner must run docs/CAPTURE_FIXTURES.md and
-   replace them. Until then, treat field locations as best-effort — the
-   generic walker + both-locations user handling are the hedge.
+1. ~~All fixtures are synthetic.~~ **Partially closed 2026-07-07:** the owner
+   provided real DevTools captures for TweetDetail, UserTweets, UserMedia,
+   Likes, and an (empty) Bookmarks — all normalized with zero code changes.
+   Real-world confirmations: the 2026 envelope is `data.user.result.timeline`
+   (not `timeline_v2`; the generic walker didn't care), user names live in
+   `user.core`, note_tweet/quote/unified_card shapes match the synthetics.
+   Still uncaptured: SearchTimeline, HomeTimeline, a real tombstone, a
+   non-empty Bookmarks (see docs/CAPTURE_FIXTURES.md status note).
 2. Tombstone events stop at `extension/content/index.js` state (debug
    surface only). No consumer yet (step 5 wires them to the app).
 3. `TweetResultsByRestIds` (batch) has no fixture — pass-listed, and the

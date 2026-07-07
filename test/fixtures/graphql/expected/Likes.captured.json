@@ -1,0 +1,36 @@
+{
+  "tweets": [
+    {
+      "id_str": "2074285269436809704",
+      "created_at_ms": 1783383121000,
+      "lang": "en",
+      "user": {
+        "id_str": "3829085608",
+        "screen_name": "craigweiss",
+        "name": "Craig Weiss"
+      },
+      "full_text": "don't let claude also know you're using codex\nyou have been warned",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074285269436809704",
+      "edit_initial_id_str": "2074285269436809704",
+      "counts": {
+        "replies": 36,
+        "retweets": 2,
+        "likes": 129,
+        "quotes": 1,
+        "bookmarks": 5,
+        "views": 9403
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "Likes",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

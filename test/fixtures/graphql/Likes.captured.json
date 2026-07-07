@@ -1,0 +1,231 @@
+{
+  "__fixture": {
+    "synthetic": false,
+    "op": "Likes",
+    "captured_at": "2026-07-07",
+    "covers": [
+      "real Likes timeline (single liked tweet)",
+      "envelope is data.user.result.timeline (NOT timeline_v2 — 2026 shape)"
+    ],
+    "note": "REAL capture from x.com via DevTools (owner-provided, response body unmodified except cursor values redacted)."
+  },
+  "data": {
+    "user": {
+      "result": {
+        "__typename": "User",
+        "timeline": {
+          "timeline": {
+            "instructions": [
+              {
+                "entries": [
+                  {
+                    "content": {
+                      "__typename": "TimelineTimelineItem",
+                      "entryType": "TimelineTimelineItem",
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "itemType": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "cashtag_attachments": [],
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "affiliates_highlighted_label": {},
+                                  "avatar": {
+                                    "image_url": "https://pbs.twimg.com/profile_images/1914812840927748096/Rchy2ZK2_normal.jpg"
+                                  },
+                                  "core": {
+                                    "created_at": "Thu Oct 01 01:07:34 +0000 2015",
+                                    "name": "Craig Weiss",
+                                    "screen_name": "craigweiss"
+                                  },
+                                  "dm_permissions": {
+                                    "can_dm": false
+                                  },
+                                  "follow_request_sent": false,
+                                  "has_graduated_access": true,
+                                  "id": "VXNlcjozODI5MDg1NjA4",
+                                  "is_blue_verified": true,
+                                  "legacy": {
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "founder & ceo at https://t.co/0UQAAqAfoR (yc w22) | @ycombinator | software engineer | early @scale_ai | prev: @google, @meta, @snap, @lyft, @nasa",
+                                    "entities": {
+                                      "description": {
+                                        "urls": [
+                                          {
+                                            "display_url": "rome.ai",
+                                            "expanded_url": "http://rome.ai",
+                                            "indices": [
+                                              17,
+                                              40
+                                            ],
+                                            "url": "https://t.co/0UQAAqAfoR"
+                                          }
+                                        ]
+                                      },
+                                      "url": {
+                                        "urls": [
+                                          {
+                                            "display_url": "rome.ai",
+                                            "expanded_url": "http://rome.ai",
+                                            "indices": [
+                                              0,
+                                              23
+                                            ],
+                                            "url": "https://t.co/0UQAAqAfoR"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 29491,
+                                    "follow_request_sent": false,
+                                    "followers_count": 49570,
+                                    "friends_count": 7309,
+                                    "has_custom_timelines": false,
+                                    "is_translator": false,
+                                    "listed_count": 229,
+                                    "media_count": 692,
+                                    "needs_phone_verification": false,
+                                    "normal_followers_count": 49570,
+                                    "notifications": false,
+                                    "pinned_tweet_ids_str": [
+                                      "2069863242932052228"
+                                    ],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/3829085608/1743025219",
+                                    "profile_interstitial_type": "",
+                                    "statuses_count": 7815,
+                                    "time_zone": "",
+                                    "translator_type": "none",
+                                    "url": "https://t.co/0UQAAqAfoR",
+                                    "utc_offset": 0,
+                                    "want_retweets": false,
+                                    "withheld_description": "",
+                                    "withheld_scope": ""
+                                  },
+                                  "location": {
+                                    "location": "sf"
+                                  },
+                                  "media_permissions": {
+                                    "can_media_tag": true
+                                  },
+                                  "parody_commentary_fan_label": "None",
+                                  "privacy": {
+                                    "protected": false
+                                  },
+                                  "profile_bio": {
+                                    "description": "founder & ceo at https://t.co/0UQAAqAfoR (yc w22) | @ycombinator | software engineer | early @scale_ai | prev: @google, @meta, @snap, @lyft, @nasa"
+                                  },
+                                  "profile_description_language": "en",
+                                  "profile_image_shape": "Circle",
+                                  "relationship_perspectives": {
+                                    "blocked_by": false,
+                                    "blocking": false,
+                                    "followed_by": false,
+                                    "following": false,
+                                    "live_following": false,
+                                    "muting": false
+                                  },
+                                  "rest_id": "3829085608",
+                                  "super_follow_eligible": true,
+                                  "super_followed_by": false,
+                                  "super_following": false,
+                                  "verification": {
+                                    "verified": false
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": [
+                                "2074285269436809704"
+                              ],
+                              "editable_until_msecs": "1783386721000",
+                              "edits_remaining": "5",
+                              "is_edit_eligible": true
+                            },
+                            "grok_analysis_button": true,
+                            "grok_annotations": {
+                              "is_image_editable_by_grok": false
+                            },
+                            "grok_translated_post_with_availability": {
+                              "is_available": false
+                            },
+                            "is_translatable": false,
+                            "legacy": {
+                              "bookmark_count": 5,
+                              "bookmarked": false,
+                              "conversation_id_str": "2074285269436809704",
+                              "created_at": "Tue Jul 07 00:12:01 +0000 2026",
+                              "display_text_range": [
+                                0,
+                                66
+                              ],
+                              "entities": {},
+                              "favorite_count": 129,
+                              "favorited": true,
+                              "full_text": "don't let claude also know you're using codex\nyou have been warned",
+                              "id_str": "2074285269436809704",
+                              "is_quote_status": false,
+                              "lang": "en",
+                              "quote_count": 1,
+                              "reply_count": 36,
+                              "retweet_count": 2,
+                              "retweeted": false,
+                              "user_id_str": "3829085608"
+                            },
+                            "rest_id": "2074285269436809704",
+                            "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+                            "unmention_data": {},
+                            "views": {
+                              "count": "9403",
+                              "state": "EnabledWithCount"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "entryId": "tweet-2074285269436809704",
+                    "sortIndex": "2074333329838047232"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TimelineTimelineCursor",
+                      "cursorType": "Top",
+                      "entryType": "TimelineTimelineCursor",
+                      "value": "REDACTED_CURSOR"
+                    },
+                    "entryId": "cursor-top-2074333329838047233",
+                    "sortIndex": "2074333329838047233"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TimelineTimelineCursor",
+                      "cursorType": "Bottom",
+                      "entryType": "TimelineTimelineCursor",
+                      "value": "REDACTED_CURSOR"
+                    },
+                    "entryId": "cursor-bottom-2074333329838047231",
+                    "sortIndex": "2074333329838047231"
+                  }
+                ],
+                "type": "TimelineAddEntries"
+              }
+            ],
+            "metadata": {
+              "scribeConfig": {
+                "page": "favorites"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

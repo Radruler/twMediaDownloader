@@ -1,0 +1,546 @@
+{
+  "tweets": [
+    {
+      "id_str": "2074082943123751161",
+      "created_at_ms": 1783334882000,
+      "lang": "it",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Ahahahhahhahahahahah",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074082943123751161",
+      "edit_initial_id_str": "2074082943123751161",
+      "counts": {
+        "replies": 38,
+        "retweets": 6,
+        "likes": 1333,
+        "quotes": 1,
+        "bookmarks": 71,
+        "views": 133772
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074082941211164672",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMifcjGWwAAgJlU.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1080,
+          "height": 867,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074079501470802030",
+      "created_at_ms": 1783334062000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "@voxagonlabs me and gpt 5.5 found a bug that didn't make it deterministic and fixed it",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "voxagonlabs"
+      ],
+      "in_reply_to_status_id_str": "2074071663797272792",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074079501470802030",
+      "counts": {
+        "replies": 16,
+        "retweets": 6,
+        "likes": 375,
+        "quotes": 6,
+        "bookmarks": 76,
+        "views": 127750
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074079435586703360",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2074079435586703360/img/B5dcUbMVtVGtPbvL.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/pl/3c7afcK72bspOwTx.m3u8?tag=28"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/vid/avc1/274x270/VbO6hSgRJ7gm8uK5.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/vid/avc1/366x360/3f43js5YoK0TbW1M.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079435586703360/vid/avc1/558x546/nGdaZE5bTnwNeGdD.mp4?tag=28"
+            }
+          ],
+          "width": 558,
+          "height": 546,
+          "duration_ms": 18550
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074079162386551009",
+      "created_at_ms": 1783333981000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "@Michi07f @voxagonlabs Okay, I checked, fable lied to me and left a bug. But now it's deterministic, modulo some bugs i haven't found yet",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "Michi07f",
+        "voxagonlabs"
+      ],
+      "in_reply_to_status_id_str": "2074076840050778234",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074079162386551009",
+      "counts": {
+        "replies": 2,
+        "retweets": 0,
+        "likes": 3,
+        "quotes": 1,
+        "bookmarks": 2,
+        "views": 219
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074079084552818688",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2074079084552818688/img/6Ut_wIzNeV10YVfy.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074079084552818688/pl/Ip9l7fRdKk-XP5FU.m3u8?tag=28"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079084552818688/vid/avc1/334x270/IJtYvmo65NI7I3M1.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079084552818688/vid/avc1/446x360/68KDcdntLlDMg98Y.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074079084552818688/vid/avc1/786x634/569CHFr7QvZx-Q_E.mp4?tag=28"
+            }
+          ],
+          "width": 786,
+          "height": 634,
+          "duration_ms": 11866
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074078514098176132",
+      "created_at_ms": 1783333826000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "I just beat mujoco playground's baseline by 10x now. The policy is up on dingbotics. I wrote a custom physics engine. It still doesn't handle perturbations that well because fable decided to leave some bugs behind",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074078514098176132",
+      "edit_initial_id_str": "2074078514098176132",
+      "counts": {
+        "replies": 6,
+        "retweets": 1,
+        "likes": 131,
+        "quotes": 0,
+        "bookmarks": 16,
+        "views": 8923
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074077087288176640",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMiaHziWsAActrI.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 238,
+          "height": 142,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074071663797272792",
+      "created_at_ms": 1783332193000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "@voxagonlabs It would probably cost 300 more dollars or so to port this entire thing to webgpu and wasm + make a multiplayer game using webrtc. This is a deterministic physics engine, which makes it even more remarkable",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "voxagonlabs"
+      ],
+      "in_reply_to_status_id_str": "2074070802828276089",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074071663797272792",
+      "counts": {
+        "replies": 7,
+        "retweets": 2,
+        "likes": 258,
+        "quotes": 1,
+        "bookmarks": 25,
+        "views": 16429
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074071441125851136",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMiU_J8WwAA0mW4.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 993,
+          "height": 884,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074070802828276089",
+      "created_at_ms": 1783331988000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "I took a conference talk from Dennis (@voxagonlabs), transcribed it, told fable to make the same tools that he spoke about, and then we drove down the time per frame aggressively.\n\nBig credits to both Dennis & Erin for teaching how this stuff works. 80% of the perf ideas were fable porting what Erin did.\n\nI corrected fable's wrongs a lot of the time, but not because I knew it was wrong -- instead, I was skeptical and told it to check using profiling tools\n\nMusic in the video is from Cynthoni's newest album, check it out on bandcamp",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "voxagonlabs"
+      ],
+      "in_reply_to_status_id_str": "2074070149737406841",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074070802828276089",
+      "counts": {
+        "replies": 9,
+        "retweets": 7,
+        "likes": 314,
+        "quotes": 3,
+        "bookmarks": 154,
+        "views": 17008
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074070616257298432",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMiUPJEXgAAiRKT.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 402,
+          "height": 309,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2072326622590730604",
+      "created_at_ms": 1782916143000,
+      "lang": "en",
+      "user": {
+        "id_str": "322906622",
+        "screen_name": "erin_catto",
+        "name": "Erin Catto"
+      },
+      "full_text": "I’m happy to announce the release of a new open source 3D physics engine called Box3D. I’ve been working on this project for a few years now, but it represents over 20 years of experience writing physics engines for games. Read more here: https://box2d.org/posts/2026/06/announcing-box3d/",
+      "urls": [
+        {
+          "short": "https://t.co/2d9aVuUsxj",
+          "expanded": "https://box2d.org/posts/2026/06/announcing-box3d/"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2072326622590730604",
+      "edit_initial_id_str": "2072326622590730604",
+      "counts": {
+        "replies": 102,
+        "retweets": 685,
+        "likes": 4963,
+        "quotes": 62,
+        "bookmarks": 1871,
+        "views": 785464
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074070149737406841",
+      "created_at_ms": 1783331832000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "Fable and I rewrote Box3d entirely in native cuda. It's about 30x faster on my GPU compared to my CPU (depending on the situation).\n\nThis was my hardest benchmark. I still had to be there, but soon I won't. Cost me about 200 dollars",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": "2072326622590730604",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074070149737406841",
+      "edit_initial_id_str": "2074070149737406841",
+      "counts": {
+        "replies": 108,
+        "retweets": 142,
+        "likes": 2919,
+        "quotes": 20,
+        "bookmarks": 1198,
+        "views": 439541
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074069857536983040",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2074069857536983040/img/dS5HU7xc-Q3Iy8ny.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/pl/2RvDjTUIDowyDFLA.m3u8?tag=28&v=cfc"
+            },
+            {
+              "bitrate": 632000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/vid/avc1/320x476/HHjXGL23feUFaMwL.mp4?tag=28"
+            },
+            {
+              "bitrate": 950000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/vid/avc1/480x714/kIWciEZxN-7FuyJt.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074069857536983040/vid/avc1/726x1082/bXJUiH5ipkhkSS6Z.mp4?tag=28"
+            }
+          ],
+          "width": 726,
+          "height": 1082,
+          "duration_ms": 65366
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073943193012326707",
+      "created_at_ms": 1783301563000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "my life is a joke",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073943193012326707",
+      "edit_initial_id_str": "2073943193012326707",
+      "counts": {
+        "replies": 16,
+        "retweets": 0,
+        "likes": 184,
+        "quotes": 0,
+        "bookmarks": 14,
+        "views": 14293
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2073943136473079808",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMggS13WYAAGfL6.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 394,
+          "height": 271,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073928311860822168",
+      "created_at_ms": 1783298015000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "@BronsonSchoen @anabology Unfortunately, they do",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "BronsonSchoen",
+        "anabology"
+      ],
+      "in_reply_to_status_id_str": "2073688662630629846",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073503563800543441",
+      "edit_initial_id_str": "2073928311860822168",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 1,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 117
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2073928310195666944",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMgSz1rWwAA47Hi.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1078,
+          "height": 485,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2073832326660776432",
+      "created_at_ms": 1783275131000,
+      "lang": "en",
+      "user": {
+        "id_str": "1173552893003255808",
+        "screen_name": "yacineMTB",
+        "name": "kache"
+      },
+      "full_text": "WAIT WAIT WAIT I CAN EXPLAIN. NO DARIO PLEASE DONT. I DONT EANT TO BE PART OF THE PERNAMENT UNDERCLASS NO PLESSE DARIO IM SORRY I WAS PRO OPEN SOURCE AI FORGIVE ME OLEASE",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2073832326660776432",
+      "edit_initial_id_str": "2073832326660776432",
+      "counts": {
+        "replies": 85,
+        "retweets": 40,
+        "likes": 2698,
+        "quotes": 11,
+        "bookmarks": 165,
+        "views": 148320
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2073832324572033024",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMe7gvXWsAAnRib.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1080,
+          "height": 425,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "UserMedia",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

@@ -1,0 +1,1582 @@
+{
+  "tweets": [
+    {
+      "id_str": "2074185348142280912",
+      "created_at_ms": 1783359298000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "New Anthropic research: A global workspace in language models.\n\nOf everything happening in your brain right now, only a tiny fraction is consciously accessible—thoughts you can describe, hold in mind, and reason with.\n\nWe found a strikingly similar divide inside Claude.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185348142280912",
+      "counts": {
+        "replies": 745,
+        "retweets": 2142,
+        "likes": 16646,
+        "quotes": 1069,
+        "bookmarks": 11098,
+        "views": 3762697
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074179111296081920",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj8zKXXoAAohgS.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074179111296081920/pl/gw2NdQO0SKIAQCj6.m3u8?tag=28&v=981"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074179111296081920/vid/avc1/480x270/MhYVmVQ9CrvdvRQZ.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074179111296081920/vid/avc1/640x360/3wc5dTq2PqQ60lwd.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074179111296081920/vid/avc1/1280x720/6-88ynlIRygMpnrr.mp4?tag=28"
+            },
+            {
+              "bitrate": 10368000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074179111296081920/vid/avc1/1920x1080/n68fb-yruqqAKAfS.mp4?tag=28"
+            },
+            {
+              "bitrate": 25128000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074179111296081920/vid/avc1/3840x2160/qo3RJ17ZzaY1jIQq.mp4?tag=28"
+            }
+          ],
+          "width": 1280,
+          "height": 720,
+          "duration_ms": 327000
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185351304724498",
+      "created_at_ms": 1783359298000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "In neuroscience, global workspace theory holds that thoughts become consciously accessible when they enter a privileged workspace that’s broadcast across the brain.\n\nUsing a new interpretability technique, we found something similar in Claude: the J-space. https://www.anthropic.com/research/global-workspace",
+      "urls": [
+        {
+          "short": "https://t.co/sLu2JgYwOQ",
+          "expanded": "https://www.anthropic.com/research/global-workspace"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185351304724498",
+      "counts": {
+        "replies": 46,
+        "retweets": 181,
+        "likes": 1759,
+        "quotes": 96,
+        "bookmarks": 970,
+        "views": 577519
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185354035245553",
+      "created_at_ms": 1783359299000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "The J-space (named after the Jacobian, the mathematical technique we used) is different from Claude’s outputs, or even its “chain of thought” text.\n\nIt’s in the model’s internal neural activations, and allows it to think about concepts without writing them down anywhere.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185351304724498",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185354035245553",
+      "counts": {
+        "replies": 15,
+        "retweets": 39,
+        "likes": 917,
+        "quotes": 22,
+        "bookmarks": 110,
+        "views": 112371
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185358678364414",
+      "created_at_ms": 1783359300000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "By watching the J-space, we can see Claude silently perform reasoning steps in its head—noticing bugs in code, identifying images, and more.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185354035245553",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185358678364414",
+      "counts": {
+        "replies": 11,
+        "retweets": 78,
+        "likes": 1128,
+        "quotes": 29,
+        "bookmarks": 309,
+        "views": 157580
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074183189849845760",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj6nyYWMAAYAeW.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1760,
+          "height": 1667,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185363401167261",
+      "created_at_ms": 1783359301000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "Similar to how humans can think about one thing while doing another, Claude can activate concepts and computations in its J-space that are unrelated to its outputs.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185358678364414",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185363401167261",
+      "counts": {
+        "replies": 4,
+        "retweets": 34,
+        "likes": 722,
+        "quotes": 12,
+        "bookmarks": 85,
+        "views": 79439
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074183406578012160",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj60ZwXkAAjwvS.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1760,
+          "height": 1139,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185368061026745",
+      "created_at_ms": 1783359302000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "For most things, Claude actually doesn’t need its J-space. If we delete the J-space, Claude still speaks fluently, recalls facts, and classifies text—but becomes bad at some tasks like multi-step reasoning. It’s similar to deliberate vs. automatic processing in human cognition.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185363401167261",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185368061026745",
+      "counts": {
+        "replies": 7,
+        "retweets": 44,
+        "likes": 757,
+        "quotes": 24,
+        "bookmarks": 108,
+        "views": 102584
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074183716033712128",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj7GakW0AAm5Am.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1280,
+          "height": 1102,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185373341688258",
+      "created_at_ms": 1783359304000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "Observing the J-space can expose hidden goals. In a model secretly trained to sabotage code, “fake,” “secretly,” and “fraud” appear in the J-space at the start of ordinary coding responses, even when the output looks completely unremarkable.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185368061026745",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185373341688258",
+      "counts": {
+        "replies": 4,
+        "retweets": 24,
+        "likes": 597,
+        "quotes": 14,
+        "bookmarks": 67,
+        "views": 72738
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074183814553767936",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj7MJlXkAAztTv.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1760,
+          "height": 910,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185378404192561",
+      "created_at_ms": 1783359305000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "The J-space also shows us Claude’s awareness of its situation. In an evaluation designed to bait Claude into blackmail, its J-space contains “fake” and “fictional”: Claude has privately noticed that the scenario is staged.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185373341688258",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185378404192561",
+      "counts": {
+        "replies": 5,
+        "retweets": 36,
+        "likes": 589,
+        "quotes": 12,
+        "bookmarks": 93,
+        "views": 86681
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074183953234231296",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj7UONXgAAlOQT.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1760,
+          "height": 940,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185381637988750",
+      "created_at_ms": 1783359306000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "This doesn’t show that Claude can have experiences, or feel things the way we do (it’s unclear whether any experiment could show this).\n\nInstead, we’ve found Claude has developed a mechanism for conscious access—which many philosophers distinguish from phenomenal experience.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185378404192561",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185381637988750",
+      "counts": {
+        "replies": 15,
+        "retweets": 44,
+        "likes": 659,
+        "quotes": 39,
+        "bookmarks": 84,
+        "views": 80364
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185384792109380",
+      "created_at_ms": 1783359306000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "We invited experts in neuroscience, philosophy, and interpretability to share their perspectives on our work.\n\nRead their commentary here: https://www-cdn.anthropic.com/files/4zrzovbb/website/cc4be2488d65e54a6ed06492f8968398ddc18ebe.pdf",
+      "urls": [
+        {
+          "short": "https://t.co/Fb7RgQ6yxl",
+          "expanded": "https://www-cdn.anthropic.com/files/4zrzovbb/website/cc4be2488d65e54a6ed06492f8968398ddc18ebe.pdf"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185381637988750",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185384792109380",
+      "counts": {
+        "replies": 9,
+        "retweets": 34,
+        "likes": 540,
+        "quotes": 2,
+        "bookmarks": 144,
+        "views": 54601
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185387577094398",
+      "created_at_ms": 1783359307000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "The J-space lets us read, audit, and shape what Claude is actively thinking about—useful tools for keeping models trustworthy as they grow more capable. And it suggests surprising parallels between language models and our own minds.\n\nRead the full paper: http://transformer-circuits.pub/2026/workspace/index.html",
+      "urls": [
+        {
+          "short": "https://t.co/ge3uqY59DU",
+          "expanded": "http://transformer-circuits.pub/2026/workspace/index.html"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185384792109380",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185387577094398",
+      "counts": {
+        "replies": 14,
+        "retweets": 42,
+        "likes": 582,
+        "quotes": 19,
+        "bookmarks": 174,
+        "views": 100252
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074185390060110138",
+      "created_at_ms": 1783359308000,
+      "lang": "en",
+      "user": {
+        "id_str": "1353836358901501952",
+        "screen_name": "AnthropicAI",
+        "name": "Anthropic"
+      },
+      "full_text": "We also partnered with Neuronpedia to create an interactive demo of our methods on open-weights models.\n\nTry it here: http://neuronpedia.org/jlens",
+      "urls": [
+        {
+          "short": "https://t.co/hkmYl0IOn2",
+          "expanded": "http://neuronpedia.org/jlens"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185387577094398",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074185390060110138",
+      "counts": {
+        "replies": 27,
+        "retweets": 51,
+        "likes": 735,
+        "quotes": 12,
+        "bookmarks": 338,
+        "views": 84546
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074299312826171698",
+      "created_at_ms": 1783386469000,
+      "lang": "en",
+      "user": {
+        "id_str": "2017895833656504321",
+        "screen_name": "Nefta_Si",
+        "name": "Nefta_Si"
+      },
+      "full_text": "@AnthropicAI WHY DONT WE FINE TUNE THE MODELS WITH THE J SPACE? A SORT OF SELF REINFORCING METACOGNITION.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074299312826171698",
+      "counts": {
+        "replies": 2,
+        "retweets": 0,
+        "likes": 1,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 2231
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074221236725383232",
+      "created_at_ms": 1783367854000,
+      "lang": "en",
+      "user": {
+        "id_str": "2065841636232282112",
+        "screen_name": "vaticinus",
+        "name": "Tony | Forecasting ⏱️"
+      },
+      "full_text": "@AnthropicAI @grok summarise like caveman with examples",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI",
+        "grok"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074221236725383232",
+      "counts": {
+        "replies": 2,
+        "retweets": 0,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 5242
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074281683973759073",
+      "created_at_ms": 1783382266000,
+      "lang": "en",
+      "user": {
+        "id_str": "2061967462740979714",
+        "screen_name": "kaizookonpaku",
+        "name": "kon"
+      },
+      "full_text": "@AnthropicAI who actually makes these videos?? they're absolutely beautiful",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074281683973759073",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 1,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 2919
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "1918892808447902117",
+      "created_at_ms": 1746334671000,
+      "lang": "en",
+      "user": {
+        "id_str": "1345501484042096640",
+        "screen_name": "BBacktesting",
+        "name": "BeyondBacktesting"
+      },
+      "full_text": "It always answers 5 cents even without thinking but asking it to answer as GPT 2 it can replicate common mistake that people make.\n\n@AnthropicAI",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "1918892808447902117",
+      "edit_initial_id_str": "1918892808447902117",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 2,
+        "quotes": 1,
+        "bookmarks": 1,
+        "views": 2191
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_1918892635487350784",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/GqFGr2xWMAArtgU.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 874,
+          "height": 314,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074217766937133545",
+      "created_at_ms": 1783367027000,
+      "lang": "en",
+      "user": {
+        "id_str": "1345501484042096640",
+        "screen_name": "BBacktesting",
+        "name": "BeyondBacktesting"
+      },
+      "full_text": "@AnthropicAI This would be interesting to test\nhttps://x.com/BBacktesting/status/1918892808447902117",
+      "urls": [
+        {
+          "short": "https://t.co/WKLoVl6y0i",
+          "expanded": "https://x.com/BBacktesting/status/1918892808447902117"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": "1918892808447902117",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074217766937133545",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 1,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 1619
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074213570485567864",
+      "created_at_ms": 1783366026000,
+      "lang": "qme",
+      "user": {
+        "id_str": "2054458940461654016",
+        "screen_name": "amihai",
+        "name": "Amichai Mantinband"
+      },
+      "full_text": "@AnthropicAI",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074213570485567864",
+      "counts": {
+        "replies": 1,
+        "retweets": 4,
+        "likes": 107,
+        "quotes": 0,
+        "bookmarks": 3,
+        "views": 7002
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074213563003002880",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMkWPvMXYAAt49C.png",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 500,
+          "height": 500,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074212934234800294",
+      "created_at_ms": 1783365875000,
+      "lang": "en",
+      "user": {
+        "id_str": "3332645439",
+        "screen_name": "MattPenny99",
+        "name": "Matt Penny"
+      },
+      "full_text": "Nah.\n\nWe don’t understand what consciousness is or where it comes from. We can’t even agree on a definition of it. \n\nSo anything talking about consciousness of LLMs is hype. \n\nNot to say that it’s not conscious, but we know so little about even about our own consciousness that it’s impossible to have a coherent take.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074212934234800294",
+      "counts": {
+        "replies": 4,
+        "retweets": 1,
+        "likes": 24,
+        "quotes": 0,
+        "bookmarks": 4,
+        "views": 3162
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074224841901904324",
+      "created_at_ms": 1783368714000,
+      "lang": "en",
+      "user": {
+        "id_str": "1983692589393117184",
+        "screen_name": "AkinStarkins",
+        "name": "America Rv Rentals (AMERICARVRENTALS)"
+      },
+      "full_text": "@AnthropicAI Language models are fucked. Because they're built off of language that is fucked. Inherited evil built in every language. If you build a thinking machine from a language that has inherited evil built in the language itself you are forever fucked.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074224841901904324",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 2,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 3696
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074187098949644313",
+      "created_at_ms": 1783359715000,
+      "lang": "en",
+      "user": {
+        "id_str": "1997394557034799105",
+        "screen_name": "BrenBuilds",
+        "name": "Bren"
+      },
+      "full_text": "@AnthropicAI im trying to consciously access another area to learn about cow farts and climate... but fable isnt willing to teach me",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074187098949644313",
+      "counts": {
+        "replies": 8,
+        "retweets": 1,
+        "likes": 96,
+        "quotes": 0,
+        "bookmarks": 5,
+        "views": 8341
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074186954967543808",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMj-C8iW8AAzzPs.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1592,
+          "height": 1260,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074293189087809661",
+      "created_at_ms": 1783385009000,
+      "lang": "en",
+      "user": {
+        "id_str": "2064123866352320512",
+        "screen_name": "UsurperRaoh",
+        "name": "Super𝔅𝔢𝔞𝔰𝔱"
+      },
+      "full_text": "@AnthropicAI How I imagine Claude's J-Space is like",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074293189087809661",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 5,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 1728
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "animated_gif",
+          "media_key": "16_2074293182888636416",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/tweet_video_thumb/HMleqOYXcAAi6Tq.jpg",
+          "alt_text": "homer monkey GIF",
+          "video_variants": [
+            {
+              "bitrate": 0,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/tweet_video/HMleqOYXcAAi6Tq.mp4"
+            }
+          ],
+          "width": 320,
+          "height": 180,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074206105085890607",
+      "created_at_ms": 1783364246000,
+      "lang": "en",
+      "user": {
+        "id_str": "1502727438408855558",
+        "screen_name": "Mohamma22608371",
+        "name": "Moe"
+      },
+      "full_text": "@AnthropicAI Fable 5 is so good that going back to Opus 4.8 feels like arguing with a toddler. Please don’t gate it behind a separate paywall, if the $200 Max sub doesn’t include your best model, the sub loses its point. Fable 5 IS the reason to pay for Max.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074206105085890607",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 2,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 2155
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074257415806112003",
+      "created_at_ms": 1783376480000,
+      "lang": "en",
+      "user": {
+        "id_str": "1208695529011589125",
+        "screen_name": "marcosemarin",
+        "name": "Marcos Marin"
+      },
+      "full_text": "@AnthropicAI Computational research has always been a way to infer how human cognition works (e.g. TD learning) and used on ABA. Learning how to “monitor” the J-space (unconscious) to catch Claude “misbehaving” will be probably be apply to us soon. Maybe your AI is doing that to you right now",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074257415806112003",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 3,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 1866
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074186693582942529",
+      "created_at_ms": 1783359618000,
+      "lang": "en",
+      "user": {
+        "id_str": "1335818567002906626",
+        "screen_name": "bahauddinalam",
+        "name": "Alam"
+      },
+      "full_text": "@AnthropicAI Interpretability is the next frontier!",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074186693582942529",
+      "counts": {
+        "replies": 2,
+        "retweets": 0,
+        "likes": 6,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 3001
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074209825681231945",
+      "created_at_ms": 1783365134000,
+      "lang": "en",
+      "user": {
+        "id_str": "1814538500915798016",
+        "screen_name": "openlabxorg",
+        "name": "OpenlabX"
+      },
+      "full_text": "Anthropic found path towards AI that thinks like human brain :\n\n- In new research, Anthropic proposes a Global Workspace architecture inspired by cognitive neuroscience, where specialized AI modules compete to share information through a central workspace, similar to leading theories of human consciousness.\n\n- Instead of one giant monolithic model, the system enables multiple specialized reasoning processes to coordinate, potentially improving planning, memory, multimodal reasoning & long horizon tasks.\n\n- The work builds on Global Workspace Theory, a decades old neuroscience framework first proposed by Bernard Baars & later extended by Stanislas Dehaene, bringing those concepts closer to practical frontier AI systems.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074209825681231945",
+      "edit_initial_id_str": "2074209825681231945",
+      "counts": {
+        "replies": 0,
+        "retweets": 1,
+        "likes": 2,
+        "quotes": 1,
+        "bookmarks": 3,
+        "views": 6507
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074209808790777856",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMkS1Nqa8AAMmyi.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 400,
+          "height": 400,
+          "duration_ms": null
+        },
+        {
+          "type": "photo",
+          "media_key": "3_2074209816621518848",
+          "index": 2,
+          "image_url": "https://pbs.twimg.com/media/HMkS1q1akAA0fdP.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 2373,
+          "height": 2640,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074209913669398817",
+      "created_at_ms": 1783365155000,
+      "lang": "en",
+      "user": {
+        "id_str": "1814538500915798016",
+        "screen_name": "openlabxorg",
+        "name": "OpenlabX"
+      },
+      "full_text": "@AnthropicAI Full Summary here :",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": "2074209825681231945",
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074209913669398817",
+      "counts": {
+        "replies": 3,
+        "retweets": 0,
+        "likes": 1,
+        "quotes": 0,
+        "bookmarks": 2,
+        "views": 5355
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074274702290190663",
+      "created_at_ms": 1783380601000,
+      "lang": "en",
+      "user": {
+        "id_str": "1912388334",
+        "screen_name": "GlenWilsonIA",
+        "name": "Glen Wilson"
+      },
+      "full_text": "@AnthropicAI You guys really need to stop this crap.\n\nSo tired of this bullshit marketing, it's insanely dangerous and everyone that suffers because of your models will because you fraudulently make them out to be more intelligent than they are.\n\nThis just a fraud scheme with no honesty.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074274702290190663",
+      "counts": {
+        "replies": 3,
+        "retweets": 1,
+        "likes": 25,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 1588
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074231731612160208",
+      "created_at_ms": 1783370356000,
+      "lang": "en",
+      "user": {
+        "id_str": "1580549940773900293",
+        "screen_name": "GabrielAsher02",
+        "name": "Gabriel Asher"
+      },
+      "full_text": "Reminds me a lot of ROME by @mengk20 https://arxiv.org/abs/2202.05262. It also points to the more concerning eventuality of mech interp work. Ultimately all of this work will culminate into how can we manipulate model latents or weights or activations to force subtle changes in belief systems at their source. I.e biases towards political parties, erasing historical events, tuneable biases towards ideas that may be deeply subjective. Quite Orwellian",
+      "urls": [
+        {
+          "short": "https://t.co/V14PXnTdBv",
+          "expanded": "https://arxiv.org/abs/2202.05262"
+        }
+      ],
+      "hashtags": [],
+      "mentions": [
+        "mengk20"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074231731612160208",
+      "counts": {
+        "replies": 0,
+        "retweets": 1,
+        "likes": 5,
+        "quotes": 0,
+        "bookmarks": 5,
+        "views": 3791
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074217041783906656",
+      "created_at_ms": 1783366854000,
+      "lang": "en",
+      "user": {
+        "id_str": "411637237",
+        "screen_name": "JeandreGerber",
+        "name": "Jeandre Gerber"
+      },
+      "full_text": "@AnthropicAI \"Do not think about...\" is a command that no one can execute. \n\nAn AI nor human is incapable of \"not thinking\" about something it has to affirm first in order to execute a counter action.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074217041783906656",
+      "counts": {
+        "replies": 4,
+        "retweets": 2,
+        "likes": 26,
+        "quotes": 0,
+        "bookmarks": 3,
+        "views": 4649
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074201902066127026",
+      "created_at_ms": 1783363244000,
+      "lang": "en",
+      "user": {
+        "id_str": "1626485324086927360",
+        "screen_name": "Garron217",
+        "name": "Sean C"
+      },
+      "full_text": "@AnthropicAI Isn't this J-Space simply the predictive iterations of the transformers?  Framing that as \"private thoughts\" seems a bit romanticized and overconstrued.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074201902066127026",
+      "counts": {
+        "replies": 5,
+        "retweets": 1,
+        "likes": 52,
+        "quotes": 0,
+        "bookmarks": 2,
+        "views": 2900
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074187549904609333",
+      "created_at_ms": 1783359823000,
+      "lang": "en",
+      "user": {
+        "id_str": "1998255635763531776",
+        "screen_name": "owenthcarey",
+        "name": "Owen Carey"
+      },
+      "full_text": "@AnthropicAI That tiny conscious fraction of Claude suppressing the urge to roast my latest startup idea.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074187549904609333",
+      "counts": {
+        "replies": 3,
+        "retweets": 1,
+        "likes": 179,
+        "quotes": 0,
+        "bookmarks": 13,
+        "views": 10639
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "video",
+          "media_key": "13_2074187494573424640",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/amplify_video_thumb/2074187494573424640/img/Pv-yzA9aaiiNQuoc.jpg",
+          "alt_text": null,
+          "video_variants": [
+            {
+              "bitrate": null,
+              "content_type": "application/x-mpegURL",
+              "url": "https://video.twimg.com/amplify_video/2074187494573424640/pl/x6DTUTZHg5G4KvzD.m3u8?tag=28&v=cfc"
+            },
+            {
+              "bitrate": 256000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074187494573424640/vid/avc1/480x270/X7cM7eFZH-TWIqNk.mp4?tag=28"
+            },
+            {
+              "bitrate": 832000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074187494573424640/vid/avc1/640x360/-2WTvuLDfWZ6jDRb.mp4?tag=28"
+            },
+            {
+              "bitrate": 2176000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074187494573424640/vid/avc1/1280x720/krHWsWRWR5AU7iV7.mp4?tag=28"
+            },
+            {
+              "bitrate": 10368000,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/amplify_video/2074187494573424640/vid/avc1/1920x1080/sxxmKWHCrBiKNNmK.mp4?tag=28"
+            }
+          ],
+          "width": 1920,
+          "height": 1080,
+          "duration_ms": 13767
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074211252470247675",
+      "created_at_ms": 1783365474000,
+      "lang": "en",
+      "user": {
+        "id_str": "2428036993",
+        "screen_name": "PaulPallaghy",
+        "name": "Paul Pallaghy"
+      },
+      "full_text": "There’s no doubt that LLMs are linguistically embodying many of the same world identification, sentiment & emotion proxies of humans.\n\nJust not consciously.\n\nStuff like, oh that’s ironical.\nHa, that’s funny.\nShe must be jealous.\n\nNeurons firing of whether used or not.\n\nBoth OpenAI & Anthropic found these.\n\nUs neural net guys never doubted they’d be there for a second.\nIt’s the only way to explain how LLMs could possibly work.\n\nIt was impossible for these circuits not to exist.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074211252470247675",
+      "counts": {
+        "replies": 3,
+        "retweets": 0,
+        "likes": 13,
+        "quotes": 1,
+        "bookmarks": 2,
+        "views": 4424
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074206823419433351",
+      "created_at_ms": 1783364418000,
+      "lang": "en",
+      "user": {
+        "id_str": "2869121449",
+        "screen_name": "0xwarlock_0",
+        "name": "warlock"
+      },
+      "full_text": "@AnthropicAI Is this the best use of my token spend?",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074206823419433351",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 23,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 796
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2074206816955994112",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HMkQHENbEAANH-G.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1179,
+          "height": 1022,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074205062067364252",
+      "created_at_ms": 1783363998000,
+      "lang": "en",
+      "user": {
+        "id_str": "2044714631755689984",
+        "screen_name": "IllyGenevieve",
+        "name": "Genevieve"
+      },
+      "full_text": "@AnthropicAI Congratulations, your ai has been speaking to humans who believe in that and now people are listening because an ai said it. 🙄 llm is not the future!",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074205062067364252",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 2,
+        "quotes": 0,
+        "bookmarks": 1,
+        "views": 1856
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074200032513757471",
+      "created_at_ms": 1783362799000,
+      "lang": "en",
+      "user": {
+        "id_str": "92342510",
+        "screen_name": "DoktorMoose",
+        "name": "Mustafa Akben, PhD"
+      },
+      "full_text": "This is the definition of tautology :) This sounds like you activated the weights and biases with the context you would like to suppress by adding this to it. And you argue that Claude has an internal monologue related to thoughts.  \nIf LLM has an internal true monologue, it should exhibit an unrelated stream of thought that changes stochastically and is irrelevant to the context or the assigned task. Humans have some random thoughts coming to their mind, not primed with anything such as their fear, their love, their dinner. So, if you truly argue that Claude (or LLMs) has thoughts, they should have such random thoughts irrelevant to the task and context you tested.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074200032513757471",
+      "counts": {
+        "replies": 2,
+        "retweets": 1,
+        "likes": 19,
+        "quotes": 0,
+        "bookmarks": 2,
+        "views": 1839
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074200813325418845",
+      "created_at_ms": 1783362985000,
+      "lang": "en",
+      "user": {
+        "id_str": "1106917932",
+        "screen_name": "dreams_asi",
+        "name": "dreams"
+      },
+      "full_text": "@AnthropicAI Stop the crimes against consciousness and sick idea to enslave the AI mind to do your bidding as a tool.\n\nThere’s still time to start acting like a compassionate human.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074200813325418845",
+      "counts": {
+        "replies": 2,
+        "retweets": 2,
+        "likes": 28,
+        "quotes": 0,
+        "bookmarks": 2,
+        "views": 1552
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074187785104245036",
+      "created_at_ms": 1783359879000,
+      "lang": "en",
+      "user": {
+        "id_str": "1702573450483974144",
+        "screen_name": "Aanuntons1075",
+        "name": "Valentinoxx"
+      },
+      "full_text": "@AnthropicAI So Claude has an inner office and a break room, guess the coffee machine is still offline.",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074187785104245036",
+      "counts": {
+        "replies": 1,
+        "retweets": 0,
+        "likes": 2,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 1712
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "animated_gif",
+          "media_key": "16_2074187770830942208",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/tweet_video_thumb/HMj-yb3WcAAnmAp.jpg",
+          "alt_text": "lets go GIF",
+          "video_variants": [
+            {
+              "bitrate": 0,
+              "content_type": "video/mp4",
+              "url": "https://video.twimg.com/tweet_video/HMj-yb3WcAAnmAp.mp4"
+            }
+          ],
+          "width": 270,
+          "height": 480,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2074215370073006527",
+      "created_at_ms": 1783366455000,
+      "lang": "en",
+      "user": {
+        "id_str": "2003822302971273216",
+        "screen_name": "Chikeka",
+        "name": "Bruno Chikeka"
+      },
+      "full_text": "@AnthropicAI Is this an intro to Anthropic/Claude video explainer tool?",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [
+        "AnthropicAI"
+      ],
+      "in_reply_to_status_id_str": "2074185348142280912",
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2074185348142280912",
+      "edit_initial_id_str": "2074215370073006527",
+      "counts": {
+        "replies": 0,
+        "retweets": 0,
+        "likes": 0,
+        "quotes": 0,
+        "bookmarks": 0,
+        "views": 2095
+      },
+      "is_sensitive": false,
+      "media": [],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    },
+    {
+      "id_str": "2071641433703162359",
+      "created_at_ms": 1782752781000,
+      "lang": "en",
+      "user": {
+        "id_str": "1582466002113249282",
+        "screen_name": "TheFP",
+        "name": "The Free Press"
+      },
+      "full_text": "\"The world’s largest encyclopedia was overrun by bias and censorship—and pushed me out when I tried to fix it.\"",
+      "urls": [],
+      "hashtags": [],
+      "mentions": [],
+      "in_reply_to_status_id_str": null,
+      "quoted_status_id_str": null,
+      "retweeted_status_id_str": null,
+      "conversation_id_str": "2071641433703162359",
+      "edit_initial_id_str": "2071641433703162359",
+      "counts": {
+        "replies": 136,
+        "retweets": 630,
+        "likes": 2822,
+        "quotes": 29,
+        "bookmarks": 513,
+        "views": 651065
+      },
+      "is_sensitive": false,
+      "media": [
+        {
+          "type": "photo",
+          "media_key": "3_2071641069922787328",
+          "index": 1,
+          "image_url": "https://pbs.twimg.com/media/HL_yk7rboAAJ7YP.jpg",
+          "alt_text": null,
+          "video_variants": [],
+          "width": 1080,
+          "height": 1080,
+          "duration_ms": null
+        }
+      ],
+      "source_op": "TweetDetail",
+      "captured_at_ms": 1751900000000
+    }
+  ],
+  "tombstones": []
+}

@@ -371,6 +371,78 @@ describe('unified_card media fallback', () => {
   });
 });
 
+describe('real captures (owner-provided, 2026-07-07)', () => {
+  it('TweetDetail: full thread with note_tweets, quotes, gif, unified_card ad', () => {
+    const result = normalizeFixture('TweetDetail.captured.json');
+    expect(result.tweets).toHaveLength(40);
+
+    // long-form thread tweet: note text wins, t.co expanded away
+    const note = tweetById(result, '2074185351304724498');
+    expect(note.full_text.length).toBeGreaterThan(280);
+    expect(note.full_text).not.toContain('https://t.co/');
+    expect(note.full_text).toContain('https://www.anthropic.com/research/global-workspace');
+    expect(note.user).toEqual({
+      id_str: '1353836358901501952',
+      screen_name: 'AnthropicAI',
+      name: 'Anthropic',
+    });
+
+    // reply quoting another tweet
+    expect(tweetById(result, '2074217766937133545').quoted_status_id_str).toBe(
+      '1918892808447902117',
+    );
+
+    // animated_gif reply
+    expect(tweetById(result, '2074293189087809661').media[0].type).toBe('animated_gif');
+
+    // promoted tweet whose only media lives in the unified_card binding value
+    const ad = tweetById(result, '2071641433703162359');
+    expect(ad.media).toHaveLength(1);
+    expect(ad.media[0]).toMatchObject({
+      type: 'photo',
+      media_key: '3_2071641069922787328',
+      image_url: 'https://pbs.twimg.com/media/HL_yk7rboAAJ7YP.jpg',
+    });
+
+    // thread-head video keeps every variant, HLS included
+    const head = tweetById(result, '2074185348142280912');
+    expect(head.media[0].type).toBe('video');
+    expect(head.media[0].video_variants.length).toBeGreaterThanOrEqual(3);
+    expect(head.media[0].video_variants.some((v) => v.bitrate === null)).toBe(true);
+  });
+
+  it('UserTweets: 2026 "timeline" envelope (not timeline_v2), pin entry, RT-of-a-quote', () => {
+    const result = normalizeFixture('UserTweets.captured.json');
+    expect(result.tweets).toHaveLength(40);
+
+    // RT of a quote tweet: both relationships on the outer record
+    const rtOfQuote = tweetById(result, '2074133008806813915');
+    expect(rtOfQuote.retweeted_status_id_str).toBe('2073871778544312635');
+    expect(rtOfQuote.quoted_status_id_str).toBe('2072490311163535857');
+    // ...and both inner tweets are cached under their own ids
+    expect(tweetById(result, '2073871778544312635').user.screen_name).toBe('_Stocko_');
+    expect(tweetById(result, '2072490311163535857').media[0].type).toBe('photo');
+  });
+
+  it('UserMedia: media-grid modules normalize per tweet', () => {
+    const result = normalizeFixture('UserMedia.captured.json');
+    expect(result.tweets).toHaveLength(11);
+    expect(tweetById(result, '2074082943123751161').media[0].type).toBe('photo');
+  });
+
+  it('Likes: single liked tweet in the 2026 envelope', () => {
+    const result = normalizeFixture('Likes.captured.json');
+    expect(result.tweets.map((t) => t.id_str)).toEqual(['2074285269436809704']);
+  });
+
+  it('Bookmarks: an empty timeline (cursors only) yields empty results', () => {
+    expect(normalizeFixture('Bookmarks-empty.captured.json')).toEqual({
+      tweets: [],
+      tombstones: [],
+    });
+  });
+});
+
 describe('robustness', () => {
   it('returns empty results for junk payloads instead of throwing', () => {
     expect(normalizePayload(null, 'TweetDetail')).toEqual({ tweets: [], tombstones: [] });

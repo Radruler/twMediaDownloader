@@ -6,8 +6,12 @@ normalizer output for each fixture — regenerate deliberately with
 `npm run update-expected` and review the diff; never regenerate to "make
 tests pass" without checking the output is actually right.
 
-Everything here is currently **synthetic** (`*.synthetic.json`). Real,
-redacted captures replace them via the workflow in
-[docs/CAPTURE_FIXTURES.md](../../../docs/CAPTURE_FIXTURES.md); name those
-`*.captured.json` and delete the synthetic file they supersede in the same
-commit.
+`*.captured.json` are **real** payloads (owner-captured 2026-07-07, cursor
+values redacted); `*.synthetic.json` are hand-written. New captures arrive
+via the workflow in
+[docs/CAPTURE_FIXTURES.md](../../../docs/CAPTURE_FIXTURES.md). A synthetic
+fixture is deleted once real captures cover everything it covers — the ones
+still here each guard a shape the real set lacks (tombstone-in-thread,
+TweetWithVisibilityResults, sensitive flag, `timeline_v2` envelope,
+TimelineAddToModule, SearchTimeline/HomeTimeline/TweetResultByRestId
+envelopes); see each file's `__fixture.covers`.
