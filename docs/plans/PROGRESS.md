@@ -6,10 +6,10 @@ Binding context, in order: docs/plans/00-overview.md (Decisions Log),
 docs/plans/step-2-handoff.md, docs/plans/04-metadata-sidecar.md,
 docs/plans/06-local-companion-app.md.
 
-**Branch policy for this dispatch:** all work is committed and pushed to
-`claude/twitter-media-archiver-cucc56` (the environment-designated branch;
-this session may not push to master). The remote branch is the handoff
-medium — every green commit is pushed immediately.
+**Branch policy for this dispatch:** work was developed on
+`claude/twitter-media-archiver-cucc56` and fast-forwarded to `master` at
+the owner's request (2026-07-07, commit 1dbb8c9) — master is current.
+The remote is the handoff medium — every green commit is pushed.
 
 ## NEXT ACTION
 
