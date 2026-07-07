@@ -47,8 +47,11 @@ A Manifest V3 extension (Chrome; Firefox via MV2/MV3 variant) for `x.com`. A tin
 | [03-ui.md](03-ui.md) | Download buttons everywhere (incl. media viewer full view — the reported bug), selectors, feedback UX | cache API *contract* only | Yes |
 | [04-metadata-sidecar.md](04-metadata-sidecar.md) | Sidecar `.txt`/`.json` spec, filename module, save layer (`chrome.downloads`) | cache API *contract* only | Yes |
 | [05-alternative-architectures.md](05-alternative-architectures.md) | Spec/evaluation: File System Access, `chrome.debugger` zero-request capture, native-messaging desktop helper, CDP desktop app | — | Yes — research/spec only |
+| [06-local-companion-app.md](06-local-companion-app.md) | Local companion app: extension captures, app downloads/writes/keeps a "recently viewed" library. **Amends 05's verdict** (D+E hybrid is now the target end-state) and 01 (shared `packages/core`, TypeScript for core) | 01, 02 contracts | App itself: yes, after core lands |
 
-**Suggested build order if serialized:** 01 → 02 → 03+04 → bulk-download rebuild (02 §6) → 05 extensions as wanted.
+See also [discussion-02-vs-05.md](discussion-02-vs-05.md) for the reasoning that led to plan 06.
+
+**Suggested build order if serialized:** 01 → 02 → 03+04 → bulk-download rebuild (02 §6) → 06 (transport, app, library UI) → 05's Option B if still wanted.
 
 ## Module contract (agree on this before parallel work)
 
