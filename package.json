@@ -1,7 +1,24 @@
 {
+  "name": "twmediadownloader",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "update-expected": "node scripts/update-expected.mjs"
+  },
   "devDependencies": {
+    "@types/node": "^26.1.0",
+    "esbuild": "^0.25.5",
     "eslint": "^6.8.0",
-    "eslint-plugin-jquery": "^1.5.1"
+    "eslint-plugin-jquery": "^1.5.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "acorn": "^7.1.1",
