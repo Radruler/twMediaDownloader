@@ -4,6 +4,42 @@ Written 2026-07 by the step-2 agent, for the step 3a (UI), 3b (save), and 5
 (companion app) agents. Read 00-overview's Decisions Log first; it still
 overrides everything, including this file.
 
+## STATUS MARKER (final, 2026-07-07) — step 2 is DONE
+
+**Done in this pass:**
+- `packages/core` (TS): TweetRecord/TombstoneEvent contract + `graphql-normalize`
+  (generic walker; note_tweet, visibility wrappers, RT/quote recursion,
+  core+legacy user locations, unified_card port, tombstone events, snowflake
+  date fallback).
+- `extension/content/`: MAIN-world `page-interceptor.js` (fetch+XHR, pass-list,
+  string CustomEvent bridge, 126 lines, zero requests ever issued),
+  `tweet-cache.js` (LRU 5000, 00-overview API), isolated entry with debug
+  overlay + fixture-capture mode.
+- Tooling: esbuild `npm run build` → loadable MV3 `dist/` (src/ untouched),
+  vitest at root — 62 tests green, `tsc --noEmit` clean.
+- Fixtures: synthetics for 8 operations + edge cases, **plus real owner
+  captures for TweetDetail / UserTweets / UserMedia / Likes / empty Bookmarks**
+  — all normalized with zero code changes (live envelope is
+  `data.user.result.timeline`, users in `user.core`; both confirmed).
+- Docs: CAPTURE_FIXTURES.md workflow, this handoff, 00-overview contract
+  amendments (retweeted_status_id_str, edit_initial_id_str, tombstones).
+
+**Deliberately NOT done (scope boundaries, not oversights):**
+- Step-1 cleanup: no dead code deleted, no options/UI/locales/manifest-in-src
+  changes, no CLAUDE.md/ARCHITECTURE.md, `src/js/config.js` cookie-logging
+  debug code left as-is per dispatch instructions.
+- No UI layer (3a), no save layer (3b), no bulk/scroll driver (4), no
+  companion app (5). Tombstone events stop at the debug surface — step 5
+  wires them onward.
+- Real captures still missing: SearchTimeline, HomeTimeline, a real
+  tombstone thread, a non-empty Bookmarks (synthetics stand in; see
+  CAPTURE_FIXTURES.md status note).
+- Not verified in a real Chrome: loading `dist/` and the scroll walkthrough
+  below — this environment has no browser+x.com session. Everything else
+  (build output, manifest injection, tests) is machine-verified.
+- Firefox <128 `<script>`-injection fallback not implemented (Chrome-first,
+  Decision 10).
+
 ## What landed
 
 ```

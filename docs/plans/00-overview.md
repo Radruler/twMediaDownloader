@@ -105,7 +105,7 @@ Instruction format: "Read `docs/plans/` (00 first, Decisions Log is binding), th
 |---|---|---|---|
 | 0 | Owner pushes the newer repo version (x.com fixes); agent reconciles 00's assessment + 01's deletion table against it | — | gate for everything |
 | 1 | Dead-code removal + `packages/core`/`extension`/`app` scaffold + esbuild/vitest + CLAUDE.md/ARCHITECTURE.md | 01 (+06 §6 layout) | single agent |
-| 2 | Interceptor + normalizer (TS, in core) + tweet cache + fixtures. **Includes live-site verification pass** (capture real payloads → fixtures) | 02 | single agent; unlocks everything |
+| 2 | **DONE 2026-07-07** (see [step-2-handoff.md](step-2-handoff.md)) — Interceptor + normalizer (TS, in core) + tweet cache + fixtures. Live-site verification: real captures for 5 ops landed; SearchTimeline/HomeTimeline/tombstone captures still pending | 02 | single agent; unlocks everything |
 | 3a | UI layer: buttons everywhere incl. media viewer, toasts, selectors module | 03 | parallel with 3b |
 | 3b | Save layer: chrome.downloads, filename+sidecar in core, standalone mode complete | 04 | parallel with 3a |
 | 4 | Bulk rebuild: scroll driver + dialog port + standalone ZIP output | 02 §6, 03 §6, 04 §5 | after 3a+3b |
