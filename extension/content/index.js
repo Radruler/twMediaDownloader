@@ -15,6 +15,7 @@
 
 import { normalizePayload } from '@twmd/core';
 import { TweetCache } from './tweet-cache.js';
+import { saveTweet } from './save.js';
 
 const LAST_IDS_MAX = 25;
 const TOMBSTONES_MAX = 100;
@@ -104,6 +105,17 @@ window.__twmdDebug = {
   unlistedOps: () => Object.fromEntries(state.unlistedOps),
   rawPayloads: () => [...state.rawByOp.keys()],
   get: (id) => TweetCache.get(id),
+  /**
+   * Temporary debug trigger for the save layer (plan 04 B4) until the 3a UI
+   * exists: __twmdDebug.save('<tweet id>') saves all media + sidecar to
+   * Downloads/twMediaDownloader/<screen_name>/.
+   * options.sidecar: 'txt' (default) | 'json' | 'both' | 'none'.
+   */
+  save: (id, options) =>
+    saveTweet(id, options).then((result) => {
+      console.log('[twmd] save result:', result);
+      return result;
+    }),
 };
 
 // ---- debug overlay ----

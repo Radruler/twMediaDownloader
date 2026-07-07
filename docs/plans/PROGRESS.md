@@ -13,16 +13,19 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> B1+B2 (milestone A DONE): add "downloads" permission via build.mjs
-> manifest step (src/manifest.json untouched); create
-> extension/background/save-worker.js (minimal SW addition handling
-> {type:'twmd-save', items:[{url|dataUrl, filename}]} →
-> chrome.downloads.download conflictAction 'uniquify') and
-> extension/content/save.js (tweetId → TweetCache.get → planMediaDownload
-> → fetch bytes plain GET no headers → blob→dataURL → runtime.sendMessage;
-> sidecar txt via data: URL; paths via standaloneRelativePath). Wire
-> __twmdDebug.save(tweetId) into extension/content/index.js (B4). Bundle
-> via build.mjs. Then npm test/typecheck/build, commit, push.
+> C1+C2 (milestones A+B DONE): app/ workspace already scaffolded
+> (app/package.json + app/src/{config,db}.js written, NOT yet installed or
+> tested). Steps: (1) add "app" to root package.json workspaces; (2)
+> npm install (pulls ws + better-sqlite3 — if better-sqlite3 native build
+> fails, fall back to node:sqlite DatabaseSync and note in SURPRISES);
+> (3) write app/src/server.js (ws server 127.0.0.1:8465, pairing auth from
+> config token, frames per plan 06 §2: hello/hello_ack, seen, archive,
+> bulk_begin/bulk_end, request_template [strip cookie/auth headers],
+> tombstone [NEW frame type — plan amendment], status) + app/src/main.js
+> (loadConfig, print token on first run, log console); (4) vitest
+> test/app-db.test.ts (ingest against graphql expected fixtures) +
+> test/app-server.test.ts (real ws round-trip on port 0, in-memory db);
+> (5) npm test/typecheck/build green → commit, push.
 
 ## Checklist
 
@@ -58,17 +61,25 @@ State: `todo` | `doing` | `done <sha>`
       test/media-url.test.ts (14 tests). Exported from @twmd/core.
 
 ### MILESTONE B — save layer, extension wiring (plan 04)
-- [ ] **B1** `todo` — "downloads" permission added by build.mjs manifest
-      step (src/manifest.json NOT edited).
-- [ ] **B2** `todo` — extension/content/save.js: tweetId → TweetCache.get →
-      fetch media bytes (plain GET, NO custom headers) → message to service
-      worker; sidecar text → data: URL download. New minimal
-      extension/background.js bundled by build.mjs (src/js/background.js
-      untouched).
-- [ ] **B3** `todo` — saves land in Downloads/twMediaDownloader/<screen_name>/,
-      conflictAction 'uniquify', sidecar .txt on by default (Decisions 7/8/9).
-- [ ] **B4** `todo` — `__twmdDebug.save(tweetId)` debug trigger in
-      extension/content/index.js debug surface.
+- [x] **B1** `done` (commit "extension: standalone save layer") —
+      build.mjs adds "downloads" to dist manifest permissions; verified in
+      dist/manifest.json; src/manifest.json untouched.
+- [x] **B2** `done` (same commit) — extension/content/save.js
+      (buildSaveManifest pure planner + saveTweet orchestration: cache →
+      planMediaDownload → plain fetch(url) w/ orig→4096→large fallback →
+      data: URLs → PORT 'twmd-save'); extension/background/save-worker.js
+      bundled to dist/js/save-worker.js; dist/background-wrapper.js
+      regenerated to import legacy background.js + save-worker.js (src
+      wrapper untouched). NOTE: uses chrome.runtime.connect PORT, not
+      sendMessage — legacy background.js NGs all unknown sendMessage types
+      synchronously, which would kill async responses.
+- [x] **B3** `done` (same commit) — standaloneRelativePath →
+      twMediaDownloader/<screen_name>/, conflictAction 'uniquify',
+      sidecar 'txt' default ('json'|'both'|'none' options).
+- [x] **B4** `done` (same commit) — __twmdDebug.save(tweetId, options?) in
+      extension/content/index.js. test/save.test.ts (6 tests) covers the
+      pure planner. Browser-side flow needs the owner's manual Chrome
+      walkthrough (documented in handoff at end of work).
 
 ### MILESTONE C — companion app M1 (plan 06 §2/§3/§7)
 - [ ] **C1** `todo` — app/ Node workspace (plain Node daemon + log console;
