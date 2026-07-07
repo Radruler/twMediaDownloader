@@ -13,6 +13,11 @@ Goal: make the codebase small, modular, and testable so that AI agents can safel
 | `src/js/zip_request_legacy.js`, `src/js/zip_worker.js` | 577 | `ENABLE_ZIPREQUEST` is force-disabled (`main_react.user.js:4778-4781`), background handler commented out (`background.js:287-291`). |
 | `src/js/decimal.min.js` | vendored | Only used for 64-bit tweet-ID math (`main_react.user.js:509-574`). Replace with native `BigInt` (snowflake epoch math: `(BigInt(id) >> 22n) + 1288834974657n`). |
 | `background.js` commented blocks | ~120 | Lines 44-57, 125-134, 328-413 are commented-out MV2 webRequest history. Delete; git history preserves them. |
+| Open-in-tabs + tab-sorting feature | ~200 | Decision 6 (00-overview): Alt+Click open-in-tabs is dropped, so delete `extension_functions.open_multi_tabs`/`request_tab_sorting` (`init.js:171-234`), `request_tab_sorting`/`TAB_SORT_REQUEST` in `background.js:99-172,235-244`, `is_open_media_mode()` and all `open_images`/`open_video` paths in `main_react.user.js`, the `OPEN_MEDIA_LINK_BY_DEFAULT` option everywhere (options page, locales), and the `pbs.twimg.com/media/*` content-script match in the manifests (it exists only for tab sorting). |
+
+> **Note (owner, 2026-07-07):** a newer version of this repo with x.com domain fixes is incoming.
+> Re-verify this deletion table against it before executing — line numbers and possibly the
+> domain-related items will shift; the reasoning stands.
 
 Also remove the corresponding entries from `manifest*.json` content-script lists, the `*://api.twitter.com/*` match (only needed for OAuth), and the OAuth/TweetDeck strings from `_locales/` and `options.js`/`options.html` if present.
 
@@ -82,7 +87,7 @@ MV3 content scripts can't use ES modules directly, so add a minimal bundler:
 
 ## 5. Explicitly *not* doing
 
-- No TypeScript migration in the first pass (adds a type-modeling task for the entire GraphQL surface while it's still being discovered; JSDoc types on the cache contract give 80% of the value). Revisit after the rebuild stabilizes.
+- ~~No TypeScript migration in the first pass~~ **Amended by Decision 1 + plan 06:** `packages/core` (normalize, TweetRecord types, filename, sidecar) is TypeScript from the start — it's the contract shared by extension and companion app. Extension/app code stays JS. Layout becomes `packages/core/`, `extension/`, `app/` (plan 06 §3).
 - No framework (React/Preact) for the dialog — it's one dialog; keep it as template-string DOM.
 - No renaming of user-visible things: extension name, storage keys (`twMediaDownloader_*` in `chrome.storage.local`), filename conventions, shortcut keys. Users' saved options and archives must survive the upgrade.
 

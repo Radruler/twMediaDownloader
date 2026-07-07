@@ -9,8 +9,8 @@ Today a per-tweet download zips images client-side and clicks a blob/data URL (`
 - Add `"downloads"` permission. Content script sends `{save: [{url|blobText, filename}]}` to the service worker; worker calls `chrome.downloads.download({ url, filename: 'twMediaDownloader/<screen_name>/<basename>', saveAs: false, conflictAction: 'uniquify' })`.
 - Per-tweet download saves **individual files** (media + sidecar) into a per-user subfolder of Downloads — no more one-zip-per-tweet (sidesteps the Firefox blob/data-URL warnings the legacy code fought, `main_react.user.js:4188-4193`).
 - Sidecar/text content: service workers can't `URL.createObjectURL`; pass sidecar text to the worker and download as a `data:text/plain;charset=utf-8;base64,…` URL (fine at sidecar sizes). ZIP blobs (bulk flow) stay in the content-script context where blob URLs work, or use an offscreen document if needed.
-- **Bulk download keeps producing a single ZIP** (unchanged user contract), now containing sidecars too (one per tweet) alongside the log/CSV.
-- Make "individual files vs per-tweet zip" an option if trivial; default individual.
+- **Bulk download keeps producing a single ZIP in standalone mode** (unchanged user contract), now containing sidecars too (one per tweet) alongside the log/CSV. In app-connected mode, bulk output is folder-per-run via the app (Decision 13, plan 06).
+- **Decision 8: per-tweet downloads are individual files only** — do not build a per-tweet-zip option.
 
 ## 2. Filenames (`content/filename.js`, pure + tested)
 
@@ -57,7 +57,7 @@ Exact layout can be tuned; requirements: post URL first line, full text verbatim
 
 The full `TweetRecord` (00-overview contract) plus `sidecar_version`, the list of saved filenames, and the chosen media URLs. Schema-versioned so downstream tooling can rely on it.
 
-Options page additions: sidecar on/off (default **on**), format txt/json/both (default txt), per-tweet zip vs individual files.
+Options page additions: sidecar on/off (default **on**), format txt/json/both (default **txt**, Decision 7).
 
 ## 4. Media selection rules (restating from plan 02 for the implementer)
 

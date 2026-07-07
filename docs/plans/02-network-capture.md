@@ -28,7 +28,7 @@ Turns a raw captured payload into `TweetRecord[]` (contract in 00-overview). Mus
 
 - Timeline instructions: `data.*.instructions[]` → `TimelineAddEntries` / `TimelinePinEntry` / module items; entries → `content.itemContent.tweet_results.result`.
 - `TweetDetail` threaded conversation entries (includes replies — each is a full tweet; cache them all).
-- Result wrappers: `Tweet` vs `TweetWithVisibilityResults` (unwrap `.tweet`), `TweetTombstone` (skip), `TweetUnavailable` (skip).
+- Result wrappers: `Tweet` vs `TweetWithVisibilityResults` (unwrap `.tweet`), `TweetTombstone` / `TweetUnavailable` — don't cache, but **emit a tombstone event carrying the entry's tweet id** when it can be derived (entryId); plan 06 uses these to flag deleted posts passively (Decision 18).
 - Nested tweets: `legacy.retweeted_status_result`, `quoted_status_result` — recurse; cache the inner tweets under their own IDs and record the relationship on the outer record.
 - Text: prefer `note_tweet.note_tweet_results.result.text` (long-form posts) over `legacy.full_text`; expand `entities.urls[].expanded_url` into the text; strip the trailing `https://t.co/…` media link.
 - Media: `legacy.extended_entities.media[]` → type, `media_url_https`, `ext_alt_text`, `video_info.variants` (keep all; selection happens at save time), `original_info` w/h, `media_key`.
@@ -50,10 +50,11 @@ For a per-tweet download where the clicked tweet isn't in the cache (should be r
 
 1. **DOM extraction** — for photos, the rendered `<img src="https://pbs.twimg.com/media/…?name=…">` gives the media ID; rewrite to `name=orig`. Text/author/date are also in the DOM. Covers photos fully without any request. (This is roughly what the legacy code did as its own fallback, `main_react.user.js:4340-4358`.)
 2. **Provoke the page** — for missing video variants: the data arrives via the page's own `TweetDetail` when the status page/media viewer opens. UI hint: "open the tweet to enable video download". Zero forged requests.
-3. **Last resort (off by default, explicit user opt-in in options): active `TweetResultByRestId` fetch.** If implemented, request parity rules:
-   - Same-origin `fetch` from the page context (MAIN world helper), so Chrome sends exactly the browser's cookies, `sec-ch-*`, `user-agent`, HTTP/2 fingerprint.
-   - Headers copied from a **live observed request** (the interceptor records the most recent GraphQL request's header set + queryId + features blob for reuse) — never hardcoded: `authorization` (public web bearer), `x-csrf-token` (= `ct0` cookie), `x-twitter-auth-type: OAuth2Session`, `x-twitter-active-user: yes`, `x-twitter-client-language`, and `x-client-transaction-id` *only if* a generator strategy is viable at implementation time; otherwise ship without this rung.
-   - Throttle: ≥5 s between calls, no retries beyond 1.
+
+**REJECTED (Decision 2, 00-overview): there is no rung 3.** An earlier draft allowed an opt-in
+active `TweetResultByRestId` fetch as a last resort; the owner rejected it — the extension never
+issues API requests itself, full stop. The ladder ends at rung 2. (Do not re-propose this;
+the header-template capture described in plan 06 §1 exists for the app's *CDN* fetches only.)
 
 Media byte fetches (images/videos) are *not* API calls and are always allowed: plain `GET` to `pbs.twimg.com` / `video.twimg.com` with no custom headers — identical to the user clicking "open image in new tab". Images: `?format=<ext>&name=orig` (fallback `name=4096x4096` then `large` on 404). Videos: highest-bitrate `video/mp4` variant from the cached `video_variants` (these are direct CDN mp4 URLs; no HLS handling needed when the variant list is available).
 

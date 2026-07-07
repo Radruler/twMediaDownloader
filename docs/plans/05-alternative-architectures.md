@@ -53,4 +53,10 @@ The "different-shaped app" the user asked about. Spec:
 | D: + native host | 0 | same as A | ✅ | ✅ full | installer | medium |
 | E: CDP desktop app | 0 | same as A | ✅ | ✅ full | launch ritual, no in-page UI | medium-high |
 
-**Recommendation: A now, B as fast-follow, D/E only if the product grows into a full archiver; C never.**
+~~**Recommendation: A now, B as fast-follow, D/E only if the product grows into a full archiver; C never.**~~
+
+**Superseded by owner decisions (2026-07-07, see 00-overview Decisions Log): A now, then plan 06
+(the D+E hybrid: local companion app over a localhost WebSocket) as the target end-state. B is
+deprioritized — the app covers arbitrary-path saving. C stays never. Distribution is
+self-distributed/unpacked, personal use only (Decision 11) — no store-review constraints on
+permissions; optimize for fast local iteration.**

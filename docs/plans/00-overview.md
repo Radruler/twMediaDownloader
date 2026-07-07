@@ -1,7 +1,39 @@
 # twMediaDownloader — Modernization Plan: Overview
 
-**Status:** Planning. Nothing in this directory has been implemented yet.
+**Status:** Planning complete, decisions locked (see Decisions Log below). Nothing implemented yet.
 **Audience:** AI agents (and humans) working on this repo, possibly in parallel. Each numbered plan document is scoped so one agent can own it.
+
+> **PREREQUISITE before any implementation work:** the repo owner has a newer version of this
+> codebase (including x.com domain fixes) that will be pushed before deep work starts. When it
+> lands, re-verify this overview's current-state assessment and plan 01's deletion list against
+> it before executing. The architecture plans (02–06) are unaffected by that delta.
+
+## Decisions Log (owner-confirmed, 2026-07-07)
+
+These override anything else in the plan documents where they conflict:
+
+1. **TypeScript for `packages/core` only**; extension/app code stays JS.
+2. **No active API fetch, ever.** Plan 02 §5 rung 3 is rejected — the fallback ladder ends at "open the tweet so the page fetches it". The browser's own traffic is the only API data source.
+3. **Bulk download is scroll-driven** (slower, zero forged requests) — accepted.
+4. **Sensitive-media flag is always ignored** — download buttons work regardless of interstitials.
+5. **Download buttons always grab ALL media in the post** — including in the media viewer. No "current item only" mode.
+6. **No Alt+Click / open-in-tabs mode.** Delete `OPEN_MEDIA_LINK_BY_DEFAULT`, `open_multi_tabs`, and the tab-sorting machinery with it.
+7. Sidecar default: **`.txt` on**, `.json` available as option.
+8. Per-tweet downloads save **individual files** (no per-tweet ZIP).
+9. Standalone mode saves to **Downloads subfolders only**; File System Access (plan 05 Option B) is deprioritized — the companion app is the path to arbitrary paths.
+10. **Chrome-first**; Firefox best-effort.
+11. **Self-distributed / personal use** — no store submission. Permissions and update cadence optimized for unpacked loading.
+12. Companion app shell: **Electron/Node** (max reuse of JS core).
+13. Connected-mode bulk output: **folder-per-run via the app**; ZIP remains standalone-mode behavior. (Media-server integration explicitly later.)
+14. Library retention: **infinite, always**. No auto-expiry; manual purge tool only.
+15. App launch: **manual** (no tray autostart in v1).
+16. Multi-browser/profile capture: **later**.
+17. **Edited tweets:** supported now as an edge case — logical-post grouping via `edit_control` initial ID, versions recorded.
+18. **Deleted posts:** keep in library with a "deleted" indicator. Detection is **passive only** (captured tombstones, 404s during archiving) — never poll X.
+19. **Auto-record everything scrolled** into a "seen" feed with a queue to formalize items into the archive (plan 06 §two-tier model).
+20. **Non-thrashy maintenance:** smoke tests are manual, low-volume, normal-browsing-shaped. Nothing in this project may hammer X with unusual request patterns.
+21. **No thumbnail store.** The library renders archived items from their original files on disk; unarchived items are text-first (on-demand CDN preview allowed, never persisted, never prefetched in bulk).
+22. ToS risk acknowledged by owner; passive-capture posture is the deliberate mitigation.
 
 ## The single most important finding
 
@@ -25,13 +57,13 @@ From the current code and README:
 | Feature | Current implementation | Keep? |
 |---|---|---|
 | Per-tweet media download button in each tweet's action row | `main_react.user.js` `add_media_button_to_tweet()` | Yes (improved, plan 03) |
-| Alt+Click opens media in tabs instead of downloading | `is_open_media_mode()` | Yes |
+| Alt+Click opens media in tabs instead of downloading | `is_open_media_mode()` | **No — delete** (Decision 6) |
 | Bulk download of user/media/likes/bookmarks/search/notifications timelines into a ZIP, with tweet-ID range, count limit, media-type filters, dry-run, CSV+log in ZIP | dialog in `main_react.user.js`, data from `timeline.js` | Yes (rebuilt data source, plans 02/05) |
 | Filename convention `<screen_name>-<tweet_id>-<YYYYMMDD_hhmmss>-{img|gif|vid}<N>.<ext>` | `setup_image_download_button()` etc. | Yes — users rely on this for existing archives |
 | Original-size images (`name=orig`), max-bitrate MP4 | `get_img_url_orig()`, variant selection | Yes |
 | Options page (en/ja), per-feature toggles, night-mode aware styling | `options.js`, `_locales/` | Yes |
 | Keyboard shortcuts Shift+Alt+D / Shift+Alt+L | `manifest.json` `commands` | Yes |
-| Tab-sorting when opening multiple images | `background.js` | Yes (low priority) |
+| Tab-sorting when opening multiple images | `background.js` | **No — delete** (Decision 6; only served open-in-tabs) |
 | TweetDeck support, legacy-Twitter support, OAuth 1.0a flow | dead products/paths | **No — delete** (plan 01) |
 
 ## Target architecture (one paragraph)
@@ -51,7 +83,22 @@ A Manifest V3 extension (Chrome; Firefox via MV2/MV3 variant) for `x.com`. A tin
 
 See also [discussion-02-vs-05.md](discussion-02-vs-05.md) for the reasoning that led to plan 06.
 
-**Suggested build order if serialized:** 01 → 02 → 03+04 → bulk-download rebuild (02 §6) → 06 (transport, app, library UI) → 05's Option B if still wanted.
+## Dispatch sequence (the rewrite, in order)
+
+Instruction format: "Read `docs/plans/` (00 first, Decisions Log is binding), then execute step N."
+
+| Step | Work | Plan(s) | Parallel? |
+|---|---|---|---|
+| 0 | Owner pushes the newer repo version (x.com fixes); agent reconciles 00's assessment + 01's deletion table against it | — | gate for everything |
+| 1 | Dead-code removal + `packages/core`/`extension`/`app` scaffold + esbuild/vitest + CLAUDE.md/ARCHITECTURE.md | 01 (+06 §6 layout) | single agent |
+| 2 | Interceptor + normalizer (TS, in core) + tweet cache + fixtures. **Includes live-site verification pass** (capture real payloads → fixtures) | 02 | single agent; unlocks everything |
+| 3a | UI layer: buttons everywhere incl. media viewer, toasts, selectors module | 03 | parallel with 3b |
+| 3b | Save layer: chrome.downloads, filename+sidecar in core, standalone mode complete | 04 | parallel with 3a |
+| 4 | Bulk rebuild: scroll driver + dialog port + standalone ZIP output | 02 §6, 03 §6, 04 §5 | after 3a+3b |
+| 5 | App M1+M2: protocol, pairing, SQLite ingest (seen/queue/archive), downloader, folder-per-run | 06 §2–4, §7 | can start after 2 (needs only core + capture stream), i.e. parallel with 3–4 |
+| 6 | App M3+M4: library UI, search, versions/deleted badges, purge, packaging | 06 §5, §7 | after 5 |
+
+Steps 3a, 3b, and 5 are the maximum safe parallel width (three agents) once step 2 lands.
 
 ## Module contract (agree on this before parallel work)
 
