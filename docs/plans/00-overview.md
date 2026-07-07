@@ -3,10 +3,24 @@
 **Status:** Planning complete, decisions locked (see Decisions Log below). Nothing implemented yet.
 **Audience:** AI agents (and humans) working on this repo, possibly in parallel. Each numbered plan document is scoped so one agent can own it.
 
-> **PREREQUISITE before any implementation work:** the repo owner has a newer version of this
-> codebase (including x.com domain fixes) that will be pushed before deep work starts. When it
-> lands, re-verify this overview's current-state assessment and plan 01's deletion list against
-> it before executing. The architecture plans (02–06) are unaffected by that delta.
+> **PREREQUISITE — SATISFIED (2026-07-07):** the owner's newer local iteration (0.1.5.4 with
+> x.com fixes) was imported as the repo baseline in commit `addb00f`. The assessment below is
+> updated accordingly; plan 01's deletion table was re-verified. Dispatch step 0 is done —
+> implementation can start at step 1.
+>
+> **Reconciliation summary vs the original assessment:**
+> - Finding 1 (wrong domain) — **fixed in baseline**: manifest + code now target `x.com`.
+> - Finding 2 (dead REST endpoints) — **still true**: endpoints were renamed to `api.x.com/1.1/…`
+>   and `/2/timeline/…` but are the same shut-down legacy APIs. The baseline's own code comments
+>   confirm the dead end ("Try to fetch via API (will fail due to CSP)") and its `__NEXT_DATA__`
+>   DOM fallback cannot work — x.com is not a Next.js app; that global does not exist there.
+>   Plan 02 (passive GraphQL interception) is unchanged and now evidence-backed by the baseline's
+>   failed active-fetch attempts.
+> - Findings 3–5 (TweetDeck/legacy/selector rot) — baseline removed the legacy userscript and
+>   parked TweetDeck + packaging scripts in `src/deprecated/`; selectors unchanged (still rotted).
+> - New in baseline, kept as seeds: `src/js/config.js` (config/strings extraction) and
+>   `src/js/media_extractor.js` (shared media extraction with unified_card handling + `name=orig`
+>   URLs) — both anticipate plan 01/02 module boundaries; see plan 01 §1a.
 
 ## Decisions Log (owner-confirmed, 2026-07-07)
 

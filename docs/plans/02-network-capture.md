@@ -12,6 +12,13 @@ The modern X web client calls `https://x.com/i/api/graphql/<queryId>/<OperationN
 
 Meanwhile, **everything rendered on screen arrived via a GraphQL response we can observe**. The page already paid for the data; we just keep a copy. Zero extra requests, zero forged headers, zero queryId knowledge needed, and it inherently satisfies "identical to normal browser requests" — they *are* the browser's requests.
 
+**Evidence from the imported baseline (commit `addb00f`):** the owner's own iteration already
+tried the active-request routes and hit the walls predicted here — its comments record that
+content-script fetches to `api.x.com` are CSP/CORS-blocked ("Try to fetch via API (will fail due
+to CSP)"), a page-context fetch injection was attempted next, and a final `__NEXT_DATA__` DOM
+fallback can't work (x.com isn't Next.js; the global doesn't exist). Treat those baseline paths
+as confirmation of this plan's premise, not as code to salvage.
+
 ## 2. Interceptor (`content/page-interceptor.js`, MAIN world)
 
 - Registered in the manifest as a content script with `"world": "MAIN"`, `"run_at": "document_start"` (Chrome 111+; Firefox 128+ supports `world` too — for older Firefox, inject a `<script>` tag from the isolated script as fallback).

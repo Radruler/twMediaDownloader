@@ -15,9 +15,22 @@ Goal: make the codebase small, modular, and testable so that AI agents can safel
 | `background.js` commented blocks | ~120 | Lines 44-57, 125-134, 328-413 are commented-out MV2 webRequest history. Delete; git history preserves them. |
 | Open-in-tabs + tab-sorting feature | ~200 | Decision 6 (00-overview): Alt+Click open-in-tabs is dropped, so delete `extension_functions.open_multi_tabs`/`request_tab_sorting` (`init.js:171-234`), `request_tab_sorting`/`TAB_SORT_REQUEST` in `background.js:99-172,235-244`, `is_open_media_mode()` and all `open_images`/`open_video` paths in `main_react.user.js`, the `OPEN_MEDIA_LINK_BY_DEFAULT` option everywhere (options page, locales), and the `pbs.twimg.com/media/*` content-script match in the manifests (it exists only for tab sorting). |
 
-> **Note (owner, 2026-07-07):** a newer version of this repo with x.com domain fixes is incoming.
-> Re-verify this deletion table against it before executing — line numbers and possibly the
-> domain-related items will shift; the reasoning stands.
+> **Re-verified against the imported baseline (commit `addb00f`, 2026-07-07):** the legacy
+> userscript is already gone; TweetDeck script, firefox manifest and `chrome-mode`/`firefox-mode`
+> now live in `src/deprecated/` — **delete that whole directory** in step 1 (git history is the
+> archive). `twitter-oauth/`, `session.js`, `zip_request_legacy.js`, `zip_worker.js`,
+> `decimal.min.js` are all still present and still to delete. Line numbers cited in this plan set
+> refer to the pre-import code and will have shifted in `main_react.user.js`/`timeline.js`;
+> the reasoning stands.
+
+### 1a. Baseline-specific cleanup (new items from the imported iteration)
+
+| Item | Action |
+|---|---|
+| `src/js/config.js` | **Seed, reshape.** Config extraction is the right instinct. `OPTIONS` → the new config module; `UI_STRINGS` → `_locales/` (proper i18n, not a JS table); `API_ENDPOINTS` → **delete** (all four are dead legacy REST endpoints, incl. the newly added `1.1/videos/tweet/config`); `LOADING_IMAGE_URL` → replace with a bundled asset (don't hotlink `abs.twimg.com`). Delete `OPEN_MEDIA_LINK*` strings (Decision 6). |
+| `src/js/media_extractor.js` | **Seed for `packages/core`.** Solid pure function with unified_card array/object handling and `name=orig` URL building; it consumes the legacy REST `tweet_status` shape, which closely matches GraphQL's `legacy` object — adapt into the media section of `graphql-normalize` and port its logic into fixture-backed tests. Its UMD wrapper shows the intent to share with Node — exactly what `packages/core` formalizes. |
+| `[xcom-xonly-debug]` / `[xcom-fix-*]` code in `main_react.user.js`, `background.js` | **Delete during rewrite.** The page-context-fetch and `__NEXT_DATA__` fallback attempts are dead ends superseded by plan 02; the debug logging includes cookie values (`ct0`/`gt`) — remove, never log cookies. Revert `background.js` `DEBUG = true`. |
+| `options.js` commented-out bulk-button block | Delete (already disabled in baseline). |
 
 Also remove the corresponding entries from `manifest*.json` content-script lists, the `*://api.twitter.com/*` match (only needed for OAuth), and the OAuth/TweetDeck strings from `_locales/` and `options.js`/`options.html` if present.
 
