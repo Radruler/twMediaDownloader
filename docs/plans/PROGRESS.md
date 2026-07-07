@@ -13,9 +13,10 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> A2: create `packages/core/src/sidecar.ts` (txt serializer per plan 04 §3
-> exact layout + json serializer = TweetRecord + sidecar_version + saved
-> filenames + chosen media URLs; support `partial` records with the
+> A2 (A3 already done): create `packages/core/src/sidecar.ts` (txt
+> serializer per plan 04 §3 exact layout + json serializer = TweetRecord +
+> sidecar_version + saved filenames + chosen media URLs via
+> planMediaDownload; support `partial` records with the
 > `# (partial - reconstructed from DOM)` marker) + `test/sidecar.test.ts`
 > (note_tweet long text, multiline, partial records). Export from
 > packages/core/src/index.ts. Then npm test/typecheck/build, commit, push.
@@ -44,13 +45,13 @@ State: `todo` | `doing` | `done <sha>`
       TweetRecord + sidecar_version + saved filenames + chosen media URLs.
       Tests incl. note_tweet long text and partial/DOM-fallback records
       (partial → `# (partial - reconstructed from DOM)` marker).
-- [ ] **A3** `todo` — packages/core media-URL selection helpers.
-      Image orig URL: image_url ends `.jpg`/`.png` — REPLACE extension:
-      `foo.jpg` → `foo?format=jpg&name=orig` (regex like
-      media_extractor.js:90 `.replace(/\.([^.]+)$/, '?format=$1&name=orig')`),
-      NOT append. Fallback chain: name=orig → name=4096x4096 → name=large.
-      Video: max-bitrate `video/mp4` variant; HLS entries have bitrate:null —
-      skip.
+- [x] **A3** `done` (commit "core: media-url helpers") — done BEFORE A2
+      because the sidecar embeds chosen media URLs.
+      packages/core/src/media-url.ts: imageUrlForSize (REPLACES trailing
+      ext with ?format=&name=), imageUrlFallbackChain (orig→4096x4096→large),
+      extensionFromUrl, pickMp4Variant (mp4-only, bitrate null skipped,
+      bitrate 0 gif OK), planMediaDownload(MediaRecord) → {urls, ext}|null.
+      test/media-url.test.ts (14 tests). Exported from @twmd/core.
 
 ### MILESTONE B — save layer, extension wiring (plan 04)
 - [ ] **B1** `todo` — "downloads" permission added by build.mjs manifest
