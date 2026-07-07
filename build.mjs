@@ -96,12 +96,32 @@ const bundleOptions = {
   logLevel: 'info',
 };
 
+// The companion app (plan 06) runs on plain Node but imports @twmd/core
+// (TypeScript), so its entry is bundled too: node app/dist/main.mjs.
+// Native/npm deps stay external.
+const appBundleOptions = {
+  entryPoints: [{ in: path.join(root, 'app/src/main.js'), out: 'main' }],
+  outdir: path.join(root, 'app/dist'),
+  outExtension: { '.js': '.mjs' },
+  bundle: true,
+  format: 'esm',
+  platform: 'node',
+  target: ['node20'],
+  external: ['better-sqlite3', 'ws'],
+  sourcemap: false,
+  logLevel: 'info',
+};
+
 await copyStatic();
 if (watch) {
   const context = await esbuild.context(bundleOptions);
   await context.watch();
-  console.log('watching extension/ and packages/core/ …');
+  const appContext = await esbuild.context(appBundleOptions);
+  await appContext.watch();
+  console.log('watching extension/, app/, and packages/core/ …');
 } else {
   await esbuild.build(bundleOptions);
+  await esbuild.build(appBundleOptions);
   console.log(`built ${path.relative(root, distDir)}/ — load it unpacked via chrome://extensions`);
+  console.log('built app/dist/main.mjs — run with: npm run app');
 }

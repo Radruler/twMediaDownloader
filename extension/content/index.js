@@ -16,6 +16,7 @@
 import { normalizePayload } from '@twmd/core';
 import { TweetCache } from './tweet-cache.js';
 import { saveTweet } from './save.js';
+import { APP_PORT_KEY, APP_TOKEN_KEY, DEFAULT_APP_PORT, createAppClient } from './app-client.js';
 
 const LAST_IDS_MAX = 25;
 const TOMBSTONES_MAX = 100;
@@ -40,6 +41,33 @@ function flag(name) {
 function debugLog(...args) {
   if (flag('twmd_debug')) console.log('[twmd]', ...args);
 }
+
+// ---- companion-app link (plan 06, step C3) ----
+// Token set = connected mode; unset = pure standalone (invariant: the app
+// only ever UPGRADES — every feature works without it).
+
+function localStorageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (e) {
+    return null;
+  }
+}
+
+const appClient = createAppClient({
+  token: localStorageGet(APP_TOKEN_KEY),
+  port: Number(localStorageGet(APP_PORT_KEY)) || DEFAULT_APP_PORT,
+  extVersion: (() => {
+    try {
+      return chrome.runtime.getManifest().version;
+    } catch (e) {
+      return 'dev';
+    }
+  })(),
+  log: (...args) => debugLog('[app]', ...args),
+});
+appClient.start();
+TweetCache.onUpdate((tweetId, record) => appClient.sendSeen(record));
 
 document.addEventListener('twmd:graphql', (event) => {
   try {
@@ -88,6 +116,7 @@ function ingest(message) {
   state.lastCaptured.length = Math.min(state.lastCaptured.length, LAST_IDS_MAX);
   for (const tombstone of tombstones) {
     state.tombstones.unshift(tombstone);
+    if (tombstone.tweet_id) appClient.sendTombstone(tombstone);
     debugLog('tombstone captured:', tombstone.tweet_id, tombstone.text);
   }
   state.tombstones.length = Math.min(state.tombstones.length, TOMBSTONES_MAX);
@@ -116,6 +145,18 @@ window.__twmdDebug = {
       console.log('[twmd] save result:', result);
       return result;
     }),
+  /** Companion-app link state: connection, buffered archives, last status frame. */
+  app: () => ({
+    ...appClient.state,
+    archive_buffer: appClient.archiveBufferSize(),
+  }),
+  /** Queue a tweet for archiving by the companion app (buffered if offline). */
+  archive: (id, reason = 'button') => {
+    const record = TweetCache.get(String(id));
+    if (!record) return `tweet ${id} not in cache`;
+    appClient.sendArchive(record, reason);
+    return 'queued';
+  },
 };
 
 // ---- debug overlay ----

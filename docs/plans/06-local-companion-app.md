@@ -61,6 +61,7 @@ Extension sends it in the first frame (`hello`); app drops unauthenticated conne
 | `archive` | ext→app | `{record, reason: 'button'\|'bulk', run_id?}` | explicit user action → enqueue download |
 | `bulk_begin`/`bulk_end` | ext→app | `{run_id, label}` | brackets a scroll-driven bulk run → folder-per-run (Decision 13) |
 | `request_template` | ext→app | `{headers: {...}, observed_at}` | browser's real media-request headers (via observation-only `chrome.webRequest` on `pbs.twimg.com`/`video.twimg.com`); **no cookies ever** |
+| `tombstone` | ext→app | `{event: TombstoneEvent}` | added during M1 implementation (2026-07): §3 requires captured tombstones to set `deleted=1`, but this table had no frame carrying them |
 | `status` | app→ext | `{queue_depth, last_error, archived_count}` | drives a small badge in the extension |
 
 Offline behavior: extension buffers `archive` messages (bounded, ~200) while disconnected and

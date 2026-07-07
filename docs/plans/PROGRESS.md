@@ -13,19 +13,19 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> C1+C2 (milestones A+B DONE): app/ workspace already scaffolded
-> (app/package.json + app/src/{config,db}.js written, NOT yet installed or
-> tested). Steps: (1) add "app" to root package.json workspaces; (2)
-> npm install (pulls ws + better-sqlite3 — if better-sqlite3 native build
-> fails, fall back to node:sqlite DatabaseSync and note in SURPRISES);
-> (3) write app/src/server.js (ws server 127.0.0.1:8465, pairing auth from
-> config token, frames per plan 06 §2: hello/hello_ack, seen, archive,
-> bulk_begin/bulk_end, request_template [strip cookie/auth headers],
-> tombstone [NEW frame type — plan amendment], status) + app/src/main.js
-> (loadConfig, print token on first run, log console); (4) vitest
-> test/app-db.test.ts (ingest against graphql expected fixtures) +
-> test/app-server.test.ts (real ws round-trip on port 0, in-memory db);
-> (5) npm test/typecheck/build green → commit, push.
+> D1 (milestones A+B+C DONE): replace the app/src/downloader.js M1 stub
+> with the real M2 queue (plan 06 §4): ≤2 concurrent, 500–1500 ms jittered
+> gaps, GETs shaped by server.latestTemplate() headers (already sanitized —
+> NEVER add cookies), retry 3× with backoff then state archive_failed,
+> 404/410 → db.markDeleted + archive_failed if nothing saved. Then D2:
+> app/src/disk-writer.js — <archive_root>/<screen_name>/<core mediaBasename>
+> via planMediaDownload/sidecarTxt from @twmd/core, sha256 dedupe through
+> db.findFileBySha/recordFile, bulk runs (D3) →
+> <archive_root>/_runs/<YYYYMMDD>-<label>/. Unit-test with an injectable
+> fetch. Also add the extension-side observation-only chrome.webRequest
+> template capture (extension/background/request-template.js, "webRequest"
+> permission via build.mjs) + content polling → sendRequestTemplate.
+> Then npm test/typecheck/build → commit, push.
 
 ## Checklist
 
@@ -82,18 +82,32 @@ State: `todo` | `doing` | `done <sha>`
       walkthrough (documented in handoff at end of work).
 
 ### MILESTONE C — companion app M1 (plan 06 §2/§3/§7)
-- [ ] **C1** `todo` — app/ Node workspace (plain Node daemon + log console;
-      Electron deferred to M3). ws server 127.0.0.1:8465, pairing token
-      generated+printed first run, stored in app config. hello/hello_ack,
-      frames exactly per plan 06 §2 table, versioned {v:1,...}.
-- [ ] **C2** `todo` — SQLite via better-sqlite3, schema per plan 06 §3
-      (posts/versions/media/files/posts_fts). seen-ingest upsert;
-      edit-group handling (edit_initial_id_str → post_key); tombstone →
-      deleted=1.
-- [ ] **C3** `todo` — extension ws client: reconnect w/ backoff, forwards
-      every cache put as 'seen', wires tombstone events onward, buffers up
-      to 200 'archive' frames offline. Pairing token via localStorage key
-      (`twmd_app_token`); token set = connect, unset = pure standalone.
+- [x] **C1** `done` (commit "app: companion daemon M1") — app/ workspace
+      (added to root workspaces): app/src/{config,server,main,downloader}.js.
+      ws server 127.0.0.1:8465 (config port), pairing token generated +
+      printed on first run ($TWMD_APP_DIR or ~/.twmd-app/config.json),
+      hello/hello_ack, versioned {v:1,...} frames, error frames for bad
+      token / unsupported version, heartbeat ping. downloader.js is an M1
+      STUB (queue bookkeeping only — real M2 next). App is bundled by
+      build.mjs to app/dist/main.mjs (imports @twmd/core TS): npm run app.
+      Smoke-run verified (first-run banner, listen, SIGTERM shutdown).
+- [x] **C2** `done` (same commit) — app/src/db.js: better-sqlite3, WAL,
+      exact plan 06 §3 schema (posts/versions/media/files+UNIQUE(sha256)/
+      posts_fts FTS5). ingestSeen upsert (state never downgraded),
+      ingestArchiveRequest (seen|archive_failed → queued), markDeleted
+      (version id → edit-group, no phantom rows), searchPosts,
+      recordFile/findFileBySha. test/app-db.test.ts (11 tests, incl.
+      ingest of ALL expected/ fixture TweetRecords).
+- [x] **C3** `done` (same commit) — extension/content/app-client.js
+      (injectable WebSocket, hello→hello_ack gate, backoff reconnect w/
+      jitter, fatal stop on bad_token, seen fire-and-forget, archive
+      buffer ≤200 drop-oldest with in-order replay, tombstone/bulk/
+      request_template senders). Wired in index.js: token from
+      localStorage twmd_app_token (port twmd_app_port), TweetCache.onUpdate
+      → seen, tombstones forwarded, __twmdDebug.app()/.archive(id).
+      test/app-protocol.test.ts: REAL server + REAL client over real ws
+      (8 tests — pairing, ingest, queued, tombstone→deleted=1, bad token,
+      hello-required close 4003, kill-app/buffer/restart/replay, cap 200).
 
 ### MILESTONE D — companion app M2 (plan 06 §4)
 - [ ] **D1** `todo` — 'archive' frames → download queue: ≤2 concurrent,
