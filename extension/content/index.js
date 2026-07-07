@@ -290,4 +290,22 @@ if (flag('twmd_debug_overlay')) {
   else start();
 }
 
+// ---- step-3a scaffolding: EXPERIMENTAL, selectors unverified ----
+// localStorage.twmd_experimental_buttons = '1' enables the injection
+// framework skeleton (see extension/content/ui-buttons.js header).
+if (flag('twmd_experimental_buttons')) {
+  import('./ui-buttons.js').then(({ createButtonInjector }) => {
+    const injector = createButtonInjector({
+      onDownload: (id) => saveTweet(id),
+      log: (...args) => debugLog('[buttons]', ...args),
+    });
+    const startInjector = () => injector.start();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startInjector);
+    } else {
+      startInjector();
+    }
+  });
+}
+
 debugLog('capture pipeline ready');

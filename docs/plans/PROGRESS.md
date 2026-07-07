@@ -13,13 +13,14 @@ medium — every green commit is pushed immediately.
 
 ## NEXT ACTION
 
-> Milestones A–D + handoff DONE. Only the stretch remains: S1 —
-> extension/content/dom-selectors.js (candidate selector lists per UI
-> surface, all marked UNVERIFIED-AGAINST-LIVE-DOM) + ui-buttons.js
-> (injection framework skeleton: MutationObserver, idempotent per-tweet
-> marking, calls saveTweet on click). NO selector may be presented as
-> trusted; the owner tests against live x.com. Every commit: npm test &&
-> npm run typecheck && npm run build, push.
+> ALL WORK IN THIS DISPATCH IS DONE (milestones A–D, handoff, stretch S1).
+> Nothing is pending. If you are a resumed session: verify with
+> `npm test && npm run typecheck && npm run build` (148 tests green as of
+> the last commit) and stop — the next work items belong to other
+> dispatches: step 3a (live-DOM selector verification + real button UI,
+> see plan 03 §5 + step-3b5-handoff.md), step 4 (bulk/scroll driver), app
+> M3 (library UI). The owner's manual Chrome walkthrough is in
+> docs/plans/step-3b5-handoff.md.
 
 ## Checklist
 
@@ -132,9 +133,18 @@ State: `todo` | `doing` | `done <sha>`
       FTS search working.
 
 ### STRETCH (only if A–D green)
-- [ ] **S1** `todo` — step 3a scaffolding ONLY: dom-selectors.js candidate
-      lists + ui-buttons.js injection framework, marked
-      UNVERIFIED-AGAINST-LIVE-DOM.
+- [x] **S1** `done` (commit "extension: step-3a scaffolding") —
+      extension/content/dom-selectors.js (candidate lists + validate()
+      per plan 03 §3, ALL marked UNVERIFIED-AGAINST-LIVE-DOM; the pure
+      URL-based tweet-id extractors are the only trusted+tested part) and
+      extension/content/ui-buttons.js (debounced MutationObserver,
+      data-twmd dedupe, history/popstate SPA hooks, re-entrancy-guarded
+      button with URL re-read at click time for the viewer). Gated behind
+      localStorage.twmd_experimental_buttons = '1' — inert otherwise.
+      test/dom-selectors.test.ts (3 tests, URL parsing only). The 3a
+      agent owns: live-DOM selector verification (plan 03 §5 checklist),
+      real styling/toasts/themes, viewer surface polish, quoted-tweet
+      media exclusion.
 
 ### End-of-work obligations
 - [x] docs/plans/step-3b5-handoff.md written (style of step-2-handoff.md;
