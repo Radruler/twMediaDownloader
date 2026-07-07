@@ -5,7 +5,7 @@
 w.chrome = ( ( typeof browser != 'undefined' ) && browser.runtime ) ? browser : chrome;
 
 var SCRIPT_NAME = 'twMediaDownloader',
-    DEBUG = false,
+    DEBUG = true, // [xcom-xonly-debug] Force debug logging ON for diagnostics
     MANIFEST_VERSION = chrome.runtime.getManifest().manifest_version,
     CONTENT_TAB_INFOS = {};
 
@@ -57,7 +57,7 @@ function get_values( name_list ) {
 */
 
 var reload_tabs = ( () => {
-    var reg_host = /([^.]+\.)?twitter\.com/,
+    var reg_host = /([^.]+\.)?x\.com/,
         
         reload_tab = ( tab_info ) => {
             log_debug( 'reload_tab():', tab_info );
@@ -244,24 +244,30 @@ function on_message( message, sender, sendResponse ) {
             return true;
         
         case 'FETCH_JSON' :
-            log_debug( 'FETCH_JSON', message );
+            log_debug( '[xcom-xonly-debug] [background] FETCH_JSON received', { url: message.url, options: message.options });
             
             fetch( message.url, message.options )
-            .then( response => response.json() )
-            .then( ( json ) => {
-                log_debug( 'FETCH_JSON => json', json );
-                
-                sendResponse( {
-                    json : json,
-                } );
-            } )
-            .catch( ( error ) => {
-                log_error( 'FETCH_JSON => error', error );
-                
-                sendResponse( {
-                    error : error,
-                } );
-            } );
+            .then( async (response) => {
+                log_debug('[xcom-xonly-debug] [background] FETCH_JSON response', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Array.from(response.headers.entries()),
+                });
+                const text = await response.text();
+                log_debug('[xcom-xonly-debug] [background] FETCH_JSON response text', text.slice(0, 1000));
+                try {
+                    const json = JSON.parse(text);
+                    log_debug('FETCH_JSON => json', json);
+                    sendResponse({ json });
+                } catch (error) {
+                    log_error('FETCH_JSON => error parsing JSON', error, text.slice(0, 1000));
+                    sendResponse({ error: error.toString(), status: response.status, statusText: response.statusText, text: text.slice(0, 1000) });
+                }
+            })
+            .catch((error) => {
+                log_error('FETCH_JSON => error', error);
+                sendResponse({ error: error.toString() });
+            });
             return true;
         
         case 'GET_TAB_INFO' :
@@ -274,15 +280,15 @@ function on_message( message, sender, sendResponse ) {
             sendResponse( response );
             return true;
         
-        case 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS' :
-            log_debug( 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS', message );
-            
-            bulk_download_request( message.tab, message.kind );
-            
-            sendResponse( {
-                result : 'OK', // 暫定的
-            } );
-            return true;
+        // case 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS' :
+        //     log_debug( 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS', message );
+        //     
+        //     bulk_download_request( message.tab, message.kind );
+        //     
+        //     sendResponse( {
+        //         result : 'OK', // 暫定的
+        //     } );
+        //     return true;
         
         default:
             /*
@@ -298,6 +304,7 @@ function on_message( message, sender, sendResponse ) {
 }  // end of on_message()
 
 
+/*
 function bulk_download_request( tab, kind ) {
     if ( ( ! tab ) || ( ! tab.id ) ) {
         log_error( '[bulk_download_request()] tab error', tab, kind );
@@ -316,6 +323,7 @@ function bulk_download_request( tab, kind ) {
         }
     } );
 } // end of bulk_download_request()
+*/
 
 
 // ■ 各種イベント設定
@@ -416,13 +424,13 @@ chrome.commands.onCommand.addListener( ( command ) => {
     let callback;
     
     switch ( command ) {
-        case 'bulk_download' :
-            callback = ( active_tab ) => bulk_download_request( active_tab, 'media' );
-            break;
-        
-        case 'bulk_download_likes' :
-            callback = ( active_tab ) => bulk_download_request( active_tab, 'likes' );
-            break;
+        // case 'bulk_download' :
+        //     callback = ( active_tab ) => bulk_download_request( active_tab, 'media' );
+        //     break;
+        // 
+        // case 'bulk_download_likes' :
+        //     callback = ( active_tab ) => bulk_download_request( active_tab, 'likes' );
+        //     break;
         
         default :
             return;
@@ -440,7 +448,7 @@ Object.assign( w, {
     log_debug,
     log_error,
     reload_tabs,
-    bulk_download_request,
+    // bulk_download_request,
 } );
 
 } )(

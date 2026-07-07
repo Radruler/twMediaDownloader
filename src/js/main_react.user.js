@@ -1,147 +1,24 @@
-// ==UserScript==
-// @name            Twitter Media Downloader for new Twitter.com 2019
-// @description     Download media files on new Twitter.com 2019.
-// @version         0.1.5.0
-// @namespace       https://memo.furyutei.work/
-// @author          furyu
-// @include         https://twitter.com/*
-// @include         https://mobile.twitter.com/*
-// @include         https://api.twitter.com/*
-// @include         https://nazo.furyutei.work/oauth/*
-// @grant           GM_xmlhttpRequest
-// @grant           GM_setValue
-// @grant           GM_getValue
-// @grant           GM_deleteValue
-// @connect         mobile.twitter.com
-// @connect         twitter.com
-// @connect         twimg.com
-// @connect         cdn.vine.co
-// @require         https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.4/jszip.min.js
-// @require         https://cdnjs.cloudflare.com/ajax/libs/decimal.js/7.3.0/decimal.min.js
-// @require         https://furyutei.github.io/twMediaDownloader/src/js/twitter-oauth/sha1.js
-// @require         https://furyutei.github.io/twMediaDownloader/src/js/twitter-oauth/oauth.js
-// @require         https://furyutei.github.io/twMediaDownloader/src/js/twitter-oauth/twitter-api.js
-// @require         https://furyutei.github.io/twMediaDownloader/src/js/timeline.js
-// ==/UserScript==
-
-/*
-■ 外部ライブラリ
-- [jQuery](https://jquery.com/), [jquery/jquery: jQuery JavaScript Library](https://github.com/jquery/jquery)  
-    [License | jQuery Foundation](https://jquery.org/license/)  
-    The MIT License  
-
-- [JSZip](https://stuk.github.io/jszip/)  
-    Copyright (c) 2009-2014 Stuart Knightley, David Duponchel, Franz Buchinger, António Afonso  
-    The MIT License  
-    [jszip/LICENSE.markdown](https://github.com/Stuk/jszip/blob/master/LICENSE.markdown)  
-
-- [MikeMcl/decimal.js: An arbitrary-precision Decimal type for JavaScript](https://github.com/MikeMcl/decimal.js)  
-    Copyright (c) 2016, 2017 Michael Mclaughlin  
-    The MIT Licence  
-    [decimal.js/LICENCE.md](https://github.com/MikeMcl/decimal.js/blob/master/LICENCE.md)  
-
-- [sha1.js](http://pajhome.org.uk/crypt/md5/sha1.html)  
-    Copyright Paul Johnston 2000 - 2009
-    The BSD License
-
-- [oauth.js](http://code.google.com/p/oauth/source/browse/code/javascript/oauth.js)(^1)  
-    Copyright 2008 Netflix, Inc.
-    [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)  
-    (^1) archived: [oauth.js](https://web.archive.org/web/20130921042751/http://code.google.com/p/oauth/source/browse/code/javascript/oauth.js)  
-
-
-■ 関連記事など
-- [Twitter メディアダウンローダ：ユーザータイムラインの原寸画像や動画をまとめてダウンロードするユーザースクリプト(PC用Google Chrome・Firefox等対応) - 風柳メモ](http://furyu.hatenablog.com/entry/20160723/1469282864)  
-
-- [furyutei/twMediaDownloader: Download images of user's media-timeline on Twitter.](https://github.com/furyutei/twMediaDownloader)  
-
-- [lambtron/chrome-extension-twitter-oauth-example: Chrome Extension Twitter Oauth Example](https://github.com/lambtron/chrome-extension-twitter-oauth-example)  
-    Copyright (c) 2017 Andy Jiang  
-    The MIT Licence  
-    [chrome-extension-twitter-oauth-example/LICENSE](https://github.com/lambtron/chrome-extension-twitter-oauth-example/blob/master/LICENSE)  
-*/
-
-/*
-The MIT License (MIT)
-
-Copyright (c) 2020 furyu <furyutei@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-
 ( function ( w, d ) {
 
 'use strict';
 
 // ■ パラメータ {
-var OPTIONS = {
-    IMAGE_DOWNLOAD_LINK : true // true: 個別ツイートに画像ダウンロードボタンを追加
-,   VIDEO_DOWNLOAD_LINK : true // true: 個別ツイートに動画ダウンロードボタンを追加
-,   OPEN_MEDIA_LINK_BY_DEFAULT : false // true: デフォルトでメディアリンクを開く（[Alt]＋Click時にダウンロード）
-,   ENABLE_FILTER : true // true: 検索タイムライン使用時に filter: をかける
-    // ※検索タイムライン使用時、filter: をかけない場合にヒットする画像や動画が、filter: をかけるとヒットしないことがある
-,   DOWNLOAD_SIZE_LIMIT_MB : 500 // ダウンロード時のサイズ制限(MB)
-,   ENABLE_VIDEO_DOWNLOAD : true // true: 動画ダウンロードを有効にする（ユーザー認証が必要）
-,   AUTO_CONTINUE : true // true: 個数または容量制限にて止まった際、保存後に自動継続
-    
-,   OPERATION : true // true: 動作中、false: 停止中
-
-,   QUICK_LOAD_GIF : true // true: アニメーションGIF（から変換された動画）の情報(URL)取得を簡略化
-
-,   DEFAULT_LIMIT_TWEET_NUMBER : 0 // ダウンロードできる画像付きツイート数制限のデフォルト値
-,   DEFAULT_SUPPORT_IMAGE : true // true: 画像をダウンロード対象にする
-,   DEFAULT_SUPPORT_GIF : true // true: アニメーションGIF（から変換された動画）をダウンロード対象にする
-,   DEFAULT_SUPPORT_VIDEO : true // true: 動画をダウンロード対象にする
-,   DEFAULT_INCLUDE_RETWEETS : false // true: RTを含む
-,   DEFAULT_SUPPORT_NOMEDIA : false // false: メディアを含まないツイートもログ・CSVやCSVに記録する
-,   DEFAULT_DRY_RUN : false // true: 走査のみ
-
-,   ENABLE_ZIPREQUEST : false // true: ZipRequest を使用してバックグラウンドでダウンロード＆アーカイブ(拡張機能の場合)
-,   INCOGNITO_MODE : false // true: 秘匿モード（シークレットウィンドウ内で起動・拡張機能の場合のみ）
-    // TODO: Firefox でシークレットウィンドウ内で実行する場合、ENABLE_ZIPREQUEST が true だと zip_request.generate() で失敗
-    // → 暫定的に、判別して ZipRequest を使用しないようにする
-
-,   TWITTER_OAUTH_POPUP : true // true: OAuth 認証時、ポップアップウィンドウを使用 / false: 同、別タブを使用
-
-,   TWITTER_API_DELAY_TIME_MS : 1100 // Twitter API コール時、前回からの最小間隔(ms)
-    // Twitter API には Rate Limit があるため、続けてコールする際に待ち時間を挟む
-    // /statuses/show.json の場合、15分で900回（正確に 900回／15分というわけではなく、15分毎にリセットされる）→1秒以上は空けておく
-    // TODO: 別のタブで並列して実行されている場合や、別ブラウザでの実行は考慮していない
-
-,   TWITTER_API2_DELAY_TIME_MS : 5100 // Twitter API2 コール時、前回からの最小間隔(ms)
-    // ※ api.twitter.com/2/timeline/conversation/:id の場合、15分で180回
-    // TODO: 別のタブで並列して実行されている場合や、別ブラウザでの実行は考慮していない
-};
-
-// }
 
 
-// ■ 共通変数 {
-var SCRIPT_NAME = 'twMediaDownloader',
+    // CONFIG and language-dependent strings must be initialized before any use of OPTIONS
+    var UI_STRINGS = (window.CONFIG && window.CONFIG.UI_STRINGS && window.CONFIG.UI_STRINGS[LANGUAGE]) ? window.CONFIG.UI_STRINGS[LANGUAGE] : window.CONFIG.UI_STRINGS['en'];
+    var OPTIONS = window.CONFIG.OPTIONS;
+    var API_ENDPOINTS = window.CONFIG.API_ENDPOINTS;
+    var LOADING_IMAGE_URL = window.CONFIG.LOADING_IMAGE_URL;
+
+    // ■ 共通変数 {
+    var SCRIPT_NAME = 'twMediaDownloader',
     IS_CHROME_EXTENSION = !! ( w.is_chrome_extension ),
     OAUTH_POPUP_WINDOW_NAME = SCRIPT_NAME + '-OAuthAuthorization',
     DEBUG = false,
     self = undefined;
 
-if ( ! /^https:\/\/(?:mobile\.)?twitter\.com(?!\/account\/login_verification)/.test( w.location.href ) ) {
+if ( ! /^https:\/\/(?:mobile\.)?x\.com(?!\/account\/login_verification)/.test( w.location.href ) ) {
     if ( ( ! IS_CHROME_EXTENSION ) && ( typeof Twitter != 'undefined' ) ) {
         // Twitter OAuth 認証用ポップアップとして起動した場合は、Twitter.initialize() により tokens 取得用処理を実施（内部でTwitter.initializePopupWindow()を呼び出し）
         // ※ユーザースクリプトでの処理（拡張機能の場合、session.jsにて実施）
@@ -152,8 +29,8 @@ if ( ! /^https:\/\/(?:mobile\.)?twitter\.com(?!\/account\/login_verification)/.t
     return;
 }
 
-if ( /^https:\/\/(?:mobile\.)?twitter\.com\/i\/cards/.test( w.location.href ) ) {
-    // https://twitter.com/i/cards/～ では実行しない
+if ( /^https:\/\/(?:mobile\.)?x\.com\/i\/cards/.test( w.location.href ) ) {
+    // https://x.com/i/cards/～ では実行しない
     return;
 }
 
@@ -248,13 +125,6 @@ var LANGUAGE = ( function () {
     TWITTER_API = TwitterTimeline.TWITTER_API,
     //}
     
-    API_RATE_LIMIT_STATUS = 'https://api.twitter.com/1.1/application/rate_limit_status.json',
-    API_VIDEO_CONFIG_BASE = 'https://api.twitter.com/1.1/videos/tweet/config/#TWEETID#.json',
-    API_TWEET_SHOW_BASE = 'https://api.twitter.com/1.1/statuses/show.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&trim_user=false&include_ext_media_color=true&id=#TWEETID#',
-    GIF_VIDEO_URL_BASE = 'https://video.twimg.com/tweet_video/#VIDEO_ID#.mp4',
-    
-    LOADING_IMAGE_URL = 'https://abs.twimg.com/a/1460504487/img/t1/spinner-rosetta-gray-32x32.gif',
-    
     TEMPORARY_PAGE_URL = ( () => {
         // ポップアップブロック対策に一時的に読み込むページのURLを取得
         // ※なるべく軽いページが望ましい
@@ -275,87 +145,10 @@ var LANGUAGE = ( function () {
     support_nomedia = false,
     dry_run = false; // true: 走査のみ
 
-switch ( LANGUAGE ) {
-    case 'ja' :
-        OPTIONS.DOWNLOAD_BUTTON_TEXT = '⇩';
-        OPTIONS.DOWNLOAD_BUTTON_TEXT_LONG = 'メディア ⇩';
-        OPTIONS.DOWNLOAD_BUTTON_HELP_TEXT = 'タイムラインの画像/動画を保存';
-        OPTIONS.DIALOG_TWEET_ID_RANGE_HEADER = '対象 Tweet ID 範囲 (空欄時は制限なし)';
-        OPTIONS.DIALOG_TWEET_ID_RANGE_MARK = '＜ ID ＜';
-        OPTIONS.DIALOG_TWEET_ID_PLACEHOLDER_LEFT = '下限IDまたは日時';
-        OPTIONS.DIALOG_TWEET_ID_PLACEHOLDER_RIGHT = '上限IDまたは日時';
-        OPTIONS.DIALOG_LIMIT_TWEET_NUMBER_TEXT = '制限数';
-        OPTIONS.DIALOG_BUTTON_START_TEXT = '開始';
-        OPTIONS.DIALOG_BUTTON_STOP_TEXT = '停止';
-        OPTIONS.DIALOG_BUTTON_CLOSE_TEXT = '閉じる';
-        OPTIONS.CHECKBOX_IMAGE_TEXT = '画像';
-        OPTIONS.CHECKBOX_GIF_TEXT = '動画(GIF)';
-        OPTIONS.CHECKBOX_VIDEO_TEXT = '動画';
-        OPTIONS.CHECKBOX_NOMEDIA_TEXT = 'メディア無し';
-        OPTIONS.CHECKBOX_INCLUDE_RETWEETS = 'RTを含む';
-        OPTIONS.CHECKBOX_DRY_RUN = '走査のみ';
-        OPTIONS.CHECKBOX_ALERT = '少なくとも一つのメディアタイプにはチェックを入れて下さい';
-        OPTIONS.IMAGE_DOWNLOAD_LINK_TEXT = '画像⇩';
-        OPTIONS.VIDEO_DOWNLOAD_LINK_TEXT = 'MP4⇩';
-        OPTIONS.DOWNLOAD_MEDIA_TITLE = 'ダウンロード';
-        OPTIONS.OPEN_MEDIA_LINK = 'メディアを開く';
-        
-        OPTIONS.LIKES_DOWNLOAD_BUTTON_TEXT_LONG = 'いいね ⇩';
-        OPTIONS.LIKES_DOWNLOAD_BUTTON_HELP_TEXT = '『いいね』をしたツイートの画像/動画を保存';
-        OPTIONS.DIALOG_DATE_RANGE_HEADER_LIKES = '対象『いいね』日時範囲 (空欄時は制限なし)';
-        OPTIONS.DIALOG_DATE_RANGE_HEADER_NOTIFICATIONS = '対象『通知』日時範囲 (空欄時は制限なし)';
-        OPTIONS.DIALOG_DATE_RANGE_HEADER_BOOKMARKS = '対象『ブックマーク』日時範囲 (空欄時は制限なし)';
-        OPTIONS.DIALOG_DATE_RANGE_MARK = '＜ 日時 ＜';
-        OPTIONS.DIALOG_DATE_PLACEHOLDER_LEFT = '下限日時';
-        OPTIONS.DIALOG_DATE_PLACEHOLDER_RIGHT = '上限日時';
-        OPTIONS.DIALOG_DUPLICATE_WARNING = 'ダウンロードダイアログを閉じてから開き直してください';
-        
-        OPTIONS.MENTIONS_DOWNLOAD_BUTTON_TEXT_LONG = '@ツイート ⇩';
-        OPTIONS.MENTIONS_DOWNLOAD_BUTTON_HELP_LONG = '通知(@ツイート)の画像/動画を保存';
-        
-        OPTIONS.BOOKMARKS_DOWNLOAD_BUTTON_HELP_LONG = 'ブックマークの画像/動画を保存';
-        break;
-    default:
-        OPTIONS.DOWNLOAD_BUTTON_TEXT = '⇩';
-        OPTIONS.DOWNLOAD_BUTTON_TEXT_LONG = 'Media ⇩';
-        OPTIONS.DOWNLOAD_BUTTON_HELP_TEXT = 'Download images/videos from timeline';
-        OPTIONS.DIALOG_TWEET_ID_RANGE_HEADER = 'Download Tweet ID range (There is no limit when left blank)';
-        OPTIONS.DIALOG_TWEET_ID_RANGE_MARK = '< ID <';
-        OPTIONS.DIALOG_TWEET_ID_PLACEHOLDER_LEFT = 'Since ID or datetime';
-        OPTIONS.DIALOG_TWEET_ID_PLACEHOLDER_RIGHT = 'Until ID or datetime';
-        OPTIONS.DIALOG_LIMIT_TWEET_NUMBER_TEXT = 'Limit';
-        OPTIONS.DIALOG_BUTTON_START_TEXT = 'Start';
-        OPTIONS.DIALOG_BUTTON_STOP_TEXT = 'Stop';
-        OPTIONS.DIALOG_BUTTON_CLOSE_TEXT = 'Close';
-        OPTIONS.CHECKBOX_IMAGE_TEXT = 'Images';
-        OPTIONS.CHECKBOX_GIF_TEXT = 'Videos(GIF)';
-        OPTIONS.CHECKBOX_VIDEO_TEXT = 'Videos';
-        OPTIONS.CHECKBOX_NOMEDIA_TEXT = 'No media';
-        OPTIONS.CHECKBOX_INCLUDE_RETWEETS = 'include RTs';
-        OPTIONS.CHECKBOX_DRY_RUN = 'Dry run';
-        OPTIONS.CHECKBOX_ALERT = 'Please check the checkbox of at least one media type !';
-        OPTIONS.IMAGE_DOWNLOAD_LINK_TEXT = 'IMG⇩';
-        OPTIONS.VIDEO_DOWNLOAD_LINK_TEXT = 'MP4⇩';
-        OPTIONS.DOWNLOAD_MEDIA_TITLE = 'Download';
-        OPTIONS.OPEN_MEDIA_LINK = 'Open media links';
-        
-        OPTIONS.LIKES_DOWNLOAD_BUTTON_TEXT_LONG = 'Likes ⇩';
-        OPTIONS.LIKES_DOWNLOAD_BUTTON_HELP_TEXT = 'Download images/videos from Likes-timeline';
-        OPTIONS.DIALOG_DATE_RANGE_HEADER_LIKES = 'Download "Likes" date-time range (There is no limit when left blank)';
-        OPTIONS.DIALOG_DATE_RANGE_HEADER_NOTIFICATIONS = 'Download "Notifications" date-time range (There is no limit when left blank)';
-        OPTIONS.DIALOG_DATE_RANGE_HEADER_BOOKMARKS = 'Download "Bookmarks" date-time range (There is no limit when left blank)';
-        OPTIONS.DIALOG_DATE_RANGE_MARK = '< DATETIME <';
-        OPTIONS.DIALOG_DATE_PLACEHOLDER_LEFT = 'Since datetime';
-        OPTIONS.DIALOG_DATE_PLACEHOLDER_RIGHT = 'Until datetime';
-        OPTIONS.DIALOG_DUPLICATE_WARNING = 'Close the download dialog and reopen it';
-        
-        OPTIONS.MENTIONS_DOWNLOAD_BUTTON_TEXT_LONG = 'Mentions ⇩';
-        OPTIONS.MENTIONS_DOWNLOAD_BUTTON_HELP_LONG = 'Download images/videos of mentions from Notifications-timeline';
-        
-        OPTIONS.BOOKMARKS_DOWNLOAD_BUTTON_HELP_LONG = 'Download images/videos of mentions from Bookmarks-timeline';
-        break;
-}
-
+var UI_STRINGS = (window.CONFIG && window.CONFIG.UI_STRINGS && window.CONFIG.UI_STRINGS[LANGUAGE]) ? window.CONFIG.UI_STRINGS[LANGUAGE] : window.CONFIG.UI_STRINGS['en'];
+var OPTIONS = window.CONFIG.OPTIONS;
+var API_ENDPOINTS = window.CONFIG.API_ENDPOINTS;
+var LOADING_IMAGE_URL = window.CONFIG.LOADING_IMAGE_URL;
 
 // }
 
@@ -741,7 +534,7 @@ function get_screen_name( url ) {
     }
     
     if ( screen_name.length < 2 ) {
-        // ログイン時に『いいね』タイムラインは https://twitter.com/i/likes になってしまう
+        // [xcom-only-step-2] ログイン時に『いいね』タイムラインは https://x.com/i/likes になってしまう
         screen_name = $( 'h2.ProfileHeaderCard-screenname span.username b.u-linkComplex-target' ).text().trim();
     }
     
@@ -848,7 +641,7 @@ function get_tweet_id( url ) {
     
     url = url.trim();
     
-    if ( url.match( /^https?:\/\/(?:mobile\.)?twitter\.com\/[^\/]+\/[^\/]+\/(\d+)(?:$|\/)/ ) ) {
+    if ( url.match( /^https?:\/\/(?:mobile\.)?x\.com\/[^\/]+\/[^\/]+\/(\d+)(?:$|\/)/ ) ) {
         return RegExp.$1;
     }
     
@@ -1097,11 +890,12 @@ var [
         OAUTH_CONSUMER_SECRET = 'D85tY89jQoWWVH8oNjIg28PJfK4S2louq5NPxw8VzvlKBwSR0x',
         OAUTH_CALLBACK_URL = 'https://nazo.furyutei.work/oauth/',
         
+        // [xcom-only-step-3] Hardcoded Bearer tokens for x.com (update if invalid)
         API_AUTHORIZATION_BEARER = 'AAAAAAAAAAAAAAAAAAAAAF7aAAAAAAAASCiRjWvh7R5wxaKkFp7MM%2BhYBqM%3DbQ0JPmjU9F6ZoMhDfI4uTNAaQuTDm2uO9x3WFVr2xBZ2nhjdP0',
         API2_AUTHORIZATION_BEARER = 'AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
-        // ※ https://abs.twimg.com/responsive-web/web/main.<version>.js (例：https://abs.twimg.com/responsive-web/web/main.bd8d7749ae1a70054.js) 内で定義されている値
-        // TODO: 継続して使えるかどうか不明→変更された場合の対応を要検討
-        API2_CONVERSATION_BASE = 'https://api.twitter.com/2/timeline/conversation/#TWEETID#.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_composer_source=true&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&include_ext_media_color=true&include_ext_media_availability=true&send_error_codes=true&count=20&ext=mediaStats%2ChighlightedLabel%2CcameraMoment',
+        // [xcom-only-step-3] Extracted from https://abs.twimg.com/responsive-web/web/main.<version>.js
+        // If you see a debug log about an invalid Bearer token, follow instructions to extract a new one.
+        API2_CONVERSATION_BASE = 'https://api.x.com/2/timeline/conversation/#TWEETID#.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_composer_source=true&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&include_ext_media_color=true&include_ext_media_availability=true&send_error_codes=true&count=20&ext=mediaStats%2ChighlightedLabel%2CcameraMoment',
         
         twitter_api_1st_call = true,
         
@@ -1111,6 +905,7 @@ var [
             var csrf_token;
             
             try {
+                // [xcom-only-step-2] Only checks for ct0 cookie on .x.com
                 csrf_token = document.cookie.match( /ct0=(.*?)(?:;|$)/ )[ 1 ];
             }
             catch ( error ) {
@@ -1123,6 +918,7 @@ var [
             var guest_token;
             
             try {
+                // [xcom-only-step-2] Only checks for gt cookie on .x.com
                 guest_token = document.cookie.match( /gt=(.*?)(?:;|$)/ )[ 1 ];
             }
             catch ( error ) {
@@ -1135,6 +931,7 @@ var [
             var language;
             
             try {
+                // [xcom-only-step-2] Only checks for lang cookie on .x.com
                 language = document.cookie.match( /lang=(.*?)(?:;|$)/ )[ 1 ];
             }
             catch ( error ) {
@@ -1162,15 +959,15 @@ var [
                     
                     api2_is_checked = true;
                     
-                    // API2 (api.twitter.com/2/) が有効かどうかをツイート（https://twitter.com/jack/status/20）を読みこんで確認
+                    // [xcom-only-step-3] API2 (api.x.com/2/) が有効かどうかをツイート（https://x.com/jack/status/20）を読みこんで確認
                     var target_tweet_id = 20;
                     
                     api2_get_tweet_info( target_tweet_id )
                     .done( ( json, textStatus, jqXHR ) => {
-                        log_debug( 'API2 (api.twitter.com/2/) is available.' );
+                        log_debug( 'API2 (api.x.com/2/) is available.' );
                     } )
                     .fail( ( jqXHR, textStatus, errorThrown ) => {
-                        log_error( 'API2 (api.twitter.com/2/) is not available. (', jqXHR.statusText, ':', textStatus, ')' );
+                        log_error( 'API2 (api.x.com/2/) is not available. (', jqXHR.statusText, ':', textStatus, ')' );
                         
                         get_csrf_token = () => false; // API2 無効化
                     } )
@@ -1223,6 +1020,10 @@ var [
         } )(), // end of update_twitter_api_info()
         
         twitter_api_is_enabled = () => {
+            // [xcom-only-step-3] Bearer token validity check and debug log
+            if (!API_AUTHORIZATION_BEARER || !API2_AUTHORIZATION_BEARER) {
+                log_error('[xcom-only-step-3] Bearer token missing. Please extract a new Bearer token from x.com’s JS bundle or network tab and update API_AUTHORIZATION_BEARER/API2_AUTHORIZATION_BEARER.');
+            }
             return ( get_twitter_api() || get_csrf_token() );
         }, // end of twitter_api_is_enabled()
         
@@ -1377,116 +1178,116 @@ var [
             };
         } )(), // end of twitter_api_delay()
         
-        api2_get_tweet_info = ( tweet_id ) => {
-            var $deferred = new $.Deferred(),
-                csrf_token = get_csrf_token(),
-                api2_url = API2_CONVERSATION_BASE.replace( '#TWEETID#', tweet_id );
-            
-            if ( ! csrf_token ) {
-                $deferred.reject( {
-                    status : 0
-                ,   statusText : 'Illegal condition'
-                }, 'Invalid csrf token' );
-                
-                return $deferred.promise();
-            }
-            
-            /*
-            //var api_headers = {
-            //        'Authorization' : 'Bearer ' + API2_AUTHORIZATION_BEARER
-            //    ,   'x-csrf-token' : csrf_token
-            //    ,   'x-twitter-active-user' : 'yes'
-            //    ,   'x-twitter-auth-type' : 'OAuth2Session'
-            //    ,   'x-twitter-client-language' : get_language()
-            //    };
-            */
-            
-            var create_api_headers = ( api_url ) => {
-                    var headers = {
-                            'Authorization' : 'Bearer ' + ( ( ( api_url || '' ).indexOf( '/2/' ) < 0 ) ? API_AUTHORIZATION_BEARER : API2_AUTHORIZATION_BEARER ),
-                            'x-csrf-token' : csrf_token,
-                            'x-twitter-active-user' : 'yes',
-                            'x-twitter-auth-type' : 'OAuth2Session',
-                            'x-twitter-client-language' : get_language(),
-                        };
-                    
-                    if ( csrf_token.length == 32 ) {
-                        var guest_token = get_guest_token();
-                            
-                        if ( guest_token ) {
-                            headers[ 'x-guest-token' ] = guest_token;
-                        }
-                    }
-                    return headers;
+        // [xcom-fix-inject-fetch] Patch: Use page context to bypass CORS for api2_get_tweet_info
+        api2_get_tweet_info = (tweet_id) => {
+            var $deferred = new $.Deferred();
+            var api2_url = API2_CONVERSATION_BASE.replace('#TWEETID#', tweet_id);
+
+            // [xcom-fix-nextdata-fallback] Try to fetch via API (will fail), then fallback to __NEXT_DATA__ in DOM
+            // Try to fetch via API (will fail due to CSP)
+            // [xcom-fix-background-proxy] Use background.js FETCH_JSON proxy for API requests on x.com
+            if (/(\.|^)x\.com$/.test(window.location.hostname)) {
+                // [xcom-xonly-debug] Log cookies and headers before sending FETCH_JSON
+                var ct0 = (document.cookie.match(/ct0=([^;]+)/) || [])[1];
+                var gt = (document.cookie.match(/gt=([^;]+)/) || [])[1];
+                var headers = {
+                    Authorization: 'Bearer ' + API2_AUTHORIZATION_BEARER
                 };
-            
-            if (
-                ( ! IS_CHROME_EXTENSION ) ||
-                IS_FIREFOX
-            ) {
-                $.ajax( {
-                    type : 'GET'
-                ,   url : api2_url
-                ,   headers : create_api_headers( api2_url )
-                ,   dataType : 'json'
-                ,   xhrFields : {
-                        withCredentials : true
+                if (ct0) headers['x-csrf-token'] = ct0;
+                if (gt) headers['x-guest-token'] = gt;
+                log_debug('[xcom-xonly-debug] Cookies before FETCH_JSON', { ct0, gt, all: document.cookie });
+                log_debug('[xcom-xonly-debug] Headers before FETCH_JSON', headers);
+                log_debug('[xcom-xonly-debug] Sending FETCH_JSON to background', { url: api2_url, options: { credentials: 'include', headers } });
+                chrome.runtime.sendMessage({
+                    type: 'FETCH_JSON',
+                    url: api2_url,
+                    options: { credentials: 'include', headers }
+                }, function(response) {
+                    log_debug('[xcom-xonly-debug] Received FETCH_JSON response from background', response);
+                    if (response && response.json) {
+                        try {
+                            $deferred.resolve(response.json.globalObjects.tweets[tweet_id]);
+                        } catch (err) {
+                            $deferred.reject({ status: 0, statusText: 'parse error' }, err);
+                        }
+                    } else {
+                        // Fallback: parse __NEXT_DATA__ for tweet info
+                        try {
+                            var nextDataScript = document.getElementById('__NEXT_DATA__');
+                            if (nextDataScript) {
+                                var nextData = JSON.parse(nextDataScript.textContent);
+                                var tweets = nextData.props?.pageProps?.status?.statusResult?.result?.legacy
+                                    ? { [tweet_id]: nextData.props.pageProps.status.statusResult.result.legacy }
+                                    : (nextData.props?.pageProps?.timeline?.entries || [])
+                                        .reduce(function(acc, entry) {
+                                            if (entry.content?.itemContent?.tweet_results?.result?.legacy) {
+                                                var t = entry.content.itemContent.tweet_results.result.legacy;
+                                                acc[t.id_str] = t;
+                                            }
+                                            return acc;
+                                        }, {});
+                                if (tweets && tweets[tweet_id]) {
+                                    log_debug('[xcom-only-step-6] DOM fallback: found tweet in __NEXT_DATA__ for id', tweet_id);
+                                    $deferred.resolve(tweets[tweet_id]);
+                                    return;
+                                } else {
+                                    log_debug('[xcom-only-step-6] DOM fallback: __NEXT_DATA__ present but tweet id not found', tweet_id, Object.keys(tweets));
+                                }
+                            } else {
+                                log_debug('[xcom-only-step-6] DOM fallback: __NEXT_DATA__ script not found in DOM');
+                            }
+                        } catch (e) {
+                            log_debug('[xcom-only-step-6] DOM fallback: error parsing __NEXT_DATA__', e);
+                        }
+                        // Log relevant DOM structure for further analysis
+                        log_debug('[xcom-only-step-6] DOM fallback failed. Dumping document.body:', document.body ? document.body.innerHTML.slice(0, 2000) : 'no body');
+                        $deferred.reject({ status: 0, statusText: 'CSP and API fetch blocked, and __NEXT_DATA__ fallback failed' }, 'CSP and API fetch blocked, and __NEXT_DATA__ fallback failed');
                     }
-                } )
-                .done( function ( json, textStatus, jqXHR ) {
-                    log_debug( api2_url, json );
+                });
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: api2_url,
+                    dataType: 'json',
+                    xhrFields: { withCredentials: true }
+                })
+                .done(function(json) {
                     try {
-                        $deferred.resolve( json.globalObjects.tweets[ tweet_id ] );
+                        $deferred.resolve(json.globalObjects.tweets[tweet_id]);
+                    } catch (err) {
+                        $deferred.reject({ status: 0, statusText: 'parse error' }, err);
                     }
-                    catch ( error ) {
-                        $deferred.reject( jqXHR, error );
+                })
+                .fail(function() {
+                    // Fallback: parse __NEXT_DATA__ for tweet info
+                    try {
+                        var nextDataScript = document.getElementById('__NEXT_DATA__');
+                        if (nextDataScript) {
+                            var nextData = JSON.parse(nextDataScript.textContent);
+                            var tweets = nextData.props?.pageProps?.status?.statusResult?.result?.legacy
+                                ? { [tweet_id]: nextData.props.pageProps.status.statusResult.result.legacy }
+                                : (nextData.props?.pageProps?.timeline?.entries || [])
+                                    .reduce(function(acc, entry) {
+                                        if (entry.content?.itemContent?.tweet_results?.result?.legacy) {
+                                            var t = entry.content.itemContent.tweet_results.result.legacy;
+                                            acc[t.id_str] = t;
+                                        }
+                                        return acc;
+                                    }, {});
+                            if (tweets && tweets[tweet_id]) {
+                                $deferred.resolve(tweets[tweet_id]);
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        // ignore
                     }
-                } )
-                .fail( function ( jqXHR, textStatus, errorThrown ) {
-                    log_error( api2_url, textStatus, jqXHR.status + ' ' + jqXHR.statusText );
-                    $deferred.reject( jqXHR, textStatus, errorThrown );
-                } );
-                
-                return $deferred.promise();
+                    $deferred.reject({ status: 0, statusText: 'CSP and API fetch blocked, and __NEXT_DATA__ fallback failed' }, 'CSP and API fetch blocked, and __NEXT_DATA__ fallback failed');
+                });
             }
-            
-            /*
-            // Chrome 拡張機能の場合 api.twitter.com を呼ぶと、
-            // > Cross-Origin Read Blocking (CORB) blocked cross-origin response <url> with MIME type application/json. See https://www.chromestatus.com/feature/5629709824032768 for more details.
-            // のような警告が出て、レスポンスボディが空になってしまう
-            // 参考：
-            //   [Changes to Cross-Origin Requests in Chrome Extension Content Scripts - The Chromium Projects](https://www.chromium.org/Home/chromium-security/extension-content-script-fetches)
-            //   [Cross-Origin Read Blocking (CORB) とは - ASnoKaze blog](https://asnokaze.hatenablog.com/entry/2018/04/10/205717)
-            */
-            chrome.runtime.sendMessage( {
-                type : 'FETCH_JSON',
-                url : api2_url,
-                options : {
-                    method : 'GET',
-                    headers : create_api_headers( api2_url ),
-                    mode: 'cors',
-                    credentials: 'include',
-                },
-            }, function ( response ) {
-                log_debug( 'FETCH_JSON => response', response );
-                
-                if ( response.error ) {
-                    $deferred.reject( { status : response.error, statusText : '' }, 'fetch error' );
-                    return;
-                }
-                
-                try {
-                    $deferred.resolve( response.json.globalObjects.tweets[ tweet_id ] );
-                    // TODO: シークレット(incognito)モードだと、{"errors":[{"code":353,"message":"This request requires a matching csrf cookie and header."}]} のように返されてしまう
-                    // → manifest.json に『"incognito" : "split"』が必要だが、煩雑になる(Firefoxでは manifest.json 読み込み時にエラーとなる)ため、保留
-                }
-                catch ( error ) {
-                    $deferred.reject( { status : 0, statusText : '' }, error );
-                }
-            } );
-            
+
             return $deferred.promise();
-        }, // end of api2_get_tweet_info()
+        }, // end of api2_get_tweet_info [xcom-fix-background-proxy]
         
         twitter_api_get_json = ( api_url, options ) => {
             if ( ! options ) {
@@ -1530,10 +1331,21 @@ var [
                         return api2_get_tweet_info( tweet_id );
                     }
                     else {
+                        // [xcom-only-step-5] Set and log headers for x.com API requests
+                        var headers = {};
+                        if (api_url.startsWith('https://api.x.com/')) {
+                            headers['Authorization'] = 'Bearer ' + API2_AUTHORIZATION_BEARER;
+                            var csrf = get_csrf_token();
+                            if (csrf) headers['x-csrf-token'] = csrf;
+                            var guest = get_guest_token();
+                            if (guest) headers['x-guest-token'] = guest;
+                            log_debug('[xcom-only-step-5] Sending headers:', JSON.stringify(headers));
+                        }
                         return $.ajax( {
                             type : 'GET'
                         ,   url : api_url
                         ,   dataType : 'json'
+                        ,   headers: headers
                         } );
                     }
                 } );
@@ -3952,12 +3764,13 @@ function parse_tweet( $tweet ) {
             return $( this ).parents( 'div[role="link"]' ).length < 1;
         } ).first(),
         //is_individual_tweet = ( $tweet_time.length <= 0 ),
-        is_individual_tweet = ( $tweet.find( 'a[role="link"][href*="/status/"] ~ a[role="link"][href*="/help.twitter.com/"]' ).length > 0 ),
+        // [xcom-only-step-4] help.x.com selector for x.com
+        is_individual_tweet = ( $tweet.find( 'a[role="link"][href*="/status/"] ~ a[role="link"][href*="/help.x.com/"]' ).length > 0 ),
         $caret_menu_button = $tweet.find( '[role="button"][data-testid="caret"]' ).first(),
         //$source_label_container = ( is_individual_tweet ) ? $tweet.find( 'div[dir="auto"]' ).filter( function () {
-        //    return ( 0 < $( this ).children( 'a[role="link"][href*="/help.twitter.com/"]' ).length );
+        //    return ( 0 < $( this ).children( 'a[role="link"][href*="/help.x.com/"]' ).length );
         //} ) : $(),
-        $source_label_container = ( is_individual_tweet ) ? $tweet.find( 'a[role="link"][href*="/help.twitter.com/"]' ).parent() : $(),
+        $source_label_container = ( is_individual_tweet ) ? $tweet.find( 'a[role="link"][href*="/help.x.com/"]' ).parent() : $(),
         $action_list_container = $tweet.find( 'div[role="group"]' ).first(),
         $quote_container = $tweet.find( 'div[role="link"]' ).first().parent(),
         $tweet_link = ( is_individual_tweet ) ? $source_label_container.find( 'a[role="link"][href^="/"][href*="/status/"]' ).first() : $tweet_time.parents( 'a[role="link"]' ).first(),
@@ -4258,14 +4071,34 @@ function setup_image_download_button( $tweet, $media_button ) {
                 if ( api_result.tweet_info ) {
                     try {
                         try {
-                            image_urls = api_result.tweet_info.extended_entities.media.map( ( media ) => {
-                                return get_img_url( media.media_url_https, ( media.features.orig ) ? 'orig' : 'large' );
-                            } );
+                            image_urls = api_result.tweet_info.extended_entities.media
+                                .filter(media => media.type === 'photo')
+                                .map((media) => {
+                                    if (media.type !== 'photo') {
+                                        console.log('[xcom-debug] Skipping non-photo media in image extraction:', media);
+                                        return null;
+                                    }
+                                    return get_img_url(
+                                        media.media_url_https,
+                                        (media.features && media.features.orig) ? 'orig' : 'large'
+                                    );
+                                })
+                                .filter(Boolean);
                         }
                         catch ( error ) {
-                            image_urls = api_result.tweet_info.entities.media.map( ( media ) => {
-                                return get_img_url( media.media_url_https, ( media.features.orig ) ? 'orig' : 'large' );
-                            } );
+                            image_urls = api_result.tweet_info.entities.media
+                                .filter(media => media.type === 'photo')
+                                .map((media) => {
+                                    if (media.type !== 'photo') {
+                                        console.log('[xcom-debug] Skipping non-photo media in fallback image extraction:', media);
+                                        return null;
+                                    }
+                                    return get_img_url(
+                                        media.media_url_https,
+                                        (media.features && media.features.orig) ? 'orig' : 'large'
+                                    );
+                                })
+                                .filter(Boolean);
                         }
                         created_at = api_result.tweet_info.created_at;
                         image_info_fixed = true;
@@ -4347,7 +4180,7 @@ function setup_image_download_button( $tweet, $media_button ) {
                     image_info_list.push( {
                         id : parseInt( ( $image_link.attr( 'href' ) || '0' ).replace( /^.*\/photo\//, '' ), 10 ),
                         image_url : $image_link.find( 'div[aria-label] > img[src*="//pbs.twimg.com/media/"]' ).attr( 'src' ),
-                        // TODO: まれにDOMから img[src] が取得できないケースあり（例: https://twitter.com/furyutei/status/1410195533956751362）
+                         // [xcom-only-step-1] TODO: まれにDOMから img[src] が取得できないケースあり（例: https://x.com/furyutei/status/1410195533956751362）
                     } );
                 } );
                 
@@ -4389,108 +4222,157 @@ function setup_video_download_button( $tweet, $media_button ) {
         },
         
         update_video_info = async () => {
-            var api_result = await async_get_tweet_info( tweet_info.tweet_id );
-            
-            if ( ! api_result.tweet_info ) {
-                log_error( 'failed to get tweet_info', api_result );
-                alert( 'Failed to get tweet information !' );
+            // [xcom-debug] Start update_video_info
+            console.log('[xcom-debug] update_video_info: tweet_info', tweet_info);
+
+            var api_result;
+            try {
+                console.log('[xcom-debug] setup_video_download_button: start', { tweet_info });
+                api_result = await async_get_tweet_info( tweet_info.tweet_id );
+                console.log('[xcom-debug] async_get_tweet_info result:', api_result);
+                if (api_result && api_result.tweet_info) {
+                    console.log('[xcom-debug] tweet_info.extended_entities:', api_result.tweet_info.extended_entities);
+                    if (api_result.tweet_info.extended_entities && Array.isArray(api_result.tweet_info.extended_entities.media)) {
+                        api_result.tweet_info.extended_entities.media.forEach((media, idx) => {
+                            console.log(`[xcom-debug] media[${idx}]:`, media);
+                            if (media.type === 'video' || media.type === 'animated_gif') {
+                                console.log(`[xcom-debug] media[${idx}].video_info:`, media.video_info);
+                            }
+                        });
+                    }
+                } else {
+                    console.log('[xcom-debug] async_get_tweet_info: no tweet_info in result', api_result);
+                }
+            } catch (err) {
+                console.error('[xcom-debug] async_get_tweet_info threw:', err);
+                alert('[xcom-debug] async_get_tweet_info threw: ' + (err && err.message ? err.message : err));
                 return;
             }
-            
+
+            if ( ! api_result.tweet_info ) {
+                console.error('[xcom-debug] Failed to get tweet_info', api_result);
+                alert('[xcom-debug] Failed to get tweet_info: ' + JSON.stringify(api_result, null, 2));
+                return;
+            }
+
             created_at = api_result.tweet_info.created_at;
-            
+            console.log('[xcom-debug] tweet_info.created_at:', created_at);
+
             try {
+                if (api_result.tweet_info.extended_entities && Array.isArray(api_result.tweet_info.extended_entities.media)) {
+                    api_result.tweet_info.extended_entities.media.forEach((media, idx) => {
+                        console.log(`[xcom-debug] [media-extract] media[${idx}]: type=${media.type}`, media);
+                    });
+                }
                 media_prefix = ( api_result.tweet_info.extended_entities.media[ 0 ].type == 'animated_gif' ) ? 'gif' : 'vid';
+                console.log('[xcom-debug] media_prefix:', media_prefix);
             }
             catch ( error ) {
+                console.warn('[xcom-debug] Could not determine media_prefix:', error);
             }
-            
+
             try {
                 switch ( media_prefix ) {
-                    case 'gif' : ( () => {
-                        video_url = api_result.tweet_info.extended_entities.media[ 0 ].video_info.variants[ 0 ].url;
-                    } )();
-                    break;
-                    
-                    default : await ( async () => {
-                        var video_info;
-                        
-                        try {
+                    case 'gif':
+                        video_url = api_result.tweet_info.extended_entities.media[0].video_info.variants[0].url;
+                        console.log('[xcom-debug] gif video_url:', video_url);
+                        break;
+                    default:
+                        await (async () => {
+                            var video_info;
                             try {
-                                video_info = api_result.tweet_info.extended_entities.media[ 0 ].video_info;
-                            }
-                            catch ( error ) {
-                                // [Issue #54: Get video from tweets generated with Twitter for Advertisers tool](https://github.com/furyutei/twMediaDownloader/issues/54#issuecomment-806267490) への対応
-                                var unified_card_info = JSON.parse( api_result.tweet_info.card.binding_values.unified_card.string_value );
-                                
-                                video_info = unified_card_info.media_entities[ unified_card_info.component_objects.media_1.data.id ].video_info;
-                            }
-                            var variants = video_info.variants,
-                                max_bitrate = -1;
-                            
-                            variants.map( ( variant ) => {
-                                if ( ( variant.content_type == 'video/mp4' ) && ( variant.bitrate ) && ( max_bitrate < variant.bitrate ) ) {
-                                    video_url = variant.url;
-                                    max_bitrate = variant.bitrate;
-                                }
-                            } );
-                        }
-                        catch ( error ) {
-                            // [Issue #54: Get video from tweets generated with Twitter for Advertisers tool](https://github.com/furyutei/twMediaDownloader/issues/54) への対応
-                            try {
-                                var binding_values = api_result.tweet_info.card.binding_values,
-                                    stream_url = ( binding_values.player_stream_url || binding_values.amplify_url_vmap ).string_value;
-                                
-                                if ( /\.mp4(?:\?|$)/.test( stream_url ) ) {
-                                    video_url = stream_url;
-                                    return;
-                                }
-                                
-                                await new Promise( ( resolve, reject ) => {
-                                    $.ajax( {
-                                        type : 'GET',
-                                        url : stream_url,
-                                        dataType: 'xml',
-                                    } )
-                                    .done( ( xml, textStatus, jqXHR ) => {
-                                        var max_bitrate = -1;
-                                        
-                                        $( xml ).find( 'tw\\:videoVariants > tw\\:videoVariant' ).each( function () {
-                                            var $variant = $( this ),
-                                                url = decodeURIComponent( $variant.attr( 'url' ) || '' ),
-                                                content_type = $variant.attr( 'content_type' ),
-                                                bit_rate = parseInt( $variant.attr( 'bit_rate' ), 10 );
-                                            
-                                            if ( ( content_type == 'video/mp4' ) && ( bit_rate ) && ( max_bitrate < bit_rate ) ) {
-                                                video_url = url;
-                                                max_bitrate = bit_rate;
+                                video_info = api_result.tweet_info.extended_entities.media[0].video_info;
+                                console.log('[xcom-debug] video_info:', video_info);
+                                if (Array.isArray(api_result.tweet_info.extended_entities.media)) {
+                                    api_result.tweet_info.extended_entities.media.forEach((media, idx) => {
+                                        if (media.type === 'video' || media.type === 'animated_gif') {
+                                            console.log(`[xcom-debug] [video-select] media[${idx}].video_info:`, media.video_info);
+                                            if (Array.isArray(media.video_info.variants)) {
+                                                media.video_info.variants.forEach((variant, vIdx) => {
+                                                    console.log(`[xcom-debug] [video-select] media[${idx}].video_info.variants[${vIdx}]:`, variant);
+                                                });
                                             }
-                                        } );
-                                        resolve();
-                                    } )
-                                    .fail( function ( jqXHR, textStatus, errorThrown ) {
-                                        var error_message = get_jqxhr_error_message( jqXHR );
-                                        
-                                        log_error( tweet_info.tweet_id, textStatus, jqXHR.status + ' ' + jqXHR.statusText, error_message );
-                                        resolve();
-                                    } )
-                                    .always( () => {
-                                    } );
-                                } );
+                                        }
+                                    });
+                                }
+                            } catch (error) {
+                                // [Issue #54: Get video from tweets generated with Twitter for Advertisers tool]
+                                try {
+                                    // Robust unified_card extraction: support both object and array forms of binding_values, and extract all media_entities
+                                    var unified_card_string = null;
+                                    var card = api_result.tweet_info.card;
+                                    if (card && card.binding_values) {
+                                        if (Array.isArray(card.binding_values)) {
+                                            // Array form (advertiser suite)
+                                            var ucEntry = card.binding_values.find(
+                                                v => v.key === 'unified_card' && v.value && v.value.string_value
+                                            );
+                                            if (ucEntry) unified_card_string = ucEntry.value.string_value;
+                                        } else if (
+                                            card.binding_values.unified_card &&
+                                            card.binding_values.unified_card.string_value
+                                        ) {
+                                            // Object form (legacy)
+                                            unified_card_string = card.binding_values.unified_card.string_value;
+                                        }
+                                    }
+                                    if (unified_card_string) {
+                                        var unified_card_info = JSON.parse(unified_card_string);
+                                        if (
+                                            unified_card_info &&
+                                            unified_card_info.media_entities
+                                        ) {
+                                            // If component_objects.media_1 exists, use it for backward compatibility
+                                            if (
+                                                unified_card_info.component_objects &&
+                                                unified_card_info.component_objects.media_1 &&
+                                                unified_card_info.component_objects.media_1.data &&
+                                                unified_card_info.component_objects.media_1.data.id
+                                            ) {
+                                                var media_id = unified_card_info.component_objects.media_1.data.id;
+                                                if (unified_card_info.media_entities[media_id]) {
+                                                    video_info = unified_card_info.media_entities[media_id].video_info;
+                                                }
+                                            } else {
+                                                // Otherwise, select the best video_info from all media_entities
+                                                for (var key in unified_card_info.media_entities) {
+                                                    if (unified_card_info.media_entities.hasOwnProperty(key)) {
+                                                        var entity = unified_card_info.media_entities[key];
+                                                        if (entity.type === 'video' && entity.video_info) {
+                                                            video_info = entity.video_info;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    console.log('[xcom-debug] fallback video_info:', video_info);
+                                } catch (error2) {
+                                    console.error('[xcom-debug] fallback error2:', error, error2);
+                                    // TODO: 外部動画等は未サポート
+                                    console.info('[xcom-debug] response(api_result):', api_result);
+                                }
                             }
-                            catch ( error2 ) {
-                                log_error( tweet_info.tweet_id, error, error2 );
-                                // TODO: 外部動画等は未サポート
-                                log_info( 'response(api_result):', api_result );
+                            var variants = video_info && video_info.variants;
+                            var max_bitrate = -1;
+                            console.log('[xcom-debug] video_info.variants:', variants);
+                            if (Array.isArray(variants)) {
+                                variants.map((variant) => {
+                                    if ((variant.content_type == 'video/mp4') && (variant.bitrate) && (max_bitrate < variant.bitrate)) {
+                                        video_url = variant.url;
+                                        max_bitrate = variant.bitrate;
+                                    }
+                                });
+                                console.log('[xcom-debug] selected video_url:', video_url, 'max_bitrate:', max_bitrate);
                             }
-                        }
-                    } )();
-                    break;
+                        })();
+                        break;
                 }
             }
             catch ( error ) {
-                log_error( 'failed to analyze tweet_info', error );
-                alert( 'Faild to analyze tweet information !' );
+                console.error('[xcom-debug] failed to analyze tweet_info', error);
+                alert('[xcom-debug] Faild to analyze tweet information: ' + (error && error.message ? error.message : error));
             }
         },
         
@@ -4582,72 +4464,268 @@ function setup_video_download_button( $tweet, $media_button ) {
     enable_button();
 } // end of setup_video_download_button()
 
+// Unified per-tweet download button: downloads all media (images, videos, gifs) in a single zip
+function setup_tweet_download_button($tweet, $media_button) {
+    $media_button.text('Download Tweet ⇩');
+
+    let clickable = true;
+    let tweet_info = null;
+    let created_at = null;
+    let zip = null;
+
+    function disable_button() {
+        clickable = false;
+        $media_button.css('cursor', 'progress').off('click');
+    }
+
+    function enable_button() {
+        zip = null;
+        $media_button.css('cursor', 'pointer').on('click', click_handler);
+        clickable = true;
+    }
+
+    // Import shared media extraction logic
+    let extractMediaFromTweetStatus = null;
+    try {
+        if (typeof require !== 'undefined') {
+            extractMediaFromTweetStatus = require('./media_extractor').extractMediaFromTweetStatus;
+        } else if (typeof window !== 'undefined' && window.extractMediaFromTweetStatus) {
+            extractMediaFromTweetStatus = window.extractMediaFromTweetStatus;
+        }
+    } catch (e) {}
+
+    async function extract_all_media(tweet_id) {
+        // Try to get all media from API (preferred), fallback to DOM
+        let api_result = await async_get_tweet_info(tweet_id);
+        let media_items = [];
+        let tweet_data = api_result && api_result.tweet_info;
+        created_at = tweet_data && tweet_data.created_at;
+
+        // Use shared extraction logic if available
+        if (extractMediaFromTweetStatus && tweet_data) {
+            media_items = extractMediaFromTweetStatus(tweet_data).map((item, idx) => ({
+                type: item.media_type === 'image' ? 'photo' : item.media_type,
+                url: item.media_url,
+                order: idx + 1
+            }));
+            if (media_items.length > 0) {
+                if (typeof log_debug === 'function') {
+                    log_debug('[media_extractor:api] Used shared extraction for tweet', tweet_id, media_items);
+                } else {
+                    console.log('[media_extractor:api] Used shared extraction for tweet', tweet_id, media_items);
+                }
+            }
+        }
+
+        // Fallback: try to extract images from DOM if API/shared extraction fails or is incomplete
+        if (media_items.length === 0) {
+            if (typeof log_debug === 'function') {
+                log_debug('[media_extractor:dom] Falling back to DOM extraction for tweet', tweet_id);
+            } else {
+                console.log('[media_extractor:dom] Falling back to DOM extraction for tweet', tweet_id);
+            }
+            let image_info_list = [];
+            $tweet.find('a[role="link"][href*="/status/"][href*="/photo/"]').each(function () {
+                let $image_link = $(this);
+                image_info_list.push({
+                    id: parseInt(($image_link.attr('href') || '0').replace(/^.*\/photo\//, ''), 10),
+                    image_url: $image_link.find('div[aria-label] > img[src*="//pbs.twimg.com/media/"]').attr('src')
+                });
+            });
+            image_info_list.sort((a, b) => a.id - b.id);
+            image_info_list.forEach((info, idx) => {
+                if (info.image_url) {
+                    media_items.push({
+                        type: 'photo',
+                        url: get_img_url_orig(info.image_url),
+                        order: idx + 1
+                    });
+                }
+            });
+        }
+
+        // Fallback: try to extract video/gif from DOM if not found
+        if (media_items.filter(m => m.type !== 'photo').length === 0) {
+            let $video = $tweet.find('video');
+            if ($video.length > 0) {
+                let video_url = $video.attr('src');
+                if (video_url && /\.mp4(?:$|\?)/.test(video_url)) {
+                    // Try to guess type (animated_gif or video)
+                    let is_gif = $tweet.find('span').filter(function () {
+                        return ($(this).text().trim().toUpperCase() === 'GIF');
+                    }).length > 0;
+                    media_items.push({
+                        type: is_gif ? 'animated_gif' : 'video',
+                        url: video_url,
+                        order: media_items.length + 1
+                    });
+                }
+            }
+        }
+
+        return media_items;
+    }
+
+    async function download_all_media_zip() {
+        tweet_info = parse_tweet($tweet);
+        let tweet_id = tweet_info.tweet_id;
+        let screen_name = tweet_info.screen_name;
+        let timestamp_ms = tweet_info.timestamp_ms;
+        let date = new Date(parseInt(timestamp_ms, 10));
+        let timestamp = format_date(date, 'YYYYMMDD_hhmmss');
+        let zipdate = adjust_date_for_zip(date);
+
+        let media_items = await extract_all_media(tweet_id);
+
+        if (media_items.length === 0) {
+            alert('No media found in this tweet!');
+            enable_button();
+            return;
+        }
+
+        // If only one file, download directly without zipping
+        if (media_items.length === 1) {
+            let media = media_items[0];
+            let ext = 'bin';
+            if (media.type === 'photo') {
+                ext = get_img_extension(media.url);
+            } else if (media.type === 'video' || media.type === 'animated_gif') {
+                ext = get_video_extension(media.url);
+            }
+            let media_prefix = (media.type === 'photo') ? 'img' : (media.type === 'animated_gif' ? 'gif' : 'vid');
+            let filename = [
+                screen_name,
+                tweet_id,
+                timestamp,
+                media_prefix + (media.order || 1)
+            ].join('-') + '.' + ext;
+
+            // Fetch binary
+            let fetch_result = await async_fetch_media(media.url, 'arraybuffer');
+            if (fetch_result.error) {
+                log_error('Download failure', media.url, fetch_result.error, fetch_result.response);
+                alert('Download failed!');
+                enable_button();
+                return;
+            }
+            // Wrap ArrayBuffer in a Blob with correct MIME type
+            let mimeType = 'application/octet-stream';
+            if (media.type === 'photo') {
+                if (ext === 'jpg' || ext === 'jpeg') mimeType = 'image/jpeg';
+                else if (ext === 'png') mimeType = 'image/png';
+                else if (ext === 'gif') mimeType = 'image/gif';
+            } else if (media.type === 'video' || media.type === 'animated_gif') {
+                mimeType = 'video/mp4';
+            }
+            let blob = new Blob([fetch_result.response], { type: mimeType });
+            download_blob(filename, blob);
+            enable_button();
+            return;
+        }
+
+        // Otherwise, zip as before
+        zip = new JSZip();
+
+        for (let i = 0; i < media_items.length; i++) {
+            let media = media_items[i];
+            let ext = 'bin';
+            if (media.type === 'photo') {
+                ext = get_img_extension(media.url);
+            } else if (media.type === 'video' || media.type === 'animated_gif') {
+                ext = get_video_extension(media.url);
+            }
+            let media_prefix = (media.type === 'photo') ? 'img' : (media.type === 'animated_gif' ? 'gif' : 'vid');
+            let filename = [
+                screen_name,
+                tweet_id,
+                timestamp,
+                media_prefix + (media.order || (i + 1))
+            ].join('-') + '.' + ext;
+
+            // Fetch binary
+            let fetch_result = await async_fetch_media(media.url, 'arraybuffer');
+            if (fetch_result.error) {
+                log_error('Download failure', media.url, fetch_result.error, fetch_result.response);
+                continue;
+            }
+            zip.file(filename, fetch_result.response, { date: zipdate });
+        }
+
+        let zip_filename = [
+            screen_name,
+            tweet_id,
+            timestamp,
+            'media'
+        ].join('-') + '.zip';
+
+        let download_result = await async_download_zip(zip, zip_filename);
+
+        if (download_result.error) {
+            log_error('Error in zip.generateAsync()', download_result.error);
+            alert('ZIP download failed!');
+        }
+        enable_button();
+    }
+
+    function click_handler($event) {
+        if (!clickable) return;
+        disable_button();
+        $event.stopPropagation();
+        $event.preventDefault();
+        download_all_media_zip();
+    }
+
+    enable_button();
+} // end of setup_tweet_download_button()
+
 
 function add_media_button_to_tweet( $tweet ) {
     var media_button_class_name = SCRIPT_NAME + '_media_button',
         tweet_profile_class_name = SCRIPT_NAME + '_tweet_profile';
-    
+
     var tweet_info = parse_tweet( $tweet );
 
     if ( ! tweet_info.is_min_render_complete ) {
         return false;
     }
-    
+
     if ( ! tweet_info.has_media ) {
         return false;
     }
-    
-    if ( tweet_info.has.images ) {
-        if ( ! OPTIONS.IMAGE_DOWNLOAD_LINK ) {
-            return false;
-        }
-    }
-    else {
-        if ( ! OPTIONS.VIDEO_DOWNLOAD_LINK ) {
-            return false;
-        }
-    }
-    
-    update_video_mark( tweet_info );
-    
+
     var $action_list = ( 0 < tweet_info.$source_label_container.length ) ? tweet_info.$source_label_container : tweet_info.$action_list_container,
         $media_button_container = $action_list.find( '.' + media_button_class_name );
-    
+
     if ( 0 < $media_button_container.length ) {
         return false;
     }
-    
-    var tooltip_title = ( OPTIONS.OPEN_MEDIA_LINK_BY_DEFAULT ) ? OPTIONS.OPEN_MEDIA_LINK : OPTIONS.DOWNLOAD_MEDIA_TITLE,
-        tooltip_alt_title = ( OPTIONS.OPEN_MEDIA_LINK_BY_DEFAULT ) ? OPTIONS.DOWNLOAD_MEDIA_TITLE : OPTIONS.OPEN_MEDIA_LINK;
-    
+
+    var tooltip_title = OPTIONS.DOWNLOAD_MEDIA_TITLE,
+        tooltip_alt_title = OPTIONS.OPEN_MEDIA_LINK;
+
     $media_button_container = $( '<div class="ProfileTweet-action js-tooltip"><button/></div>' )
         .addClass( media_button_class_name )
         .attr( 'title', 'Click: ' + tooltip_title + ' / \n' + ( IS_MAC ? '[option]' : '[Alt]' ) + '+Click: ' + tooltip_alt_title )
         .css( {
             'display' : 'none'
         } );
-    
+
     var $media_button = $media_button_container.find( 'button:first' ).addClass( 'btn' );
-    
-    if ( tweet_info.has.images ) {
-        setup_image_download_button( $tweet, $media_button );
-    }
-    else {
-        setup_video_download_button( $tweet, $media_button );
-    }
-    
+    $media_button.text( 'Download Tweet ⇩' );
+
+    setup_tweet_download_button( $tweet, $media_button );
+
     var $action_more = $action_list.find( '.ProfileTweet-action--more' );
-    
+
     if ( 0 < $action_more.length ) {
-        // 操作性のため、「その他」メニュー("float:right;"指定)よりも左側に挿入
         $action_more.before( $media_button_container );
     }
     else {
         $action_list.append( $media_button_container );
     }
-    
+
     $media_button_container.css( 'display', 'inline-block' );
-    
+
     return ( 0 < $media_button_container.length );
 } // end of add_media_button_to_tweet()
 

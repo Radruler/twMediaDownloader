@@ -161,13 +161,13 @@ $( async function () {
                 return option_keys;
             } )();
     
-    var $bulk_download_button = $('input[name="BULK_DOWNLOAD"]'),
-        $bulk_download_likes_button = $('input[name="BULK_DOWNLOAD_LIKES"]'),
-        bulk_download_is_ready = false,
-        bulk_download_likes_is_ready = false;
+    // var $bulk_download_button = $('input[name="BULK_DOWNLOAD"]'),
+    //     $bulk_download_likes_button = $('input[name="BULK_DOWNLOAD_LIKES"]'),
+    //     bulk_download_is_ready = false,
+    //     bulk_download_likes_is_ready = false;
     
-    $bulk_download_button.hide();
-    $bulk_download_likes_button.hide();
+    // $bulk_download_button.hide();
+    // $bulk_download_likes_button.hide();
     
     var active_tab_info = await get_active_tab_info().catch( error => ({}) );
     
@@ -175,70 +175,70 @@ $( async function () {
         var pathname = new URL( active_tab_info.url ).pathname,
             pagename = ( pathname.match(/^\/([^/]+)/) || {} )[1];
         
-        switch ( pagename ) {
-            case 'home' :
-            case 'explore' :
-            case 'messages' :
-            case 'settings' : {
-                break;
-            }
-            case 'i' : {
-                if ( /^\/i\/bookmarks(?=\/|$)/.test(pathname) ) {
-                    bulk_download_is_ready = true;
-                }
-                break;
-            }
-            case 'search' :
-            case 'hashtag' :
-            case 'notifications' : {
-                bulk_download_is_ready = true;
-                break;
-            }
-            default : {
-                if ( /^\/[^/]+(\/(?:with_replies|media|likes))?\/?$/.test(pathname) ) {
-                    bulk_download_is_ready = true;
-                    bulk_download_likes_is_ready = true;
-                }
-                break;
-            }
-        }
-        
-        if ( bulk_download_is_ready ) {
-            $bulk_download_button.on( 'click', ( $event ) => {
-                if ( background_window.bulk_download_request ) {
-                    background_window.bulk_download_request( active_tab_info.tab, 'media' );
-                    window.close();
-                }
-                else {
-                    chrome.runtime.sendMessage( {
-                        type : 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS',
-                        tab : active_tab_info.tab,
-                        kind : 'media',
-                    }, function ( response ) {
-                        window.close();
-                    } );
-                }
-            } );
-            $bulk_download_button.show();
-        }
-        if ( bulk_download_likes_is_ready ) {
-            $bulk_download_likes_button.on( 'click', ( $event ) => {
-                if ( background_window.bulk_download_request ) {
-                    background_window.bulk_download_request( active_tab_info.tab, 'likes' );
-                    window.close();
-                }
-                else {
-                    chrome.runtime.sendMessage( {
-                        type : 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS',
-                        tab : active_tab_info.tab,
-                        kind : 'likes',
-                    }, function ( response ) {
-                        window.close();
-                    } );
-                }
-            } );
-            $bulk_download_likes_button.show();
-        }
+        // switch ( pagename ) {
+        //     case 'home' :
+        //     case 'explore' :
+        //     case 'messages' :
+        //     case 'settings' : {
+        //         break;
+        //     }
+        //     case 'i' : {
+        //         if ( /^\/i\/bookmarks(?=\/|$)/.test(pathname) ) {
+        //             bulk_download_is_ready = true;
+        //         }
+        //         break;
+        //     }
+        //     case 'search' :
+        //     case 'hashtag' :
+        //     case 'notifications' : {
+        //         bulk_download_is_ready = true;
+        //         break;
+        //     }
+        //     default : {
+        //         if ( /^\/[^/]+(\/(?:with_replies|media|likes))?\/?$/.test(pathname) ) {
+        //             bulk_download_is_ready = true;
+        //             bulk_download_likes_is_ready = true;
+        //         }
+        //         break;
+        //     }
+        // }
+        // 
+        // if ( bulk_download_is_ready ) {
+        //     $bulk_download_button.on( 'click', ( $event ) => {
+        //         if ( background_window.bulk_download_request ) {
+        //             background_window.bulk_download_request( active_tab_info.tab, 'media' );
+        //             window.close();
+        //         }
+        //         else {
+        //             chrome.runtime.sendMessage( {
+        //                 type : 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS',
+        //                 tab : active_tab_info.tab,
+        //                 kind : 'media',
+        //             }, function ( response ) {
+        //                 window.close();
+        //             } );
+        //         }
+        //     } );
+        //     $bulk_download_button.show();
+        // }
+        // if ( bulk_download_likes_is_ready ) {
+        //     $bulk_download_likes_button.on( 'click', ( $event ) => {
+        //         if ( background_window.bulk_download_request ) {
+        //             background_window.bulk_download_request( active_tab_info.tab, 'likes' );
+        //             window.close();
+        //         }
+        //         else {
+        //             chrome.runtime.sendMessage( {
+        //                 type : 'BULK_DOWNLOAD_REQUEST_FROM_OPTIONS',
+        //                 tab : active_tab_info.tab,
+        //                 kind : 'likes',
+        //             }, function ( response ) {
+        //                 window.close();
+        //             } );
+        //         }
+        //     } );
+        //     $bulk_download_likes_button.show();
+        // }
     }
     
     STR_KV_LIST.forEach( function( str_kv ) {

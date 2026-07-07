@@ -4,7 +4,7 @@
 const
     MODULE_NAME = 'TwitterTimeline',
     
-    context_global = ( typeof global != 'undefined' ) ? global : ( typeof window != 'undefined' ) ? window : this; // 注: Firefox WebExtension の content_scripts 内では this !== window
+    context_global = ( typeof global != 'undefined' ) ? global : ( typeof window != 'undefined' ) ? window : this; // Note: In Firefox WebExtension content_scripts, this !== window
 
 ( ( exports ) => {
 const
@@ -13,13 +13,13 @@ const
     DEFAULT_DEBUG_MODE = false,
     DEFAULT_SCRIPT_NAME = MODULE_NAME,
     
-    ENABLE_EXTERNAL_DECIMAL_LIBRARY = true, // BigInt 取り扱い用に外部 Decimalライブラリを使用するかどうかを設定
-    // true : BigInt を扱うライブラリとして、[MikeMcl/decimal.js: An arbitrary-precision Decimal type for JavaScript](https://github.com/MikeMcl/decimal.js) を優先して使用
-    // false: 本モジュール内で Decimal class を定義して使用
+    ENABLE_EXTERNAL_DECIMAL_LIBRARY = true, // Whether to use an external Decimal library for BigInt handling
+    // true : Prefer to use [MikeMcl/decimal.js: An arbitrary-precision Decimal type for JavaScript](https://github.com/MikeMcl/decimal.js) as the BigInt library
+    // false: Define and use the Decimal class within this module
     
     self = undefined,
-    // TODO: class 関数内で self を使っているが、window.self が参照できるため、定義し忘れていてもエラーにならず気づきにくい
-    // →暫定的に const self を undefined で定義して window.self への参照を切る
+    // TODO: self is used inside class functions, but since window.self can be referenced, forgetting to define it may not cause an error and is hard to notice
+    // → As a workaround, define const self as undefined to break the reference to window.self
     
     IS_WEB_EXTENSION = ( () => {
         return context_global.is_web_extension || context_global.is_chrome_extension;
@@ -28,8 +28,8 @@ const
     user_agent = navigator.userAgent.toLowerCase(),
     IS_FIREFOX = ( 0 <= user_agent.indexOf( 'firefox' ) ),
     
-    // ■ Firefox で XMLHttpRequest や fetch が予期しない動作をしたり、開発者ツールのネットワークに通信内容が表示されないことへの対策
-    // 参考: [Firefox のアドオン(content_scripts)でXMLHttpRequestやfetchを使う場合の注意 - 風柳メモ](https://memo.furyutei.work/entry/20180718/1531914142)
+    // ■ Workaround for unexpected behavior of XMLHttpRequest or fetch in Firefox, or when network activity is not shown in developer tools
+    // Reference: [Cautions when using XMLHttpRequest or fetch in Firefox add-on (content_scripts) - Furyutei Memo](https://memo.furyutei.work/entry/20180718/1531914142)
     XMLHttpRequest = ( typeof content != 'undefined' && typeof content.XMLHttpRequest == 'function' ) ? content.XMLHttpRequest  : context_global.XMLHttpRequest,
     fetch = ( typeof content != 'undefined' && typeof content.fetch == 'function' ) ? content.fetch  : context_global.fetch,
     
@@ -103,7 +103,7 @@ const
     
     browser = ( () => {
         const
-            browser = ( this.browser && this.browser.runtime ) ? this.browser : this.chrome; // 注: Firefox の content_scripts 内では this !== window
+            browser = ( this.browser && this.browser.runtime ) ? this.browser : this.chrome; // Note: In Firefox content_scripts, this !== window
         
         if ( IS_WEB_EXTENSION && ( ( ! browser ) || ( ! browser.runtime ) ) ) {
             exit_for_unsupported();
@@ -175,7 +175,7 @@ const
                         return BigInt( n );
                     }
                     catch ( error ) {
-                        return BigInt( Math.floor( n ) ); // TODO: 小数部があると精度が落ちる
+                        return BigInt( Math.floor( n ) ); // TODO: Precision is lost if there is a fractional part
                     }
                 }
                 
@@ -217,15 +217,15 @@ const
         return Decimal;
     } )(),
     
-    ID_INC_PER_MSEC = Decimal.pow( 2, 22 ), // ミリ秒毎のID増分
-    ID_INC_PER_SEC = ID_INC_PER_MSEC.mul( 1000 ), // 秒毎のID増分
+    ID_INC_PER_MSEC = Decimal.pow( 2, 22 ), // ID increment per millisecond
+    ID_INC_PER_SEC = ID_INC_PER_MSEC.mul( 1000 ), // ID increment per second
     TWEPOCH_OFFSET_MSEC = 1288834974657,
     TWEPOCH_OFFSET_SEC = Math.ceil( TWEPOCH_OFFSET_MSEC / 1000 ), // 1288834974.657 sec (2010.11.04 01:42:54(UTC)) (via http://www.slideshare.net/pfi/id-15755280)
-    ID_THRESHOLD = '300000000000000', // 2010.11.04 22時(UTC)頃に、IDが 30000000000以下から300000000000000以上に切り替え
+    ID_THRESHOLD = '300000000000000', // Around 2010-11-04 22:00 (UTC), IDs switched from below 30000000000 to above 300000000000000
     DEFAULT_UNTIL_ID = '9153891586667446272', // // datetime_to_tweet_id(Date.parse( '2080-01-01T00:00:00.000Z' )) => 9153891586667446272
     
-    LIKE_ID_INC_PER_MSEC = Decimal.pow( 2, 20 ), // Like ID（/2/timeline/favorites/<usr_id>応答のsortIndex）の、ミリ秒毎の増加分
-    BOOKMARK_ID_INC_PER_MSEC = Decimal.pow( 2, 18 ), // Bookmark ID（/2/timeline/bookmark/応答のsortIndex）の、ミリ秒毎の増加分
+    LIKE_ID_INC_PER_MSEC = Decimal.pow( 2, 20 ), // Like ID (sortIndex in /2/timeline/favorites/<usr_id> response), increment per millisecond
+    BOOKMARK_ID_INC_PER_MSEC = Decimal.pow( 2, 18 ), // Bookmark ID (sortIndex in /2/timeline/bookmark/ response), increment per millisecond
     
     convert_utc_msec_to_tweet_id = ( utc_msec ) => {
         if ( ! utc_msec ) {
@@ -1464,6 +1464,16 @@ const
                     datetime = format_date( date, 'YYYY/MM/DD hh:mm:ss' ),
                     media_list = self.get_media_list_from_tweet_status( tweet_status );
                 
+                // Deep copy card if present, to preserve all card/unified_card data for downstream extraction
+                let card = undefined;
+                if (tweet_status.card) {
+                    try {
+                        card = JSON.parse(JSON.stringify(tweet_status.card));
+                    } catch (e) {
+                        card = tweet_status.card;
+                    }
+                }
+
                 Object.assign( tweet_info, {
                     id : tweet_status.id_str,
                     user_id : user.id_str,
@@ -1481,6 +1491,7 @@ const
                     retweet_count : tweet_status.retweet_count,
                     like_count : tweet_status.favorite_count,
                     tweet_url : 'https://twitter.com/' + user.screen_name + '/status/' + tweet_status.id_str,
+                    card // <-- include card for downstream unified_card extraction
                 } );
             }
             catch ( error ) {
@@ -1512,60 +1523,16 @@ const
         } // end of convert_tweet_text_from_tweet_status()
         
         get_media_list_from_tweet_status( tweet_status ) {
-            let source_media_infos = [];
-            
-            if ( tweet_status.extended_entities && tweet_status.extended_entities.media ) {
-                source_media_infos = tweet_status.extended_entities.media;
+            // Use shared extraction logic from media_extractor.js
+            if (typeof require !== 'undefined') {
+                const { extractMediaFromTweetStatus } = require('./media_extractor');
+                return extractMediaFromTweetStatus(tweet_status);
+            } else if (typeof window !== 'undefined' && window.extractMediaFromTweetStatus) {
+                return window.extractMediaFromTweetStatus(tweet_status);
+            } else {
+                // Fallback: no extraction available
+                return [];
             }
-            else if ( tweet_status.entities && tweet_status.entities.media ) {
-                source_media_infos = tweet_status.entities.media;
-            }
-            else {
-                try {
-                    let unified_card_info = JSON.parse( tweet_status.card.binding_values.unified_card.string_value );
-                    
-                    source_media_infos = [ unified_card_info.media_entities[ unified_card_info.component_objects.media_1.data.id ] ];
-                }
-                catch ( error ) {
-                    source_media_infos = [];
-                }
-            }
-            
-            return source_media_infos.map( ( source_media_info ) => {
-                let media_type = MEDIA_TYPE.unknown,
-                    media_url = null,
-                    get_max_bitrate_video_info = ( video_infos ) => {
-                        return video_infos.filter( video_info => video_info.content_type == 'video/mp4' ).reduce( ( video_info_max_bitrate, video_info ) => {
-                            return ( video_info_max_bitrate.bitrate < video_info.bitrate ) ? video_info : video_info_max_bitrate;
-                        }, { bitrate : -1 } );
-                    };
-                
-                switch ( source_media_info.type ) {
-                    case 'photo' :
-                        media_type = MEDIA_TYPE.image;
-                        try {
-                            media_url = source_media_info.media_url_https.replace( /\.([^.]+)$/, '?format=$1&name=orig' );
-                        }
-                        catch ( error ) {
-                        }
-                        break;
-                    
-                    case 'animated_gif' :
-                        media_type = MEDIA_TYPE.gif;
-                        media_url = get_max_bitrate_video_info( ( source_media_info.video_info || {} ).variants || [] ).url;
-                        break;
-                    
-                    case 'video' :
-                        media_type = MEDIA_TYPE.video;
-                        media_url = get_max_bitrate_video_info( ( source_media_info.video_info || {} ).variants || [] ).url;
-                        break;
-                }
-                
-                return {
-                    media_type,
-                    media_url,
-                };
-            } ).filter( media => ( media.media_type != MEDIA_TYPE.unknown ) && ( media.media_url ) );
         } // end of get_media_list_from_tweet_status()
         
     }, // end of TIMELINE_TOOLBOX()
