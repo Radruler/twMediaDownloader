@@ -20,7 +20,7 @@
  * before; dist/ is the artifact to load unpacked (chrome://extensions).
  */
 
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as esbuild from 'esbuild';
@@ -72,8 +72,10 @@ catch (error) {
 `;
 
 async function copyStatic() {
-  await rm(distDir, { recursive: true, force: true });
   await mkdir(distDir, { recursive: true });
+  for (const entry of await readdir(distDir)) {
+    await rm(path.join(distDir, entry), { recursive: true, force: true });
+  }
   await cp(srcDir, distDir, {
     recursive: true,
     filter: (source) => !source.includes(`${path.sep}deprecated`),
@@ -134,5 +136,5 @@ if (watch) {
   await esbuild.build(bundleOptions);
   await esbuild.build(appBundleOptions);
   console.log(`built ${path.relative(root, distDir)}/ — load it unpacked via chrome://extensions`);
-  console.log('built app/dist/main.mjs — run with: npm run app');
+  console.log('built app/dist/main.mjs — run the companion app inside the devcontainer with: npm run app');
 }

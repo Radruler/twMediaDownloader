@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      pull: false
+    image: twmd-devcontainer:node-22.12
+    command: sleep infinity
+    working_dir: /workspaces/twMediaDownloader
+    ports:
+      - "127.0.0.1:8465:8465"
+    volumes:
+      - ..:/workspaces/twMediaDownloader:cached
+      - twmd-node-modules:/workspaces/twMediaDownloader/node_modules
+      - twmd-app-node-modules:/workspaces/twMediaDownloader/app/node_modules
+      - twmd-npm-cache:/home/node/.npm
+      - twmd-app-data:/twmd-app
+    environment:
+      npm_config_cache: /home/node/.npm
+      TWMD_APP_DIR: /twmd-app
+      TWMD_APP_HOST: 0.0.0.0
+
+volumes:
+  twmd-node-modules:
+  twmd-app-node-modules:
+  twmd-npm-cache:
+  twmd-app-data:

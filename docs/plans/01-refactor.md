@@ -85,6 +85,11 @@ MV3 content scripts can't use ES modules directly, so add a minimal bundler:
 - Replace the mystery root scripts `chrome-mode`/`firefox-mode` (manifest swappers) with the build flags above.
 - Current `package.json` deps (`acorn`, `lodash`, `minimist` — unused at runtime) → remove.
 
+Current workflow amendment (2026-07-09): run the npm scripts above through
+`.devcontainer/` rather than host npm. The devcontainer pins Node 22.12.0 and
+keeps dependencies/cache in Docker volumes while writing build artifacts into
+the checkout.
+
 ### Migration strategy (important — don't big-bang)
 
 1. Land tooling + layout with the *existing* `main_react.user.js` as a temporary monolith module that the entry point imports. Extension must build and load at every commit.
@@ -106,7 +111,8 @@ MV3 content scripts can't use ES modules directly, so add a minimal bundler:
 
 ## Acceptance criteria
 
-- `npm run build` produces a loadable, error-free extension for Chrome; `npm test` green.
+- Devcontainer `npm run build` produces a loadable, error-free extension for
+  Chrome; devcontainer `npm test` green.
 - Repo JS (excluding vendored jszip/jquery, tests, fixtures) under ~4,000 lines after plans 02–04 land.
 - Every x.com selector greps to exactly one file; every GraphQL field access greps to exactly one file.
 - `CLAUDE.md` + `ARCHITECTURE.md` exist and match reality.

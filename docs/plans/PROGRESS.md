@@ -15,8 +15,8 @@ The remote is the handoff medium — every green commit is pushed.
 
 > ALL WORK IN THIS DISPATCH IS DONE (milestones A–D, handoff, stretch S1).
 > Nothing is pending. If you are a resumed session: verify with
-> `npm test && npm run typecheck && npm run build` (148 tests green as of
-> the last commit) and stop — the next work items belong to other
+> `docker compose -f .devcontainer/docker-compose.yml run --rm app sh -lc 'npm test && npm run typecheck && npm run build'`
+> (148 tests green as of the last verification) and stop — the next work items belong to other
 > dispatches: step 3a (live-DOM selector verification + real button UI,
 > see plan 03 §5 + step-3b5-handoff.md), step 4 (bulk/scroll driver), app
 > M3 (library UI). The owner's manual Chrome walkthrough is in
@@ -84,7 +84,8 @@ State: `todo` | `doing` | `done <sha>`
       hello/hello_ack, versioned {v:1,...} frames, error frames for bad
       token / unsupported version, heartbeat ping. downloader.js is an M1
       STUB (queue bookkeeping only — real M2 next). App is bundled by
-      build.mjs to app/dist/main.mjs (imports @twmd/core TS): npm run app.
+      build.mjs to app/dist/main.mjs (imports @twmd/core TS): npm run app
+      inside the devcontainer.
       Smoke-run verified (first-run banner, listen, SIGTERM shutdown).
 - [x] **C2** `done` (same commit) — app/src/db.js: better-sqlite3, WAL,
       exact plan 06 §3 schema (posts/versions/media/files+UNIQUE(sha256)/
@@ -152,12 +153,21 @@ State: `todo` | `doing` | `done <sha>`
 - [x] NEXT ACTION above kept precise at every commit.
 
 ## Verification expectations
+- Use the devcontainer for repo tooling. Build it once with
+  `docker compose -f .devcontainer/docker-compose.yml build app`, install
+  with `docker compose -f .devcontainer/docker-compose.yml run --rm app npm ci`,
+  then run npm scripts through that compose service. Do not require host
+  `node_modules` for normal verification.
+- The devcontainer pins Node 22.12.0. `node_modules`, npm cache, and app data
+  live in Docker volumes; `dist/` and `app/dist/` are written into the checkout
+  so Chrome can load the built extension from `dist/`.
 - A/C/D: unit tests (vitest at root). App ingest tested against
   test/fixtures/graphql expected outputs.
 - B + live ws loop: no browser here — provide a scripted fake (Node script
   replaying fixture TweetRecords over the ws protocol) so M1/M2 are provable
   end-to-end; document the manual Chrome walkthrough in the handoff.
-- Every commit: `npm test && npm run typecheck && npm run build` green.
+- Every commit: devcontainer
+  `npm test && npm run typecheck && npm run build` green.
 
 ## HARD CONSTRAINTS (never violate)
 - No request to x.com/api.x.com from any new code. Media/CDN GETs only
@@ -183,3 +193,7 @@ State: `todo` | `doing` | `done <sha>`
   `run = /** @type {any} */ (null)`.
 - npm workspaces: `app` added to root package.json workspaces;
   better-sqlite3 installed with working FTS5 in this environment.
+- 2026-07-09 devcontainer update: repo tooling now runs through
+  `.devcontainer/`; host `npm` is not required. `build.mjs` empties `dist/`
+  contents instead of deleting the directory itself, so builds also work when
+  an output directory is a mount.

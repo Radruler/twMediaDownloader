@@ -16,7 +16,8 @@ overrides everything, including this file.
   `tweet-cache.js` (LRU 5000, 00-overview API), isolated entry with debug
   overlay + fixture-capture mode.
 - Tooling: esbuild `npm run build` → loadable MV3 `dist/` (src/ untouched),
-  vitest at root — 62 tests green, `tsc --noEmit` clean.
+  vitest at root. Current verification should run through the devcontainer,
+  not host npm.
 - Fixtures: synthetics for 8 operations + edge cases, **plus real owner
   captures for TweetDetail / UserTweets / UserMedia / Likes / empty Bookmarks**
   — all normalized with zero code changes (live envelope is
@@ -60,13 +61,15 @@ test/*.test.ts                    52 tests: fixtures, cache, interceptor behavio
 docs/CAPTURE_FIXTURES.md          owner workflow to replace synthetic fixtures with real ones
 ```
 
-Build: `npm run build` copies `src/` (untouched, minus `src/deprecated/`) into
+Build: run `npm run build` inside the devcontainer. It copies `src/`
+(untouched, minus `src/deprecated/`) into
 `dist/`, bundles the two capture entries to `dist/js/{page-interceptor,capture}.js`,
 and writes `dist/manifest.json` = `src/manifest.json` + two content-script
 entries (interceptor with `"world": "MAIN"`, both `document_start`).
 `src/manifest.json` itself was deliberately NOT edited — it lacks the bundles,
 so editing it would have broken loading `src/` directly. **Load `dist/`.**
-`npm run watch` rebuilds bundles on change (re-run a full build after
+`npm run watch` rebuilds bundles on change (run it inside the devcontainer;
+re-run a full build after
 touching `src/` or the manifest).
 
 ## The data flow (what you consume)
@@ -139,10 +142,10 @@ page's own fetch/XHR ▶ page-interceptor (MAIN) ▶ CustomEvent 'twmd:graphql'
 
 ## Dry-run walkthrough (what the owner should see)
 
-After `npm run build`, load `dist/` unpacked (chrome://extensions, Developer
-mode). Expect no manifest/service-worker errors (the legacy SW warning
-baseline is unchanged). On x.com set `localStorage.twmd_debug_overlay = '1'`
-and reload:
+After a devcontainer build, load `dist/` unpacked (chrome://extensions,
+Developer mode). Expect no manifest/service-worker errors (the legacy SW
+warning baseline is unchanged). On x.com set
+`localStorage.twmd_debug_overlay = '1'` and reload:
 
 1. **Home** — overlay appears bottom-right; `HomeTimeline` counter ticks,
    cache size jumps by ~20–40 per scroll chunk; last-ids list updates.
@@ -159,8 +162,11 @@ and reload:
 
 ## Verification status (this branch, 2026-07)
 
-- `npm test` — 52 tests green (fixtures locked to expected/ + behavioral).
-- `npm run typecheck` — clean.
-- `npm run build` — produces dist/; manifest JSON verified to contain the two
+- Run verification in the devcontainer:
+  `docker compose -f .devcontainer/docker-compose.yml run --rm app sh -lc
+  'npm test && npm run typecheck && npm run build'`.
+- The historical step-2 branch had 52 tests green; current master has 148
+  tests green across the full stack.
+- `npm run build` in the devcontainer produces dist/; manifest JSON verified to contain the two
   new entries with correct worlds. Loading in a real Chrome was not possible
   in this environment — the owner's dry-run above is the remaining check.

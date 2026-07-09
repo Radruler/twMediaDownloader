@@ -2,7 +2,9 @@
  * main.js — companion-app entry (plan 06 M1/M2). Plain Node daemon with a
  * log console; the Electron shell + library UI are M3 (deferred).
  *
- * Run: npm run build && npm run app   (or: node app/dist/main.mjs)
+ * Run through the devcontainer:
+ *   docker compose -f .devcontainer/docker-compose.yml exec app npm run app
+ * Or directly after a build: node app/dist/main.mjs
  * Config dir: $TWMD_APP_DIR or ~/.twmd-app (config.json, library.sqlite3,
  * archive/).
  */
@@ -22,6 +24,8 @@ function log(...args) {
 }
 
 const { config, firstRun, file } = loadConfig();
+const host = process.env.TWMD_APP_HOST || '127.0.0.1';
+const publicHost = host === '0.0.0.0' ? '127.0.0.1' : host;
 
 if (firstRun) {
   console.log('');
@@ -53,6 +57,7 @@ const downloader = createDownloader({
 
 const server = createAppServer({
   port: config.port,
+  host,
   token: config.token,
   db,
   log,
@@ -61,7 +66,7 @@ const server = createAppServer({
 });
 
 await server.ready;
-log(`listening on ws://127.0.0.1:${server.port} — waiting for the extension`);
+log(`listening on ws://${publicHost}:${server.port} — waiting for the extension`);
 log(`archive root: ${config.archive_root}`);
 
 let closing = false;

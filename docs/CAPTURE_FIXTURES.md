@@ -38,8 +38,12 @@ copies of responses the page fetched on its own.
 
 ## Path A (recommended): the built-in capture mode
 
-1. `npm run build`, then load `dist/` unpacked via `chrome://extensions`
-   (Developer mode → "Load unpacked").
+1. Build in the devcontainer, then load `dist/` unpacked via
+   `chrome://extensions` (Developer mode → "Load unpacked"):
+
+   ```sh
+   docker compose -f .devcontainer/docker-compose.yml run --rm app npm run build
+   ```
 2. On x.com, open DevTools → Console (top/page context is fine — these flags
    live in page `localStorage`, which both worlds share) and run:
 
@@ -97,12 +101,24 @@ plausible fakes (same URL shape) is acceptable too.
 
 1. Save as `test/fixtures/graphql/<Op>[-variant].captured.json`. Make sure
    the `__fixture.op` field is the operation name (tests read it).
-2. `npm run update-expected` — generates
+2. Run the expected-output generator in the devcontainer:
+
+   ```sh
+   docker compose -f .devcontainer/docker-compose.yml run --rm app npm run update-expected
+   ```
+
+   This generates
    `test/fixtures/graphql/expected/<same name>.json`.
 3. **Review both files** (the expected output is the contract: check
    `full_text`, media variants, user fields, tombstones look right).
-4. `npm test`. If normalization dropped something the payload clearly
-   contains, that's a normalizer bug: fix
+4. Run tests in the devcontainer:
+
+   ```sh
+   docker compose -f .devcontainer/docker-compose.yml run --rm app npm test
+   ```
+
+   If normalization dropped something the payload clearly contains, that's a
+   normalizer bug: fix
    `packages/core/src/graphql-normalize.ts` until the expected output is
    correct, regenerate, re-review.
 5. Once a real capture covers what a synthetic fixture covered, delete the

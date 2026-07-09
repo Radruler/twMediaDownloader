@@ -22,8 +22,8 @@ docs/plans/PROGRESS.md.
   with sha256 dedupe and bulk-run folders). Extension ws client with
   offline archive buffering. `scripts/fake-extension.mjs` proves the loop
   without Chrome.
-- 145 tests green, `tsc --noEmit` clean, `npm run build` produces both
-  the loadable `dist/` extension and `app/dist/main.mjs`.
+- 148 tests green, `tsc --noEmit` clean, and the devcontainer build produces
+  both the loadable `dist/` extension and `app/dist/main.mjs`.
 
 **Deliberately NOT done (scope boundaries, not oversights):**
 - No UI layer (3a) — the only save triggers are `__twmdDebug.save()` /
@@ -77,11 +77,23 @@ test/                filename, media-url, sidecar, save, app-db, app-protocol
                      (real ws server+client), app-downloader (real files)
 ```
 
-Build: `npm run build` → `dist/` (extension; now also grows the
+Build: run `npm run build` inside the devcontainer → `dist/` (extension; now also grows the
 `downloads`+`webRequest` permissions and a regenerated
 `background-wrapper.js` that imports the two new worker bundles) and
 `app/dist/main.mjs` (the app bundled for plain Node; `better-sqlite3`/`ws`
-external). `npm run app` runs the daemon.
+external). `npm run app` runs the daemon inside the devcontainer.
+
+Devcontainer workflow (preferred; no host `npm` required):
+
+```sh
+docker compose -f .devcontainer/docker-compose.yml build app
+docker compose -f .devcontainer/docker-compose.yml run --rm app npm ci
+docker compose -f .devcontainer/docker-compose.yml run --rm app sh -lc 'npm test && npm run typecheck && npm run build'
+```
+
+The devcontainer pins Node 22.12.0. Dependencies, npm cache, and the app's
+config/library/archive live in Docker volumes. `dist/` and `app/dist/` are
+written into the checkout so Chrome can load `dist/` from the host.
 
 ## How the pieces talk
 
@@ -151,12 +163,14 @@ webRequest observation ─▶ 'twmd-template' port ─▶ app-client
 5. Firefox: untested entirely this pass (Chrome-first, Decision 10).
 6. `npm run watch` doesn't rebuild the copied `src/` statics (pre-existing).
 7. better-sqlite3 is a native dep — a Node major upgrade needs a rebuild
-   (`npm rebuild better-sqlite3`).
+   (`npm ci` in a fresh container volume or `npm rebuild better-sqlite3`).
 
 ## Owner walkthrough (manual, in Chrome)
 
 Standalone save (plan 04 acceptance):
-1. `npm install && npm run build`, load `dist/` unpacked.
+1. Build in the devcontainer:
+   `docker compose -f .devcontainer/docker-compose.yml run --rm app npm run build`,
+   then load `dist/` unpacked.
 2. On x.com, open DevTools → console → this extension's context. Scroll
    any timeline; `__twmdDebug.stats()` should show cache entries.
 3. Pick a photo tweet's id (from `__twmdDebug.last()`), run
@@ -170,7 +184,12 @@ Standalone save (plan 04 acceptance):
    (`-gif1.mp4`).
 
 Companion app (plan 06 M1/M2 acceptance):
-6. `npm run app` in a terminal — copy the pairing token it prints.
+6. Start the compose service, then run the daemon in it:
+   `docker compose -f .devcontainer/docker-compose.yml up app` and, in a
+   second terminal,
+   `docker compose -f .devcontainer/docker-compose.yml exec app npm run app`.
+   Copy the pairing token it prints. The compose file publishes
+   `127.0.0.1:8465` and stores app data in the `twmd-app-data` Docker volume.
 7. In the extension console: `localStorage.twmd_app_token = '<token>'`,
    reload the x.com tab. App log should print "extension connected".
 8. Scroll — app log stays quiet but `__twmdDebug.app()` shows sent.seen
@@ -185,11 +204,12 @@ Companion app (plan 06 M1/M2 acceptance):
 11. Confirm politeness: the app log's download lines should be spaced
     (500–1500 ms) and never more than 2 in flight.
 
-## Verification status (this branch, 2026-07-07)
+## Verification status (this branch, updated 2026-07-09)
 
-- `npm test` — 145 tests green (10 files), incl. real-ws protocol tests
+- Devcontainer
+  `npm test && npm run typecheck && npm run build` — clean under Node 22.12.0.
+- `npm test` — 148 tests green (11 files), incl. real-ws protocol tests
   and real-file downloader tests.
-- `npm run typecheck` / `npm run build` — clean.
 - Live daemon smoke: first-run token banner, 109 fixture records ingested
   via `scripts/fake-extension.mjs` → 106 posts (cross-fixture dedup),
   tombstone → deleted=1, FTS query returns matches, graceful SIGTERM.

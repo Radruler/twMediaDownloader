@@ -8,6 +8,29 @@ Twitter メディアダウンローダ (twMediaDownloader)
 [Web 版公式 Twitter](https://twitter.com/) のメディア（画像／動画）を、原寸サイズでダウンロードするためのスクリプト。  
 ※個別ツイートのメディアダウンロードについては、[TweetDeck](https://tweetdeck.twitter.com/) でも対応。  
 
+■ Development
+---
+Current development and verification should run in the devcontainer, not with
+host `npm`. Dependencies and npm cache live in Docker volumes; build outputs
+(`dist/`, `app/dist/`) are written into the checkout so Chrome can load the
+extension from `dist/`.
+
+```sh
+docker compose -f .devcontainer/docker-compose.yml build app
+docker compose -f .devcontainer/docker-compose.yml run --rm app npm ci
+docker compose -f .devcontainer/docker-compose.yml run --rm app sh -lc 'npm test && npm run typecheck && npm run build'
+```
+
+To run the companion daemon for manual Chrome testing:
+
+```sh
+docker compose -f .devcontainer/docker-compose.yml up app
+docker compose -f .devcontainer/docker-compose.yml exec app npm run app
+```
+
+The app is published to `127.0.0.1:8465`; its config, pairing token, SQLite
+library, and archive root are kept in the `twmd-app-data` Docker volume.
+
 
 ■ インストール方法 
 ---
