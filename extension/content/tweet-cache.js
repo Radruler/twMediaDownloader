@@ -1,7 +1,7 @@
 /**
  * tweet-cache.js — isolated-world in-memory tweet store (plan 02 §4).
  *
- * Implements the module contract from docs/plans/00-overview.md:
+ * Implements the TweetCache contract (see ARCHITECTURE.md):
  *   TweetCache.get(tweetId)  -> TweetRecord | null   (synchronous)
  *   TweetCache.onUpdate(cb)  -> unsubscribe fn; cb(tweetId, TweetRecord)
  *   TweetCache.stats()       -> { size, hitRate }

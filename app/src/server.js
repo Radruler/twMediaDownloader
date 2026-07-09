@@ -10,7 +10,7 @@
  * request_template, tombstone*. Sent (app→ext): hello_ack, status, error.
  * (*tombstone is a plan amendment: plan 06 §2's table omitted a frame for
  * the normalizer's TombstoneEvents, but §3 requires captured tombstones to
- * set deleted=1 — noted in PROGRESS.md SURPRISES.)
+ * set deleted=1.)
  *
  * SECURITY INVARIANTS (Decisions Log): the app never sees x.com traffic or
  * credentials; request_template headers are sanitized here AND at capture —

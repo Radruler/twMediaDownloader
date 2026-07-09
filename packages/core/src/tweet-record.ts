@@ -1,6 +1,6 @@
 /**
  * TweetRecord — the normalized tweet contract shared by the extension and the
- * companion app. Defined in docs/plans/00-overview.md ("Module contract");
+ * companion app. Authoritative contract (documented in ARCHITECTURE.md);
  * every later layer (UI, save, bulk, app ingest) codes against this shape.
  *
  * Contract-stability rule: fields may be ADDED (with null-safe defaults);

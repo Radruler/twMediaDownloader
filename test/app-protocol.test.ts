@@ -2,7 +2,7 @@
  * End-to-end M1 protocol loop (plan 06 §2/§7): the REAL app server and the
  * REAL extension client talking over a real WebSocket on 127.0.0.1 —
  * no Chrome needed. This is the scripted stand-in for the live browser
- * walkthrough (documented for the owner in the step-3b5 handoff).
+ * walkthrough (docs/VERIFICATION.md Tier 3).
  */
 import WebSocket from 'ws';
 import { afterEach, describe, expect, it, vi } from 'vitest';
