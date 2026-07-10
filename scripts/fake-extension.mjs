@@ -4,7 +4,7 @@
  * (plan 06 §7 M1 acceptance without a browser).
  *
  *   node app/dist/main.mjs                # terminal 1 — note the token
- *   node scripts/fake-extension.mjs --token <token> [--port 8465]
+ *   node scripts/fake-extension.mjs --token <token> [--host 127.0.0.1] [--port 8465]
  *        [--archive <tweet_id>]           # also send an archive frame
  *        [--tombstone <tweet_id>]         # also send a tombstone
  *
@@ -30,12 +30,13 @@ function argValue(name) {
 }
 
 const token = argValue('token');
+const host = argValue('host') ?? '127.0.0.1';
 const port = Number(argValue('port') ?? 8465);
 const archiveId = argValue('archive');
 const tombstoneId = argValue('tombstone');
 
 if (!token) {
-  console.error('usage: node scripts/fake-extension.mjs --token <pairing token> [--port N] [--archive <id>] [--tombstone <id>]');
+  console.error('usage: node scripts/fake-extension.mjs --token <pairing token> [--host HOST] [--port N] [--archive <id>] [--tombstone <id>]');
   process.exit(1);
 }
 
@@ -46,7 +47,7 @@ for (const file of readdirSync(EXPECTED_DIR)) {
 }
 console.log(`loaded ${records.length} TweetRecords from ${EXPECTED_DIR}`);
 
-const ws = new WebSocket(`ws://127.0.0.1:${port}`);
+const ws = new WebSocket(`ws://${host}:${port}`);
 const send = (frame) => ws.send(JSON.stringify({ v: 1, ...frame }));
 
 ws.on('open', () => {
@@ -96,6 +97,6 @@ ws.on('close', () => {
   process.exit(0);
 });
 ws.on('error', (error) => {
-  console.error(`cannot reach the app on 127.0.0.1:${port} — is it running?`, error.message);
+  console.error(`cannot reach the app on ${host}:${port} — is it running?`, error.message);
   process.exit(1);
 });

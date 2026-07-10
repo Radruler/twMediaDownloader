@@ -4,10 +4,11 @@
  * starts and the extension is fully standalone (invariant, plan 06 §1).
  *
  * Pairing token comes from localStorage 'twmd_app_token' for now (the
- * options-page UI is a separate step); port override: 'twmd_app_port'.
+ * options-page UI is a separate step); host/port overrides:
+ * 'twmd_app_host' / 'twmd_app_port'.
  *
  * Behavior:
- *  - connect to ws://127.0.0.1:<port>, first frame `hello` w/ token;
+ *  - connect to ws://<host>:<port>, first frame `hello` w/ token;
  *  - wait for hello_ack before sending anything else;
  *  - exponential-backoff reconnect (1s → 60s cap, jittered);
  *  - `seen` frames are fire-and-forget (dropped while disconnected —
@@ -21,7 +22,9 @@
  */
 
 export const APP_TOKEN_KEY = 'twmd_app_token';
+export const APP_HOST_KEY = 'twmd_app_host';
 export const APP_PORT_KEY = 'twmd_app_port';
+export const DEFAULT_APP_HOST = '127.0.0.1';
 export const DEFAULT_APP_PORT = 8465;
 export const PROTOCOL_VERSION = 1;
 export const ARCHIVE_BUFFER_MAX = 200;
@@ -29,9 +32,18 @@ export const ARCHIVE_BUFFER_MAX = 200;
 const BACKOFF_BASE_MS = 1000;
 const BACKOFF_CAP_MS = 60_000;
 
+export function normalizeAppHost(host = DEFAULT_APP_HOST) {
+  const value = String(host || DEFAULT_APP_HOST).trim() || DEFAULT_APP_HOST;
+  const withoutScheme = value.replace(/^wss?:\/\//i, '').replace(/\/.*$/, '');
+  const hostname = withoutScheme.replace(/^\[/, '').split(']')[0].split(':')[0];
+  if (/(^|\.)x\.com$/i.test(hostname)) return DEFAULT_APP_HOST;
+  return hostname || DEFAULT_APP_HOST;
+}
+
 /** @param {any} [options] */
 export function createAppClient({
   token,
+  host = DEFAULT_APP_HOST,
   port = DEFAULT_APP_PORT,
   WebSocketImpl = typeof WebSocket !== 'undefined' ? WebSocket : null,
   extVersion = 'dev',
@@ -88,7 +100,7 @@ export function createAppClient({
     if (stopped || state.fatal || !state.enabled) return;
     state.attempts += 1;
     try {
-      ws = new WebSocketImpl(`ws://127.0.0.1:${port}`);
+      ws = new WebSocketImpl(`ws://${normalizeAppHost(host)}:${port}`);
     } catch (error) {
       scheduleReconnect();
       return;

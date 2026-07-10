@@ -53,6 +53,7 @@ export function createDownloader({
   const runs = new Map(); // run_id -> { label, started_at }
   let active = 0;
   let archivedCount = 0;
+  let stopping = false;
   let drainResolvers = [];
 
   function statusPatch(patch = {}) {
@@ -158,7 +159,7 @@ export function createDownloader({
   async function worker() {
     active += 1;
     try {
-      while (queue.length > 0) {
+      while (!stopping && queue.length > 0) {
         const job = queue.shift();
         statusPatch();
         try {
@@ -182,6 +183,7 @@ export function createDownloader({
 
   return {
     enqueue(request) {
+      if (stopping) return;
       queue.push(request);
       statusPatch();
       const want = Math.min(concurrency, queue.length);
@@ -200,6 +202,14 @@ export function createDownloader({
 
     drain() {
       if (active === 0 && queue.length === 0) return Promise.resolve();
+      return new Promise((resolve) => drainResolvers.push(resolve));
+    },
+
+    shutdown() {
+      stopping = true;
+      queue.length = 0;
+      statusPatch();
+      if (active === 0) return Promise.resolve();
       return new Promise((resolve) => drainResolvers.push(resolve));
     },
   };

@@ -55,11 +55,70 @@ docker compose -f .devcontainer/docker-compose.yml up app
 docker compose -f .devcontainer/docker-compose.yml exec app npm run app
 ```
 
-The service listens on `127.0.0.1:8465`; its config, pairing token, SQLite
-library, and archive root live in the `twmd-app-data` Docker volume. On
-first run it prints the pairing token — set it in the extension via
-`localStorage.twmd_app_token` (options-page UI is planned). No token =
+The service listens on `127.0.0.1:8465` by default; its config, pairing
+token, SQLite library, and archive root live in the `twmd-app-data` Docker
+volume. On first run it prints the pairing token — set it in the extension
+via `localStorage.twmd_app_token` (options-page UI is planned). No token =
 the extension runs fully standalone.
+
+### Content-manager config
+
+Config is `$TWMD_APP_DIR/config.json` (`~/.twmd-app/config.json` outside
+Docker). Keys:
+
+| key | default | notes |
+|---|---|---|
+| `bind_host` | `127.0.0.1` | WebSocket bind host. Use `0.0.0.0` only as an explicit operator choice. |
+| `port` | `8465` | WebSocket port. |
+| `token` | random first-run value | Pairing token for the extension. |
+| `archive_root` | `<config-dir>/archive` | Archived media + sidecars. |
+| `db_path` | `<config-dir>/library.sqlite3` | SQLite library. |
+| `log_level` | `info` | `quiet`, `error`, `warn`, `info`, or `debug` (`info`/`debug` currently log service events). |
+
+Environment overrides are runtime-only and do not rewrite `config.json`:
+`TWMD_APP_HOST`/`TWMD_BIND_HOST`, `TWMD_APP_PORT`,
+`TWMD_ARCHIVE_ROOT`, `TWMD_DB_PATH`, `TWMD_LOG_LEVEL`.
+
+Extension-side connected mode uses:
+
+```js
+localStorage.twmd_app_token = '<token>';
+localStorage.twmd_app_host = '127.0.0.1'; // optional, default
+localStorage.twmd_app_port = '8465';      // optional, default
+```
+
+The host override is for operator-controlled non-local deployments. Do
+not point it at `x.com`/`api.x.com`; the client refuses those hosts.
+
+### Content-manager CLI
+
+After `npm run build`, operator commands run through the same service
+binary and config:
+
+```sh
+node app/dist/main.mjs status
+node app/dist/main.mjs archive <tweet_id-or-post_key>
+node app/dist/main.mjs requeue <post_key>
+node app/dist/main.mjs requeue --all-failed
+node app/dist/main.mjs purge --author <screen_name> [--yes]
+node app/dist/main.mjs purge --before 2026-07-01 [--state archive_failed] [--yes]
+node app/dist/main.mjs verify
+```
+
+`purge` is dry-run by default and requires `--yes` to delete matched
+library rows and recorded media files. `verify` re-hashes files recorded
+in SQLite and reports missing or mismatched paths; it does not repair.
+
+### Docker story
+
+The devcontainer compose file is the supported Docker shape for now. It
+mounts the repo at `/workspace`, stores service state in the
+`twmd-app-data` volume mounted at `/twmd-app`, and sets
+`TWMD_APP_HOST=0.0.0.0` so the WebSocket can be port-mapped from the
+container while the extension connects to `127.0.0.1:8465` on the host.
+For a custom Docker run, keep three durable mounts: config/db
+(`$TWMD_APP_DIR`), archive root, and the checkout/build artifacts; publish
+only the configured WebSocket port.
 
 Install: build, then load `dist/` unpacked via `chrome://extensions`
 (Developer mode). This fork is self-distributed — the store listings below

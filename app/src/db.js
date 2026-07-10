@@ -109,7 +109,24 @@ function createLibrary(db) {
     VALUES (?, ?, ?, ?, ?)
   `);
   const getPost = db.prepare('SELECT * FROM posts WHERE post_key = ?');
+  const getPostKeyByVersion = db.prepare('SELECT post_key FROM versions WHERE id_str = ?');
   const setState = db.prepare('UPDATE posts SET state = ? WHERE post_key = ?');
+  const latestRecordForPost = db.prepare(`
+    SELECT raw_record_json FROM versions
+    WHERE post_key = ? AND raw_record_json IS NOT NULL
+    ORDER BY captured_at_ms DESC, id_str DESC
+    LIMIT 1
+  `);
+  const postsByState = db.prepare(`
+    SELECT * FROM posts WHERE state = ? ORDER BY last_seen_at DESC, post_key
+  `);
+  const matchingPosts = db.prepare(`
+    SELECT * FROM posts
+    WHERE (@author IS NULL OR author_screen_name = @author)
+      AND (@before IS NULL OR last_seen_at < @before)
+      AND (@state IS NULL OR state = @state)
+    ORDER BY last_seen_at DESC, post_key
+  `);
   const markDeletedByPostKey = db.prepare(`
     UPDATE posts SET deleted = 1, deleted_detected_at = COALESCE(deleted_detected_at, ?)
     WHERE post_key = ?
@@ -120,6 +137,50 @@ function createLibrary(db) {
     VALUES (@media_key, @path, @bytes, @sha256, @downloaded_at)
   `);
   const fileBySha = db.prepare('SELECT * FROM files WHERE sha256 = ?');
+  const filesForPost = db.prepare(`
+    SELECT f.* FROM files f
+    JOIN media m ON m.media_key = f.media_key
+    JOIN versions v ON v.id_str = m.id_str
+    WHERE v.post_key = ?
+  `);
+  const deleteFilesForPost = db.prepare(`
+    DELETE FROM files
+    WHERE media_key IN (
+      SELECT m.media_key FROM media m
+      JOIN versions v ON v.id_str = m.id_str
+      WHERE v.post_key = ?
+    )
+  `);
+  const deleteMediaForPost = db.prepare(`
+    DELETE FROM media
+    WHERE id_str IN (SELECT id_str FROM versions WHERE post_key = ?)
+  `);
+  const deleteVersionsForPost = db.prepare('DELETE FROM versions WHERE post_key = ?');
+  const deletePostFts = db.prepare('DELETE FROM posts_fts WHERE post_key = ?');
+  const deletePost = db.prepare('DELETE FROM posts WHERE post_key = ?');
+
+  function recordForPost(post_key) {
+    const row = latestRecordForPost.get(post_key);
+    if (!row?.raw_record_json) return null;
+    try {
+      return JSON.parse(row.raw_record_json);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  const purgePostsTx = db.transaction((postKeys) => {
+    const fileRows = [];
+    for (const post_key of postKeys) {
+      fileRows.push(...filesForPost.all(post_key));
+      deleteFilesForPost.run(post_key);
+      deleteMediaForPost.run(post_key);
+      deleteVersionsForPost.run(post_key);
+      deletePostFts.run(post_key);
+      deletePost.run(post_key);
+    }
+    return fileRows;
+  });
 
   /**
    * The seen-ingest upsert (plan 06 §3): later captures refresh
@@ -194,6 +255,10 @@ function createLibrary(db) {
       setState.run(state, post_key);
     },
 
+    queuePost(post_key) {
+      return setState.run('queued', post_key).changes > 0;
+    },
+
     /**
      * Passive deletion flag (Decision 18): from a captured tombstone or a
      * 404/410 during archiving. Accepts a tweet id — resolves through
@@ -209,6 +274,39 @@ function createLibrary(db) {
 
     getPost(post_key) {
       return getPost.get(post_key);
+    },
+
+    postKeyForTweetId(tweet_id) {
+      const row = getPostKeyByVersion.get(tweet_id);
+      return row?.post_key ?? null;
+    },
+
+    getRecordForPost(post_key) {
+      return recordForPost(post_key);
+    },
+
+    getArchiveJob(post_key) {
+      const record = recordForPost(post_key);
+      return record ? { post_key, record, reason: 'cli' } : null;
+    },
+
+    queuedArchiveJobs() {
+      return postsByState
+        .all('queued')
+        .map((post) => this.getArchiveJob(post.post_key))
+        .filter(Boolean);
+    },
+
+    failedPosts() {
+      return postsByState.all('archive_failed');
+    },
+
+    postsMatching({ author = null, before = null, state = null } = {}) {
+      return matchingPosts.all({ author, before, state });
+    },
+
+    purgePosts(postKeys) {
+      return purgePostsTx(postKeys);
     },
 
     getVersions(post_key) {
@@ -243,8 +341,10 @@ function createLibrary(db) {
         versions: row('SELECT COUNT(*) AS n FROM versions').n,
         media: row('SELECT COUNT(*) AS n FROM media').n,
         files: row('SELECT COUNT(*) AS n FROM files').n,
-        archived: row("SELECT COUNT(*) AS n FROM posts WHERE state = 'archived'").n,
+        seen: row("SELECT COUNT(*) AS n FROM posts WHERE state = 'seen'").n,
         queued: row("SELECT COUNT(*) AS n FROM posts WHERE state = 'queued'").n,
+        archived: row("SELECT COUNT(*) AS n FROM posts WHERE state = 'archived'").n,
+        archive_failed: row("SELECT COUNT(*) AS n FROM posts WHERE state = 'archive_failed'").n,
         deleted: row('SELECT COUNT(*) AS n FROM posts WHERE deleted = 1').n,
       };
     },

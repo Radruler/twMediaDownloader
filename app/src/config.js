@@ -13,6 +13,8 @@ import { homedir } from 'node:os';
 import path from 'node:path';
 
 export const DEFAULT_PORT = 8465;
+export const DEFAULT_BIND_HOST = '127.0.0.1';
+export const DEFAULT_LOG_LEVEL = 'info';
 
 export function configDir() {
   return process.env.TWMD_APP_DIR || path.join(homedir(), '.twmd-app');
@@ -20,10 +22,23 @@ export function configDir() {
 
 export function defaultConfig(dir) {
   return {
+    bind_host: DEFAULT_BIND_HOST,
     port: DEFAULT_PORT,
     token: randomBytes(16).toString('hex'),
     archive_root: path.join(dir, 'archive'),
     db_path: path.join(dir, 'library.sqlite3'),
+    log_level: DEFAULT_LOG_LEVEL,
+  };
+}
+
+function applyEnvOverrides(config) {
+  return {
+    ...config,
+    bind_host: process.env.TWMD_APP_HOST || process.env.TWMD_BIND_HOST || config.bind_host,
+    port: process.env.TWMD_APP_PORT ? Number(process.env.TWMD_APP_PORT) : config.port,
+    archive_root: process.env.TWMD_ARCHIVE_ROOT || config.archive_root,
+    db_path: process.env.TWMD_DB_PATH || config.db_path,
+    log_level: process.env.TWMD_LOG_LEVEL || config.log_level,
   };
 }
 
@@ -31,16 +46,17 @@ export function defaultConfig(dir) {
 export function loadConfig(dir = configDir()) {
   mkdirSync(dir, { recursive: true });
   const file = path.join(dir, 'config.json');
+  const defaults = defaultConfig(dir);
   let config;
   let firstRun = false;
   try {
-    config = { ...defaultConfig(dir), ...JSON.parse(readFileSync(file, 'utf8')) };
+    config = { ...defaults, ...JSON.parse(readFileSync(file, 'utf8')) };
   } catch (e) {
-    config = defaultConfig(dir);
+    config = defaults;
     firstRun = true;
   }
   if (firstRun) {
     writeFileSync(file, `${JSON.stringify(config, null, 2)}\n`);
   }
-  return { config, firstRun, file };
+  return { config: applyEnvOverrides(config), firstRun, file };
 }

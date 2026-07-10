@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { TweetRecord } from '../packages/core/src/tweet-record.ts';
 import { openDb } from '../app/src/db.js';
 import { createAppServer, sanitizeTemplateHeaders } from '../app/src/server.js';
-import { createAppClient } from '../extension/content/app-client.js';
+import { createAppClient, normalizeAppHost } from '../extension/content/app-client.js';
 
 const TOKEN = 'test-token-123';
 
@@ -198,5 +198,16 @@ describe('sanitizeTemplateHeaders', () => {
       Referer: 'https://x.com/',
       'sec-ch-ua': '"Chromium";v="126"',
     });
+  });
+});
+
+describe('app-client host override', () => {
+  it('normalizes service hosts and refuses banned X hosts', () => {
+    expect(normalizeAppHost()).toBe('127.0.0.1');
+    expect(normalizeAppHost('192.168.1.20')).toBe('192.168.1.20');
+    expect(normalizeAppHost('ws://localhost:8465/path')).toBe('localhost');
+    expect(normalizeAppHost('x.com')).toBe('127.0.0.1');
+    expect(normalizeAppHost('api.x.com')).toBe('127.0.0.1');
+    expect(normalizeAppHost('mobile.x.com')).toBe('127.0.0.1');
   });
 });

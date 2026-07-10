@@ -16,7 +16,14 @@
 import { normalizePayload } from '@twmd/core';
 import { TweetCache } from './tweet-cache.js';
 import { saveTweet } from './save.js';
-import { APP_PORT_KEY, APP_TOKEN_KEY, DEFAULT_APP_PORT, createAppClient } from './app-client.js';
+import {
+  APP_HOST_KEY,
+  APP_PORT_KEY,
+  APP_TOKEN_KEY,
+  DEFAULT_APP_HOST,
+  DEFAULT_APP_PORT,
+  createAppClient,
+} from './app-client.js';
 
 const LAST_IDS_MAX = 25;
 const TOMBSTONES_MAX = 100;
@@ -56,6 +63,7 @@ function localStorageGet(key) {
 
 const appClient = createAppClient({
   token: localStorageGet(APP_TOKEN_KEY),
+  host: localStorageGet(APP_HOST_KEY) || DEFAULT_APP_HOST,
   port: Number(localStorageGet(APP_PORT_KEY)) || DEFAULT_APP_PORT,
   extVersion: (() => {
     try {
