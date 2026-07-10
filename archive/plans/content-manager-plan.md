@@ -1,5 +1,9 @@
 # Content Manager — Plan
 
+> **Archived 2026-07-10:** M-1, M-2, and M-3 were completed and pushed in
+> commit `f6125d8` (`Implement content manager controls`). M-4 remains a
+> deferred future import idea, not active scoped work.
+
 **Scope owner note (2026-07-09):** for this iteration the content manager
 is **primarily a downloader**. Its job: make sure we fetch the right
 information and store it — local files on this device, plus the SQLite

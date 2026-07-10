@@ -19,11 +19,12 @@ rebuilding it as a **personal, passive X/Twitter archiving system**:
   the original filename convention
   (`<screen_name>-<tweet_id>-<YYYYMMDD_hhmmss>-img1.jpg` + `.txt`), into
   `Downloads/twMediaDownloader/<screen_name>/`.
-- **Content manager** (core done; hardening in progress): a local Node
+- **Content manager** (done, pending live-browser verification): a local Node
   service that receives everything captured over WebSocket, keeps a
   searchable SQLite library of everything seen, and archives selected
   posts to disk — polite CDN-only downloads, content-hash dedupe,
-  edit-history and passive deleted-flagging.
+  edit-history, passive deleted-flagging, restart-resumed queueing, and
+  operator CLI controls.
 
 How it works: `ARCHITECTURE.md`. Decisions and remaining work:
 `docs/plans/00-overview.md`. How to verify: `docs/VERIFICATION.md`.

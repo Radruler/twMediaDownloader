@@ -12,12 +12,13 @@ docker compose -f .devcontainer/docker-compose.yml run --rm app \
   sh -lc 'npm test && npm run typecheck && npm run build'
 ```
 
-148 tests as of 2026-07-09, including: normalization against real captured
+154 tests as of 2026-07-10, including: normalization against real captured
 GraphQL fixtures; filename/sidecar/media-URL rules; the ws protocol with a
 REAL server + REAL extension client over a real socket (pairing, ingest,
 tombstones, offline buffer/replay); the downloader writing REAL files with
 an injected fetch (dedupe, 404 fallback chain, retry, concurrency cap,
-CDN-host refusal).
+CDN-host refusal); content-manager restart resume and operator CLI
+controls.
 
 ## Tier 2 — no-Chrome end-to-end (scripted fake extension)
 
@@ -29,13 +30,15 @@ browser:
 docker compose -f .devcontainer/docker-compose.yml exec app npm run app
 
 # terminal 2 — replay every fixture TweetRecord as 'seen' frames
-node scripts/fake-extension.mjs --token <token> [--port 8465] \
+node scripts/fake-extension.mjs --token <token> [--host 127.0.0.1] [--port 8465] \
   [--archive <tweet_id>]     # also exercise the downloader (REAL CDN GETs)
   [--tombstone <tweet_id>]   # flag a post deleted
 ```
 
 Expected: ~109 records → ~106 posts (cross-fixture dedup), tombstoned id
 shows `deleted=1`, FTS queries return matches, `status` frames flow.
+After a build, `TWMD_APP_DIR=<same-dir> node app/dist/main.mjs status`
+should report the same post counts and queue depth.
 
 ## Tier 3 — live Chrome walkthrough (owner; NOT yet performed)
 

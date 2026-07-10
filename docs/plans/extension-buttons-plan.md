@@ -56,9 +56,9 @@ the replacement is verified live, and removed later by
 
 Move the console-only settings into the extension options page:
 pairing token + service host/port (currently `localStorage.twmd_app_token`
-/ `twmd_app_port`), sidecar format (txt default / json / both / none),
-per-surface button toggles if wanted. Localized en/ja like the existing
-options.
+/ `twmd_app_host` / `twmd_app_port`), sidecar format (txt default / json /
+both / none), per-surface button toggles if wanted. Localized en/ja like
+the existing options.
 
 ## Owner input needed before/while executing
 

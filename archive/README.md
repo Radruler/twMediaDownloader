@@ -21,7 +21,8 @@ Contents:
 | `plans/03-ui.md` | Download-buttons-everywhere plan | Superseded by `docs/plans/extension-buttons-plan.md` (scope corrected: most buttons already exist) |
 | `plans/04-metadata-sidecar.md` | Save layer / filenames / sidecars plan | **Done** (save layer shipped); bulk-ZIP section descoped with the bulk feature |
 | `plans/05-alternative-architectures.md` | Architecture research (FSA, CDP, native messaging) | Research concluded; decisions absorbed |
-| `plans/06-local-companion-app.md` | Companion app plan (protocol, DB, downloader, Electron UI) | M1/M2 **done**; UI milestones descoped — superseded by `docs/plans/content-manager-plan.md` |
+| `plans/06-local-companion-app.md` | Companion app plan (protocol, DB, downloader, Electron UI) | M1/M2 **done**; UI milestones descoped — superseded by `plans/content-manager-plan.md`, now also archived |
+| `plans/content-manager-plan.md` | Content-manager hardening plan (restart queue, config/deploy, CLI; legacy import deferred) | M-1/M-2/M-3 **done** in `f6125d8`; M-4 deferred as a future import idea |
 | `plans/discussion-02-vs-05.md` | Architecture discussion record | Historical |
 | `plans/step-2-handoff.md` | Capture-layer handoff notes | Content absorbed into `ARCHITECTURE.md` |
 | `plans/step-3b5-handoff.md` | Save-layer + app M1/M2 handoff notes | Content absorbed into `ARCHITECTURE.md` and `docs/VERIFICATION.md` |

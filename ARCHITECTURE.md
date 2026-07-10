@@ -47,7 +47,7 @@ extension/            plain JS, bundled by esbuild
   background/request-template.js observation-only webRequest header capture
 app/                  plain JS Node service ("content manager")
   src/config.js  src/server.js  src/db.js  src/downloader.js
-  src/disk-writer.js  src/main.js
+  src/disk-writer.js  src/cli.js  src/main.js
 src/                  LEGACY extension — untouched by design until cleanup
 build.mjs             builds dist/ (loadable extension) + app/dist/main.mjs
 scripts/fake-extension.mjs  replays fixtures over real ws against the service
@@ -101,11 +101,14 @@ for the dormant bulk-run routing).
 
 ## Extension ⇄ service protocol
 
-WebSocket, service = server on `127.0.0.1:8465` (configurable), extension =
-client with jittered exponential backoff. All frames JSON `{v: 1, type, …}`.
+WebSocket, service = server on `127.0.0.1:8465` by default (host/port
+configurable), extension = client with jittered exponential backoff. All
+frames JSON `{v: 1, type, …}`.
 First frame must be `hello` with the pairing token (printed by the service
 on first run; extension reads `localStorage.twmd_app_token` — no token =
-standalone, client never starts).
+standalone, client never starts). Extension-side operator overrides:
+`localStorage.twmd_app_host` and `localStorage.twmd_app_port`; any `*.x.com`
+host override is refused.
 
 | type | direction | payload |
 |---|---|---|
@@ -131,6 +134,39 @@ posts_fts FTS5 over full_text / alt_text / author
 
 Ingest is an upsert: later captures refresh counts/last_seen_at; new ids in
 an edit-group accrete version rows; state is never downgraded by a re-seen.
+On startup, the service reconstructs only persisted `queued` jobs from the
+latest `versions.raw_record_json` and resumes them through the normal
+downloader. `archive_failed` rows are never auto-retried; the CLI is the
+manual retry path.
+
+## Service config and operator controls
+
+Config is `$TWMD_APP_DIR/config.json` (default `~/.twmd-app/config.json`)
+with runtime env overrides:
+
+- `bind_host` / `TWMD_APP_HOST` or `TWMD_BIND_HOST` (default `127.0.0.1`)
+- `port` / `TWMD_APP_PORT` (default `8465`)
+- `archive_root` / `TWMD_ARCHIVE_ROOT`
+- `db_path` / `TWMD_DB_PATH`
+- `log_level` / `TWMD_LOG_LEVEL`
+- `token` (pairing secret; generated on first run)
+
+After `npm run build`, the service binary also exposes operator CLI
+commands that read the same config:
+
+```sh
+node app/dist/main.mjs status
+node app/dist/main.mjs archive <tweet_id-or-post_key>
+node app/dist/main.mjs requeue <post_key>
+node app/dist/main.mjs requeue --all-failed
+node app/dist/main.mjs purge --author <screen_name> [--yes]
+node app/dist/main.mjs purge --before 2026-07-01 [--state archive_failed] [--yes]
+node app/dist/main.mjs verify
+```
+
+`archive` and `requeue` run through the same CDN-only downloader path.
+`purge` is dry-run by default and requires `--yes`; `verify` reports
+missing or mismatched recorded files only.
 
 ## Politeness / safety invariants (enforced in code, tested)
 
@@ -171,6 +207,7 @@ npm run build   # dist/ (load unpacked) + app/dist/main.mjs
 npm test        # vitest suite
 npm run typecheck
 npm run app     # the content-manager service (config in $TWMD_APP_DIR)
+node app/dist/main.mjs status  # operator CLI, after npm run build
 ```
 
 Debug surface on x.com (extension console context): `__twmdDebug.stats()/

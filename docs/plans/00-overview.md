@@ -1,6 +1,6 @@
 # twMediaDownloader — Overview: Decisions & Remaining Work
 
-**Status:** 2026-07-09 consolidation. Everything here is current and binding;
+**Status:** 2026-07-10 consolidation. Everything here is current and binding;
 each remaining piece of work has its own plan doc sized for a fresh session.
 Completed work is described in `ARCHITECTURE.md`; superseded plans are in
 `archive/` and must not be treated as instructions.
@@ -17,8 +17,9 @@ personal, passive X/Twitter archiving system with two parts:
    `chrome.downloads`, standalone.
 2. **Content manager** (Node service, `app/`): receives every captured
    tweet over a local WebSocket, keeps a SQLite library of everything seen,
-   and archives explicitly-selected posts to local disk — original-quality
-   media + sidecars, deduped by content hash.
+   archives explicitly-selected posts to local disk — original-quality
+   media + sidecars, deduped by content hash — and exposes a small
+   operator CLI for status, manual requeue/archive, purge, and verify.
 
 The extension works fully standalone; the service *upgrades* it, never
 gates it.
@@ -44,7 +45,8 @@ gates it.
    paths configurable, runnable in Docker (devcontainer already does).
 4. **The bulk-download feature is removed for now.** The legacy
    API-driven bulk is dead with the API. What replaces it (if anything) is
-   future ideation in `content-manager-plan.md` §Future — not scoped work.
+   future ideation only — not scoped work. The archived content-manager
+   plan has the last captured notes.
 5. **TypeScript only inside `packages/core`**; extension and app code are
    plain JS. All shared logic (TweetRecord contract, normalization,
    filenames, sidecars, media-URL selection) lives in core — never
@@ -79,13 +81,17 @@ reflects the owner's priorities.
 | # | Work | Plan | Status / gate |
 |---|---|---|---|
 | 1 | **Live verification** — first real-Chrome run of capture, standalone save, service pairing | `docs/VERIFICATION.md` (walkthrough) | owner-driven; blocks cleanup |
-| 2 | **Content manager** — queue-restart fix, config/deploy hardening, requeue/purge CLI; deferred: legacy-archive import | `content-manager-plan.md` | ready to start |
-| 3 | **Extension buttons** — add buttons to the few missing surfaces (details from owner pending), then rewrite ALL buttons onto the shared save path | `extension-buttons-plan.md` | phase 1 partially blocked on owner details |
-| 4 | **Cleanup** — delete dead legacy code, write CLAUDE.md, options page | `cleanup-plan.md` | blocked on 1 (and 3 for button code) |
-| 5 | **Archivist Client** — rename, viewer-relation capture, push export to Archivist | `archivist-client-plan.md` | rename/§C ready; §D after Archivist plan A/B |
+| 2 | **Extension buttons** — add buttons to the few missing surfaces (details from owner pending), then rewrite ALL buttons onto the shared save path | `extension-buttons-plan.md` | phase 1 partially blocked on owner details |
+| 3 | **Cleanup** — delete dead legacy code, write CLAUDE.md, final README refresh | `cleanup-plan.md` | blocked on 1 (and 2 for button code) |
+| 4 | **Archivist Client** — rename, viewer-relation capture, push export to Archivist | `archivist-client-plan.md` | rename/§C ready; §D after Archivist plan A/B |
 
-Known bugs are tracked inside the relevant plan (currently: queued posts
-lost on service restart — `content-manager-plan.md` §M-1).
+Recently completed and archived: content-manager queue restart resume,
+service-shaped config/deployment docs, extension-side service host
+override, and the operator CLI were completed in commit `f6125d8`; the
+completed plan now lives at `archive/plans/content-manager-plan.md`.
+
+Deferred future idea, not active scoped work: legacy archive import from
+old filename-convention folders.
 
 ## Related workstream: Archivist (2026-07-11)
 
@@ -96,7 +102,7 @@ extension+content-manager pipeline is the **Archivist Client** in that
 design. Plans live in `docs/plans/archivist/` (own overview, own binding
 decisions). The archiver-side work for that workstream — the Archivist
 Client rename, viewer-relation capture, opportunistic push export — is
-its own plan, `archivist-client-plan.md` (row 5 above), and is bound by
+its own plan, `archivist-client-plan.md` (row 4 above), and is bound by
 THIS doc's decisions and ground rules as well: passive capture only, no
 new requests to any content service, ever.
 
