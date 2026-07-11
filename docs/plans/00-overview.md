@@ -86,6 +86,17 @@ reflects the owner's priorities.
 Known bugs are tracked inside the relevant plan (currently: queued posts
 lost on service restart — `content-manager-plan.md` §M-1).
 
+## Related workstream: Archivist (2026-07-11)
+
+The future-components ideation above is now a designed sibling project:
+**Archivist**, the service-agnostic library service (NAS-deployed) that
+ingests this system's archived output and serves frontends. This repo's
+extension+content-manager pipeline is the **Archivist Client** in that
+design. Plans live in `docs/plans/archivist/` (own overview, own binding
+decisions); the two plans there that touch archiver code
+(`03-client-relations-and-push-plan.md`) are bound by THIS doc's decisions
+and ground rules as well.
+
 ## Ground rules for all work
 
 - Read `ARCHITECTURE.md` before touching anything — it documents the
