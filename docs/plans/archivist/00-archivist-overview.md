@@ -116,12 +116,18 @@ Division of responsibility, agreed 2026-07-11:
 | # | Work | Plan | Status / gate |
 |---|---|---|---|
 | A | **Library core** — schema, ingest core, snapshot ingest CLI, Dockerfile | `01-library-and-ingest-plan.md` | ready to start |
-| B | **API + frontend MVP** — HTTP API, thumbnails, media-grid/people UI, TrueNAS deploy notes | `02-api-and-frontend-plan.md` | after A |
-| C | **Client: relation capture** — viewer like/bookmark flags into TweetRecord | `03-client-relations-and-push-plan.md` §C | independent; ready |
-| D | **Client: push transport** — opportunistic export to Archivist's ingest API | `03-client-relations-and-push-plan.md` §D | after A; C first preferred |
+| B | **API + frontend MVP** — HTTP API, ingest endpoints, thumbnails, media-grid/people UI, TrueNAS deploy notes | `02-api-and-frontend-plan.md` | after A |
+| V | **Media viewer** — the consumer-grade viewing frontend (universal post view, threads, credits) | `04-media-viewer-plan.md` | after B |
+| — | Viewer roadmap — principled feature exploration, NOT scoped work | `05-media-viewer-roadmap.md` | ideation |
 
 A then B is the critical path to a usable MVP (snapshot-ingest a copy of
-the client's data, browse it on the NAS). C/D can interleave.
+the client's data, browse it on the NAS).
+
+**Client-side work is a separate workstream** (own doc, own session):
+`docs/plans/archivist-client-plan.md` — the Archivist Client rename,
+relation capture (viewer flags, tagged users, own-account config), and
+the opportunistic push export. Its §C is independent and can run any
+time; its §D needs plan A/B's ingest surface.
 
 ## Ground rules
 

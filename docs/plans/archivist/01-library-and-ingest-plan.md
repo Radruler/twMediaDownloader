@@ -209,7 +209,8 @@ The one ingest door (Decision 2). Versioned JSON, service-agnostic:
 - `packages/core/src/archivist-post.ts` —
   `toArchivistPost(records, filesBySha)` maps a post's TweetRecord
   versions + file hashes to this shape. Pure, fixture-tested. Relations
-  come from `record.viewer` when present (plan 03 §C; absent until then —
+  come from `record.viewer` when present (`archivist-client-plan.md` §C;
+  absent until then —
   emit `[]`). Media `sha256` may be null (metadata-only media).
 - Envelope changes follow the TweetRecord stability rule: fields may be
   added null-safe; never renamed/re-meant; bump `v` only for breaking

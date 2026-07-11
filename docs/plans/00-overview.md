@@ -82,6 +82,7 @@ reflects the owner's priorities.
 | 2 | **Content manager** — queue-restart fix, config/deploy hardening, requeue/purge CLI; deferred: legacy-archive import | `content-manager-plan.md` | ready to start |
 | 3 | **Extension buttons** — add buttons to the few missing surfaces (details from owner pending), then rewrite ALL buttons onto the shared save path | `extension-buttons-plan.md` | phase 1 partially blocked on owner details |
 | 4 | **Cleanup** — delete dead legacy code, write CLAUDE.md, options page | `cleanup-plan.md` | blocked on 1 (and 3 for button code) |
+| 5 | **Archivist Client** — rename, viewer-relation capture, push export to Archivist | `archivist-client-plan.md` | rename/§C ready; §D after Archivist plan A/B |
 
 Known bugs are tracked inside the relevant plan (currently: queued posts
 lost on service restart — `content-manager-plan.md` §M-1).
@@ -93,9 +94,11 @@ The future-components ideation above is now a designed sibling project:
 ingests this system's archived output and serves frontends. This repo's
 extension+content-manager pipeline is the **Archivist Client** in that
 design. Plans live in `docs/plans/archivist/` (own overview, own binding
-decisions); the two plans there that touch archiver code
-(`03-client-relations-and-push-plan.md`) are bound by THIS doc's decisions
-and ground rules as well.
+decisions). The archiver-side work for that workstream — the Archivist
+Client rename, viewer-relation capture, opportunistic push export — is
+its own plan, `archivist-client-plan.md` (row 5 above), and is bound by
+THIS doc's decisions and ground rules as well: passive capture only, no
+new requests to any content service, ever.
 
 ## Ground rules for all work
 

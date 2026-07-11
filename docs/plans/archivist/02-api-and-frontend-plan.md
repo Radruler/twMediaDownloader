@@ -123,7 +123,26 @@ Views:
 State: URL-encoded filters (shareable/bookmarkable), token prompt on 401,
 no client-side cache layer beyond the browser's.
 
-## B-6 — Deployment (TrueNAS)
+## B-6 — Ingest endpoints (push transport, server side)
+
+The server half of the client's push export
+(`docs/plans/archivist-client-plan.md` §D); same bearer auth as the rest
+of the API, calls the plan-A ingest core:
+
+```
+POST /api/ingest/post          body = ArchivistPost envelope (plan A-3);
+                               response { missing_files: [sha256, …] }
+PUT  /api/ingest/file/:sha256  raw bytes; hash-verified before accept,
+                               refused (409) on hash mismatch
+```
+
+Post-then-files: the client re-POSTs until `missing_files` is empty.
+Duplicate delivery must be a provable no-op (ingest core is idempotent —
+test it through the HTTP layer too). Body limit on `PUT` sized for video
+(configurable, default 2 GB, streamed to a temp file, hashed, then moved
+into the archive tree).
+
+## B-7 — Deployment (TrueNAS)
 
 - `archivist/compose.yml` (the TrueNAS "custom app" YAML): the plan-A
   image, volumes `/data` + `/archive` on the pool, port 8470, restart
