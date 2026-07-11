@@ -60,6 +60,8 @@ Responses are plain JSON, ids are Archivist row ids (stable), media
 always carries `sha256` so clients can build `/files`/`/thumbs` URLs.
 The collage app needs nothing beyond this surface — stable
 `/api/media/:id` + immutable `/files/:sha256` is its contract.
+Plan 04 (media viewer) extends this API with `/api/works` and credits —
+build B-2 with that in mind (shared query builder), don't pre-build it.
 
 ## B-3 — Write API (curation only)
 

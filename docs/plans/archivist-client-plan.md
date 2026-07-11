@@ -79,7 +79,13 @@ never reach Archivist. Fix at the contract level:
 ```ts
 /** Viewer-relationship flags as X sent them; null = absent from payload. */
 viewer: { liked: boolean | null; bookmarked: boolean | null };
+/** Author id of the tweet this replies to (legacy.in_reply_to_user_id_str). */
+in_reply_to_user_id_str: string | null;
 ```
+
+(`in_reply_to_user_id_str` exists so Archivist can detect self-reply
+threads even when the parent tweet was never archived — see Archivist
+Decision 14. Populate it in the normalizer alongside the viewer flags.)
 
 **C-2 — Normalizer:** populate in `graphql-normalize.ts` from the tweet
 legacy object. Check which fixtures in `test/fixtures` carry these

@@ -88,12 +88,17 @@ CREATE TABLE posts (
   deleted_detected_at INTEGER,
   counts_json         TEXT,
   raw_json            TEXT,             -- freshest service-native record
+  reply_to_key        TEXT,             -- service-native id of the parent post
+  reply_to_author_id  TEXT,             -- service-native author id of the parent
+  quoted_key          TEXT,             -- service-native id of a quoted post
+  thread_key          TEXT,             -- self-thread root key (derived; see A-4)
   first_ingested_at   INTEGER NOT NULL,
   last_ingested_at    INTEGER NOT NULL,
   UNIQUE(service, service_post_key)
 );
 CREATE INDEX idx_posts_author  ON posts(author_account_id, created_at_ms);
 CREATE INDEX idx_posts_created ON posts(created_at_ms);
+CREATE INDEX idx_posts_thread  ON posts(service, thread_key);
 
 CREATE TABLE post_versions (
   post_id            INTEGER NOT NULL REFERENCES posts(id),
@@ -139,6 +144,25 @@ CREATE TABLE relations (
 );
 CREATE INDEX idx_relations_item ON relations(item_kind, item_id);
 
+-- credits (Decision 15): who made / who is in an item ----------------------
+CREATE TABLE credit_roles (             -- seeded + user-extensible
+  role  TEXT PRIMARY KEY,               -- 'creator','subject','commissioner','collaborator'
+  label TEXT NOT NULL
+);
+CREATE TABLE credits (                  -- curation-owned (Decision 8 applies)
+  id         INTEGER PRIMARY KEY,
+  item_kind  TEXT NOT NULL CHECK(item_kind IN ('post','media')),
+  item_id    INTEGER NOT NULL,
+  account_id INTEGER NOT NULL REFERENCES accounts(id),
+  role       TEXT NOT NULL REFERENCES credit_roles(role),
+  source     TEXT NOT NULL DEFAULT 'manual'
+             CHECK(source IN ('manual','accepted_suggestion')),
+  created_at INTEGER NOT NULL,
+  UNIQUE(item_kind, item_id, account_id, role)
+);
+CREATE INDEX idx_credits_account ON credits(account_id);
+CREATE INDEX idx_credits_item    ON credits(item_kind, item_id);
+
 -- tags (curation-owned; deliberate non-relation, Decision 5) ---------------
 CREATE TABLE tags (
   id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE COLLATE NOCASE
@@ -166,7 +190,8 @@ CREATE TABLE ingest_runs (
 Seeds (idempotent, on open): services `twitter`, `archivist`; account
 `archivist/me` (`is_me=1`, status `active`); relation_types
 `twitter/like` (flag), `twitter/bookmark` (flag), `archivist/favorite`
-(flag), `archivist/rating` (scalar 1–5).
+(flag), `archivist/rating` (scalar 1–5); credit_roles `creator`,
+`subject`, `commissioner`, `collaborator`.
 
 Notes for the implementer:
 
@@ -178,6 +203,18 @@ Notes for the implementer:
   fictional tiered-like service.
 - `revoked_at` keeps history (we never write to external services, so a
   revoked relation is an observation, not an action).
+- Linkage keys (`reply_to_key`, `quoted_key`, `thread_key`) are
+  service-native ids, resolved best-effort against `service_post_key` OR
+  `post_versions.service_version_id` at read time — the linked post may
+  simply not be archived, and that's fine (frontends must show partial
+  threads honestly).
+- Credit *suggestions* (from mentions / media tagged users in `raw_json`)
+  are computed at API read time, never stored — only accepted ones become
+  `credits` rows (`source='accepted_suggestion'`), keeping Decision 8
+  clean. Identities without a known service id (e.g. a person mentioned
+  by screen_name only) get a stub `accounts` row with sentinel
+  `service_account_id = '~<screen_name>'`; merging a stub into a
+  later-observed real account is roadmap tooling, not MVP.
 
 ## A-3 — The `ArchivistPost` envelope + Twitter mapper
 
@@ -194,6 +231,8 @@ The one ingest door (Decision 2). Versioned JSON, service-agnostic:
   "url": "https://x.com/alice/status/1234567890",
   "is_sensitive": false, "deleted": false,
   "counts": { "likes": 1, "…": 0 },
+  "reply_to": { "key": "1234567889", "author_service_account_id": "12345" },
+  "quoted_key": null,
   "versions": [ { "service_version_id": "1234567890",
                   "captured_at_ms": 0, "raw": { /* TweetRecord */ } } ],
   "media": [ { "position": 1, "type": "photo", "sha256": "…" ,
@@ -224,6 +263,14 @@ The one ingest door (Decision 2). Versioned JSON, service-agnostic:
   `last_observed_at` on match, new row on new value — this is the rename
   history), upsert post (fresher `captured_at_ms` wins for
   `raw_json`/counts; `deleted` is sticky true), upsert versions, media.
+- Thread derivation (Decision 14): `thread_key` = if `reply_to.key`
+  resolves to an archived post by the same author → inherit that post's
+  `thread_key`; else if `reply_to.author_service_account_id` equals the
+  author's → `reply_to.key` (best-effort root; the parent may arrive
+  later); else own `service_post_key` (thread root or plain post).
+  After upsert, re-root any already-ingested children pointing at this
+  post (ingest order is not guaranteed), transitively. `rebuild-threads`
+  CLI recomputes the whole column (derived data, rebuildable).
 - Files: for each media sha256 the DB lacks, ask `fileProvider(sha256)`
   for bytes/stream; verify the hash; write to
   `<archive_root>/<service>/<screen_name>/<original-basename>` (collision:
@@ -253,8 +300,8 @@ client's CLI):
 - `stats` — counts per table, per service, per state.
 - `verify` — re-hash `files` vs disk, report missing/mismatched (no
   repair) — mirror of the client's verify.
-- `rebuild-fts` and `rebuild-thumbs --clear` (thumbs lands in plan B;
-  reserve the verb).
+- `rebuild-fts`, `rebuild-threads`, and `rebuild-thumbs --clear` (thumbs
+  lands in plan B; reserve the verb).
 
 ## A-6 — Dockerfile
 
@@ -278,3 +325,7 @@ Compose/TrueNAS specifics are plan B §deploy.
   with the client's own `db.js` + disk-writer (real formats, no mocks).
 - Fictional tiered-like service registered via seed config → relation
   with tier value round-trips (proves Decision 5).
+- Threads: self-reply chain ingested in order → one `thread_key`;
+  ingested child-first → re-rooted when the parent arrives;
+  other-author reply → NOT merged; `rebuild-threads` converges to the
+  same state as incremental ingest.

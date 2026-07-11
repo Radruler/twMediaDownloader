@@ -107,9 +107,29 @@ Division of responsibility, agreed 2026-07-11:
     decision stands for the client). Lazily generated, content-addressed
     (`<data>/thumbs/<sha256>-<w>.webp`), disposable cache.
 13. **Naming:** the service is **Archivist**; this repo's
-    extension+content-manager pipeline is the **Archivist Client**. No
-    code/repo renames now — the name appears in new code, docs, and config
-    only.
+    extension+content-manager pipeline is the **Archivist Client**. The
+    client-side rename is scoped in `docs/plans/archivist-client-plan.md`
+    (presentation-level only; frozen conventions untouched).
+14. **Post linkage is first-class** (added 2026-07-11 for the media
+    viewer). Posts carry service-native `reply_to`/`quoted` keys and a
+    derived `thread_key` (self-thread root) so frontends can collapse
+    self-reply chains into one logical work. `thread_key` is display
+    grouping, derived at ingest and rebuildable — the raw records remain
+    the truth, and partially-archived threads are shown honestly, never
+    faked complete.
+15. **Credits model who made / who is in content** (added 2026-07-11).
+    Role-tagged account↔item associations at post AND media level —
+    roles seeded (`creator`, `subject`, `commissioner`, `collaborator`)
+    and user-extensible; multiple accounts per item. Curation-owned
+    (Decision 8 applies). Captured hints (mentions, media tagged users)
+    surface as *computed suggestions* at read time and are stored only
+    when the owner accepts them. Unknown identities get stub account rows
+    until observed for real.
+16. **The media viewer is the second-generation built-in frontend**, not
+    a separate service: same process, same API, same static-file serving
+    (Decisions 10/11 — one lightweight container). Plan B's UI is the
+    scaffold it grows inside; if it ever needs to split out, the API
+    contract is already the boundary.
 
 ## Remaining work, in sequence
 
