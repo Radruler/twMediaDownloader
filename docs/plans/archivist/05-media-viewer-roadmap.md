@@ -78,11 +78,12 @@ Carry the MVP's honesty markers further:
 ## Principle 6 — Exit doors (other consumers)
 
 - **Collections.** Named, ordered, hand-picked sets of media items /
-  works. This is the likeliest bridge to the collage app (a collage
-  references a collection or individual `media_items` by stable id +
-  `/files/<sha256>`), and the second major consumer to design with the
-  owner — its own plan set, pending the owner's braindump
-  (2026-07-11: deferred, not yet specified).
+  works. This is the designed bridge to **Mosaic**, the collage viewer
+  (now its own project — `docs/plans/mosaic/`): a Mosaic pool can
+  reference an Archivist collection by stable id + `/files/<sha256>`.
+  Mosaic's MVP works without collections (its pools use filter queries
+  and its own media lists), so this stays optional — Archivist must
+  never know Mosaic exists (Mosaic Decision 1).
 - **Export bundles.** A work/collection → folder or zip with originals +
   sidecars in the frozen naming convention (round-trips with the
   client's formats). Needs: API endpoint reusing `@twmd/core` sidecar

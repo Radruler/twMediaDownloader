@@ -39,7 +39,9 @@ Division of responsibility, agreed 2026-07-11:
   personas). If we later want seen-tier data in Archivist, that's a new
   decision.
 - **Frontends** (the media grid shipped with Archivist, the people/traits
-  view, the future collage app) consume only Archivist's HTTP API.
+  view, and **Mosaic**, the collage viewer — `docs/plans/mosaic/`)
+  consume only Archivist's HTTP API. Archivist never knows which
+  consumers exist.
 
 ## Decisions (binding for the Archivist workstream)
 
