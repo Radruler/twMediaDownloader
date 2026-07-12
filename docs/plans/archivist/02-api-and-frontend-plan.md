@@ -6,6 +6,10 @@ criteria: ingested content is browsable and curatable from a LAN browser
 against the NAS container.
 
 Requires plan A. Read `00-archivist-overview.md` — Decisions binding.
+**`API.md` (same directory) is the normative contract for every endpoint
+in this plan** — request/response shapes, error format, cursor and auth
+conventions live there, not here; this plan describes behavior and
+implementation. Deviations require updating `API.md` in the same commit.
 
 ## B-1 — HTTP server & auth
 
@@ -155,10 +159,40 @@ into the archive tree).
   `ingest-client` in the container), backup guidance (`/data` +
   `/archive` are the whole system; thumbs are disposable).
 
+## Implementer appendix (pinned choices)
+
+- New modules: `archivist/src/server.js` (router + handlers, split
+  `routes/*.js` if a file passes ~400 lines), `queries.js` (the one
+  shared filter/query builder for `/api/posts` and later `/api/works` —
+  parameterized SQL, no string-interpolated user input), `thumbs.js`.
+- Router: exact-segment matching with `:param` captures, longest
+  pattern first; no external router dep. JSON body limit 1 MB
+  (`bad_request` beyond); ingest file PUT streams to
+  `<thumbs_dir>/../tmp/` then renames.
+- Cursor implementation: base64url `{k, id}` of the active sort column;
+  `WHERE (k, id) < (?, ?)` keyset pagination — never OFFSET.
+- Frontend: `archivist/ui/index.html` + `ui/src/main.jsx` (Preact +
+  htm via esbuild JSX factory — add `preact` dependency; no other UI
+  deps), built by `build.mjs` to `archivist/dist/static/`; server
+  serves that dir at `/` (no directory listing, `index.html` fallback
+  for client-side routes under `/app/*`).
+- Thumbs: widths exactly {320, 640, 1280}; generation queue concurrency
+  2 (in-process array queue, no dep); `sharp` required, `ffmpeg-static`
+  optional — probe at startup, poster-frame extraction only when
+  present (`ffmpeg -ss 1 -frames:v 1`), else type-glyph placeholder
+  (generated once per type with sharp, cached like any thumb).
+- Auth compare: `crypto.timingSafeEqual` on equal-length buffers
+  (hash both sides first).
+- Compose file: image built from `archivist/Dockerfile`; volumes
+  `./data:/data`, `<pool path>:/archive`; `ports: ["8470:8470"]`;
+  `restart: unless-stopped`.
+
 ## Tests
 
 - Router/auth: 401 without token, constant-time path exercised; static
   unauthenticated.
+- Every endpoint's response asserted against the shapes in `API.md`
+  (shared shape-assertion helpers, not copy-pasted literals).
 - `/api/posts` filter matrix over a seeded library (each filter alone +
   AND combinations, cursor pagination stability under new ingests).
 - Curation writes round-trip; captured-service relation write via API

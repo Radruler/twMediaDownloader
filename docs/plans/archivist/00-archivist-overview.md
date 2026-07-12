@@ -163,3 +163,26 @@ time; its §D needs plan A/B's ingest surface.
 - Schema changes after A ships require a migration (versioned pragma
   `user_version`), not a rebuild — the library is the owner's canonical
   data.
+- **`API.md` (this directory) is the normative HTTP contract** for
+  plans B and V and for every consumer (client push, Mosaic). Code
+  follows it; deviations update it in the same commit.
+
+## Autonomous execution protocol
+
+For a session executing these plans without the owner present:
+
+- Execute plans in the table's order; within a plan, work the numbered
+  items in order, one commit per item minimum, every commit green and
+  pushed.
+- Each plan's **Implementer appendix** pins choices deliberately — do
+  not re-litigate them; if reality forces a change, update the appendix
+  in the same commit and note why.
+- Stop-and-ask points (use them, don't guess): a contract in `API.md` or
+  the A-3 envelope proves unimplementable as written; a schema change
+  would rename/re-mean an existing column; anything would violate
+  Decision 1 (no external requests) or Decision 8 (ingest never writes
+  curation).
+- Owner-gated (skip, mark, continue): live walkthroughs
+  (`VERIFICATION.md` checklists), TrueNAS deployment on real hardware,
+  real-data snapshot ingest. Everything else must run headless in the
+  devcontainer.

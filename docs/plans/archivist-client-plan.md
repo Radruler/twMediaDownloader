@@ -176,6 +176,66 @@ uploads capped at concurrency 1 (stay invisible on the client machine).
 **D-5 — CLI:** `push-status` (dirty/acked counts, last success time) and
 `push --now` (one forced sweep) subcommands on the service binary.
 
+## Implementer appendix (pinned choices)
+
+**Files touched per section** (nothing else without a reason recorded
+here):
+
+- §N: `README.md`, `ARCHITECTURE.md`, `docs/plans/00-overview.md`,
+  `build.mjs` (manifest `name`/`description` patch), `app/src/main.js` +
+  `app/src/cli.js` (banner/help strings), the debug-overlay title in
+  `extension/content/index.js`.
+- §C: `packages/core/src/tweet-record.ts` (contract),
+  `packages/core/src/graphql-normalize.ts`, `test/fixtures/*` expected
+  files (`npm run update-expected` exists for regeneration — inspect the
+  diff, don't trust it blindly), `ARCHITECTURE.md` (contract section),
+  `app/src/config.js` (`own_accounts`, default `[]`), `README.md`
+  config table.
+- §D: `app/src/config.js` (`archivist_url` default `''`,
+  `archivist_token` default `''`), `app/src/db.js` (migration + ledger
+  helpers), new `app/src/pusher.js`, `app/src/main.js` (wire pusher when
+  `archivist_url` non-empty), `app/src/cli.js` (`push-status`,
+  `push --now`).
+
+**Payload field paths for §C** (verify against fixtures before coding —
+X moves things; the normalizer's existing legacy-object resolution is
+the pattern to follow): viewer flags at the tweet result's
+`legacy.favorited` / `legacy.bookmarked`; reply author at
+`legacy.in_reply_to_user_id_str`. Media tagged users (C-4): search the
+fixtures for the real key (candidates: `tagged_users`,
+`mediaTagsResults`, inside `media[].ext_media_availability` siblings);
+if absent from all fixtures, implement the contract field defaulting to
+`[]`, leave the normalizer TODO with the searched candidates, and record
+the finding in this doc.
+
+**Client DB migration guard (§D):** `app/src/db.js` currently has no
+`user_version` discipline — introduce it here: current schema = version
+1 (stamp existing DBs that lack it), ledger migration = version 2.
+Migrations run in `openDb` before prepared statements. The `posts` FK in
+`archivist_exports` means purge (`purgePosts`) must also delete ledger
+rows — add that to the purge transaction and its test.
+
+**Pusher (§D) pinned behavior:** wake sources = archive-completion hook
+in the downloader's success path + `setInterval` 15 min (unref'd);
+single-flight guard; batch = oldest 20 dirty; per-post flow as §D-3;
+network errors → abandon sweep silently (next wake retries); 4xx from
+Archivist → log at warn once per post_key and skip it until next
+service restart (don't hot-loop a poison post). Timeout 30 s metadata,
+10 min per file upload. No retry-with-backoff machinery beyond this —
+the timer IS the retry.
+
+## Autonomous execution protocol
+
+Work the sections in order §N → §C → §D (§D only if Archivist plan A/B
+is done — check for `archivist/src/ingest.js` in the tree; if absent,
+stop after §C and say so). One commit per section minimum; every commit
+green (`npm test && npm run typecheck && npm run build`) in the
+devcontainer; push after every green commit. Owner-gated pause points:
+(1) §C-2 if no fixture carries viewer flags — ask the owner for a fresh
+capture rather than guessing field paths; (2) anything requiring a live
+x.com DOM. Contract changes (`tweet-record.ts`) must update
+`ARCHITECTURE.md` in the same commit or the commit is wrong.
+
 ## Tests
 
 - §N: build produces the patched manifest name; no test churn otherwise.

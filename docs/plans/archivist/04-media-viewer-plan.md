@@ -9,7 +9,10 @@ feeds `05-media-viewer-roadmap.md`.
 
 Requires plans A and B. Decisions 14 (linkage/threads), 15 (credits), 16
 (same-process frontend) in `00-archivist-overview.md` are the design
-ground for this plan. Client-plan §C improves the data (viewer flags,
+ground for this plan. **`API.md` is normative** for the `/api/works`,
+credits, and credit-roles shapes this plan implements (Work and Credit
+objects, filter params, suggestion provenance) — extend `API.md` in the
+same commit as any surface change. Client-plan §C improves the data (viewer flags,
 `in_reply_to_user_id_str`, tagged users) but nothing here may *require*
 it — every view must degrade gracefully on pre-§C records.
 

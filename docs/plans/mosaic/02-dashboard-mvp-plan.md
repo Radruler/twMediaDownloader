@@ -7,7 +7,12 @@ cells sourced from his real Archivist, runs it full-screen for an
 evening, and it survives the NAS going to sleep.
 
 Requires plan P (engine) and, for live sourcing, Archivist plan B.
-`00-mosaic-overview.md` Decisions binding.
+`00-mosaic-overview.md` Decisions binding; plan 01's Implementer
+appendix pins the scaffold/seams this plan builds on. UI state
+management: plain `ChangeNotifier`/`ValueNotifier` — no state-management
+package; screens live in `mosaic/lib/src/ui/` (`wall/`, `editor/`,
+`picker/`, `settings/`). Everything but the live wall must be testable
+with `flutter test` on Linux against the fake `PlayerPort`.
 
 ## D-1 — App shell & modes
 

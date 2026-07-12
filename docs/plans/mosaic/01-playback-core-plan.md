@@ -130,3 +130,42 @@ feel before plan D exists, and the regression rig thereafter.
 - Playback correctness itself (gapless swaps, seek precision) is
   validated on the P-4 harness on real hardware — record findings in
   this doc.
+
+## Implementer appendix (pinned choices)
+
+- **Project scaffold:** `mosaic/` = `flutter create --platforms windows`
+  output, package name `mosaic`. Dependencies: `media_kit`,
+  `media_kit_video`, `media_kit_libs_windows_video`, `http`,
+  `path_provider`, `crypto`; dev: `flutter_lints`. Nothing else without
+  recording it here.
+- **Source layout** (`mosaic/lib/src/`): `model/` (P-1: `dashboard.dart`,
+  `cell.dart`, `entry.dart`, `pool.dart`, `media_ref.dart` +
+  `json.dart` round-trip), `api/archivist_client.dart` (P-2),
+  `cache/media_cache.dart` (P-2), `engine/` (P-3:
+  `cell_controller.dart`, `random_draw.dart`, `decision_log.dart`,
+  `player_port.dart`), `harness/` (P-4 screen). App entry
+  `lib/main.dart` boots straight into the harness until plan D.
+- **`PlayerPort`** is the seam that keeps everything testable on Linux:
+  `open(path, {startMs})`, `play()`, `pause()`, `seek(ms)`,
+  `positionStream`, `dispose()` — one implementation wraps
+  `media_kit.Player`, one is a fake with a controllable clock. Cell
+  logic depends only on the port; nothing outside `player_port_mpv.dart`
+  imports media_kit.
+- **Segment end enforcement:** subscribe to `positionStream`; on
+  `position >= end_ms - 50ms`, swap to the preloaded player (already
+  opened at the next entry's start and paused). Record measured swap
+  gap in the harness overlay.
+- **Config file:** `<app data>/mosaic/config.json` —
+  `archivist_url`, `archivist_token`, `cache_dir`, `cache_max_bytes`
+  (default 20 GiB), `default_image_ms` fallback (20000). App-data dir
+  via `path_provider`; dashboards in `<app data>/mosaic/dashboards/
+  <slug>.json`, pool snapshots in `…/snapshots/<pool id>.json`.
+- **Archivist API:** consume exactly `docs/plans/archivist/API.md`
+  (posts/media list + `/files`/`/thumbs` with `?token=`); pool
+  `archivist_query` objects serialize the same param names as the API's
+  query string. Record fixtures for tests from that doc's shapes, not
+  from a live server.
+- **Random draw:** seeded `Random`; state = (seed, draw index) in the
+  decision log (`<app data>/mosaic/runs/<timestamp>.jsonl`, one line per
+  drawn entry). No-immediate-repeat = reject-and-redraw against the
+  previous entry's (sha256, start_ms).

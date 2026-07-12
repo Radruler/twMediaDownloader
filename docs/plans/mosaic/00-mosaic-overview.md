@@ -119,3 +119,28 @@ the spike and engine need no Archivist at all.
 4. Export priority (Decision 10) — confirm roadmap-not-MVP.
 5. Target display(s): single monitor? multi-monitor spanning is a
    roadmap item unless it's actually day-one.
+
+## Autonomous execution protocol
+
+An agent may execute these plans without waiting on the talk-over list:
+the Decisions above ARE the defaults (name Mosaic, Flutter+media_kit
+pending spike numbers, muted+solo audio, export deferred, single
+window/monitor). If the owner later overrides one, that's a normal
+change, not a blocker.
+
+- **Where the code lives:** a `mosaic/` top-level directory in this repo
+  until the owner provisions a separate repo. It is a self-contained
+  Flutter project — NOT added to the npm workspaces, NOT built by
+  `build.mjs`, NOT part of `npm test`. Its gates are its own:
+  `flutter analyze && flutter test` green per commit (plus
+  `flutter build windows` when the toolchain is present).
+- **Toolchain reality check first:** Flutter Windows builds need a
+  Windows machine; agent sessions in this repo's devcontainer are Linux.
+  Everything in plan P except the final Windows build runs
+  Linux-headless (pure-Dart model/cache/engine logic with fake players +
+  `flutter test`). Structure the code so the media_kit-touching layer is
+  thin and injected (the `PlayerPort` interface in plan 01's appendix);
+  Windows build + P-0 spike measurements are owner-gated pause points.
+- Order: P-0 harness code → P-1 → P-2 → P-3 → P-4, then plan D; commit
+  per item; stop-and-ask on anything that would require Archivist-side
+  changes (forbidden by Decision 1) or contradict `../archivist/API.md`.

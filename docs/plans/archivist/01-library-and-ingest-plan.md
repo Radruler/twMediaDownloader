@@ -329,3 +329,50 @@ Compose/TrueNAS specifics are plan B §deploy.
   ingested child-first → re-rooted when the parent arrives;
   other-author reply → NOT merged; `rebuild-threads` converges to the
   same state as incremental ingest.
+
+## Implementer appendix (pinned choices — do not re-litigate, do update if forced)
+
+**Module layout** (`archivist/src/`, ESM, plain JS like `app/`):
+
+```
+config.js   loadConfig() → frozen config object (defaults → config.json → env)
+db.js       openDb(path) → library object (prepared stmts + helpers, like app/src/db.js);
+            exports SCHEMA, SEEDS, migrate(db) (user_version-driven)
+ingest.js   createIngest(library, { archiveRoot, log }) →
+              { ingestPost(envelope, fileProvider), rebuildThreads(), rebuildFts() }
+            fileProvider: async (sha256) → { stream, bytes } | null
+snapshot.js ingestClientDir(ingest, clientDir, { log }) → { new, updated,
+              skipped, missing_files, errors } — opens <clientDir>/library.sqlite3
+              read-only via better-sqlite3 { readonly: true }
+cli.js      subcommand dispatch (minimist, mirroring app/src/cli.js patterns)
+main.js     entry: `serve` (plan B) | cli subcommands
+```
+
+**Pinned semantics:**
+
+| question | answer |
+|---|---|
+| Which version's data feeds `posts` row + `media_items`? | The version with the greatest `captured_at_ms` (ties: greatest `service_version_id`). Media of older versions is retained only inside `post_versions.raw_json`. |
+| Path for a written file | `<service>/<screen_name>/<basename of the client's recorded filename>`; `screen_name` = freshest record's author screen_name, sanitized with `@twmd/core` `sanitizeForFilename`. Basename collision with different sha256 → append `-<first 8 of sha256>` before the extension. |
+| Client `files.path` resolution (snapshot) | Try as-is relative to `<clientDir>/archive`; if absolute or not found, retry `<clientDir>/archive/<last two path segments>`. Still missing → count in `missing_files` report, ingest the post metadata-only. NEVER fail the run for a missing file. |
+| Hash mismatch (snapshot file or ingest upload) | Reject the bytes, keep media metadata-only, warn with both hashes. Never store unverified bytes. |
+| Unknown `service` in envelope | Reject the post (`refused`). Services/relation-types come only from seeds + `$ARCHIVIST_DIR/registry.json` (optional operator file, merged idempotently at startup — this is the "add a service without a migration" mechanism). |
+| Unknown relation `key` (known service) | Skip that relation, warn, ingest the rest of the post. |
+| Relation subject account | Upserted exactly like the author (it may be an account we've never seen as an author). |
+| Tombstoned/deleted flag | `deleted` in the envelope sets `deleted=1` + `deleted_detected_at` (first observation wins); never un-sets. |
+| FTS `author_names` | All distinct `account_names.value`s for the author at write time (rename-aware search). |
+| Envelope `relations[].active: false` | Upsert with `revoked_at = observed_at` if not already revoked. `active: true` clears `revoked_at`. |
+
+**Config keys** (A-1, full list): `bind_host` (`0.0.0.0`), `port`
+(`8470`), `api_token` (random hex 32 on first run, printed to stdout
+once), `archive_root`, `db_path`, `thumbs_dir`, `log_level`
+(`quiet|error|warn|info|debug`, default `info`). Env:
+`ARCHIVIST_DIR`, `ARCHIVIST_BIND_HOST`, `ARCHIVIST_PORT`,
+`ARCHIVIST_API_TOKEN`, `ARCHIVIST_ARCHIVE_ROOT`, `ARCHIVIST_DB_PATH`,
+`ARCHIVIST_THUMBS_DIR`, `ARCHIVIST_LOG_LEVEL`.
+
+**Dependencies:** `better-sqlite3` only for this plan (`sharp`,
+`ffmpeg-static` arrive in plan B). Add `archivist` to root workspaces;
+`build.mjs` gains an esbuild entry mirroring the `app/` one
+(`archivist/src/main.js` → `archivist/dist/main.mjs`, external:
+`better-sqlite3`).
