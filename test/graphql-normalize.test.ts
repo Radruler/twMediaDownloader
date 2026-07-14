@@ -101,6 +101,7 @@ describe('TweetDetail conversation', () => {
         width: 2048,
         height: 1536,
         duration_ms: null,
+        tagged_users: [],
       },
       {
         type: 'photo',
@@ -112,6 +113,7 @@ describe('TweetDetail conversation', () => {
         width: 600,
         height: 800,
         duration_ms: null,
+        tagged_users: [],
       },
     ]);
   });
@@ -147,8 +149,10 @@ describe('TweetDetail conversation', () => {
   it('records reply threading and counts', () => {
     const reply = tweetById(result, '1800000000000000002');
     expect(reply.in_reply_to_status_id_str).toBe('1800000000000000001');
+    expect(reply.in_reply_to_user_id_str).toBe('9000000001');
     expect(reply.conversation_id_str).toBe('1800000000000000001');
     const main = tweetById(result, '1800000000000000001');
+    expect(main.viewer).toEqual({ liked: false, bookmarked: false });
     expect(main.counts).toEqual({
       replies: 2,
       retweets: 5,
@@ -239,6 +243,7 @@ describe('UserMedia: grid modules and animated_gif', () => {
         width: 480,
         height: 270,
         duration_ms: null,
+        tagged_users: [],
       },
     ]);
   });
@@ -365,6 +370,7 @@ describe('unified_card media fallback', () => {
         width: 800,
         height: 418,
         duration_ms: null,
+        tagged_users: [],
       },
     ]);
     expect(tweet.full_text).toBe('Check out this product! https://example.com/product');

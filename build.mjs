@@ -11,9 +11,9 @@
  *        extension/content/page-interceptor.js  -> dist/js/page-interceptor.js
  *        extension/content/index.js             -> dist/js/capture.js
  *        extension/background/save-worker.js    -> dist/js/save-worker.js
- *   3. writes dist/manifest.json = src/manifest.json + the two content-script
- *      entries (page-interceptor runs in world:"MAIN") + the "downloads"
- *      permission (plan 04);
+ *   3. writes dist/manifest.json = src/manifest.json + Archivist Client
+ *      presentation strings + the two content-script entries
+ *      (page-interceptor runs in world:"MAIN") + permissions;
  *   4. writes dist/background-wrapper.js = legacy import + save-worker import.
  *
  * src/manifest.json itself is NOT modified — it stays loadable exactly as
@@ -81,6 +81,9 @@ async function copyStatic() {
     filter: (source) => !source.includes(`${path.sep}deprecated`),
   });
   const manifest = JSON.parse(await readFile(path.join(srcDir, 'manifest.json'), 'utf8'));
+  manifest.name = 'Archivist Client';
+  manifest.short_name = 'Archivist';
+  manifest.description = 'Passive X/Twitter media archiving, descended from twMediaDownloader.';
   manifest.content_scripts = [...(manifest.content_scripts ?? []), ...CAPTURE_CONTENT_SCRIPTS];
   // Save layer (plan 04): chrome.downloads needs the "downloads" permission.
   // App link (plan 06): "webRequest" for OBSERVATION-ONLY header capture on
@@ -125,16 +128,33 @@ const appBundleOptions = {
   logLevel: 'info',
 };
 
+const archivistBundleOptions = {
+  entryPoints: [{ in: path.join(root, 'archivist/src/main.js'), out: 'main' }],
+  outdir: path.join(root, 'archivist/dist'),
+  outExtension: { '.js': '.mjs' },
+  bundle: true,
+  format: 'esm',
+  platform: 'node',
+  target: ['node20'],
+  external: ['better-sqlite3'],
+  sourcemap: false,
+  logLevel: 'info',
+};
+
 await copyStatic();
 if (watch) {
   const context = await esbuild.context(bundleOptions);
   await context.watch();
   const appContext = await esbuild.context(appBundleOptions);
   await appContext.watch();
-  console.log('watching extension/, app/, and packages/core/ …');
+  const archivistContext = await esbuild.context(archivistBundleOptions);
+  await archivistContext.watch();
+  console.log('watching extension/, app/, archivist/, and packages/core/ …');
 } else {
   await esbuild.build(bundleOptions);
   await esbuild.build(appBundleOptions);
+  await esbuild.build(archivistBundleOptions);
   console.log(`built ${path.relative(root, distDir)}/ — load it unpacked via chrome://extensions`);
   console.log('built app/dist/main.mjs — run the companion app inside the devcontainer with: npm run app');
+  console.log('built archivist/dist/main.mjs — run Archivist with: npm run archivist -- stats');
 }

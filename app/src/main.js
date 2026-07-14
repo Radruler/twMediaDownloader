@@ -16,6 +16,7 @@ import { createAppServer } from './server.js';
 import { createDownloader } from './downloader.js';
 import { createDiskWriter } from './disk-writer.js';
 import { runCli } from './cli.js';
+import { createArchivistPusher } from './pusher.js';
 
 function timestamp() {
   return new Date().toISOString().replace('T', ' ').slice(0, 19);
@@ -46,7 +47,7 @@ export async function startApp({
   if (firstRun) {
     console.log('');
     console.log('════════════════════════════════════════════════════════════');
-    console.log('  twMediaDownloader companion app — FIRST RUN');
+    console.log('  Archivist Client content manager — FIRST RUN');
     console.log('');
     console.log(`  Pairing token:  ${config.token}`);
     console.log('');
@@ -61,6 +62,11 @@ export async function startApp({
   log(`library: ${config.db_path}`, db.stats());
 
   let server;
+  let pusher = null;
+  if (config.archivist_url && config.archivist_token) {
+    pusher = createArchivistPusher({ db, config, log, fetchImpl });
+    log(`Archivist push enabled: ${config.archivist_url}`);
+  }
   const downloader = createDownloader({
     db,
     writer: createDiskWriter({ db, archiveRoot: config.archive_root }),
@@ -69,6 +75,7 @@ export async function startApp({
     fetchImpl,
     ...(gapMs ? { gapMs } : {}),
     ...(retryBaseMs ? { retryBaseMs } : {}),
+    onArchived: () => pusher?.wake(),
     onStatusChange: (patch) => {
       Object.assign(server.status, patch);
       server.sendStatus();
@@ -101,6 +108,7 @@ export async function startApp({
     closing = true;
     log('shutting down…');
     await downloader.shutdown();
+    pusher?.stop();
     await server.close();
     db.close();
     if (exitOnShutdown) process.exit(0);
@@ -110,11 +118,11 @@ export async function startApp({
     process.on('SIGTERM', shutdown);
   }
 
-  return { config, db, server, downloader, shutdown };
+  return { config, db, server, downloader, pusher, shutdown };
 }
 
 const entryPath = process.argv[1] ? fileURLToPath(import.meta.url) === process.argv[1] : false;
-const COMMANDS = new Set(['status', 'requeue', 'archive', 'purge', 'verify', '--help', '-h', 'help']);
+const COMMANDS = new Set(['status', 'requeue', 'archive', 'purge', 'verify', 'push-status', 'push', '--help', '-h', 'help']);
 
 if (entryPath) {
   if (COMMANDS.has(process.argv[2])) {

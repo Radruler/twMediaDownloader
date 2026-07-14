@@ -14,10 +14,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000010",
       "edit_initial_id_str": "1800000000000000010",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 3,
@@ -37,7 +42,8 @@
           "video_variants": [],
           "width": 1000,
           "height": 1000,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "UserTweets",
@@ -57,10 +63,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000012",
       "edit_initial_id_str": "1800000000000000012",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 3,
         "retweets": 8,
@@ -80,7 +91,8 @@
           "video_variants": [],
           "width": 1600,
           "height": 900,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "UserTweets",
@@ -102,10 +114,15 @@
         "synth_orig"
       ],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": "1800000000000000012",
       "conversation_id_str": "1800000000000000011",
       "edit_initial_id_str": "1800000000000000011",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 8,
@@ -125,7 +142,8 @@
           "video_variants": [],
           "width": 1600,
           "height": 900,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "UserTweets",
@@ -148,10 +166,15 @@
       ],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000013",
       "edit_initial_id_str": "1800000000000000013",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 0,

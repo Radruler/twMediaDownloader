@@ -9,15 +9,28 @@
  */
 
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizePayload } from '../packages/core/src/index.ts';
+import * as esbuild from 'esbuild';
 
 const FIXED_CAPTURED_AT = 1751900000000;
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const fixturesDir = path.join(root, 'test/fixtures/graphql');
 const expectedDir = path.join(fixturesDir, 'expected');
+const bundledCore = path.join(tmpdir(), `twmd-core-${process.pid}.mjs`);
+
+await esbuild.build({
+  entryPoints: [path.join(root, 'packages/core/src/index.ts')],
+  outfile: bundledCore,
+  bundle: true,
+  format: 'esm',
+  platform: 'node',
+  target: ['node20'],
+  logLevel: 'silent',
+});
+const { normalizePayload } = await import(`file://${bundledCore}`);
 
 await mkdir(expectedDir, { recursive: true });
 const files = (await readdir(fixturesDir)).filter((f) => f.endsWith('.json'));

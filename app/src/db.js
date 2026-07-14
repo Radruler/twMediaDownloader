@@ -67,6 +67,14 @@ CREATE VIRTUAL TABLE IF NOT EXISTS posts_fts USING fts5(
 );
 `;
 
+const MIGRATION_2 = `
+CREATE TABLE IF NOT EXISTS archivist_exports (
+  post_key TEXT PRIMARY KEY REFERENCES posts(post_key),
+  dirty_since INTEGER NOT NULL,
+  acked_at INTEGER
+);
+`;
+
 /** post_key for a TweetRecord (Decision 17). */
 export function postKeyFor(record) {
   return record.edit_initial_id_str ?? record.id_str;
@@ -77,7 +85,21 @@ export function openDb(path = ':memory:') {
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
   db.exec(SCHEMA);
+  migrate(db);
   return createLibrary(db);
+}
+
+function migrate(db) {
+  const version = db.pragma('user_version', { simple: true });
+  if (version < 1) db.pragma('user_version = 1');
+  if (version < 2) {
+    db.exec(MIGRATION_2);
+    db.prepare(`
+      INSERT OR IGNORE INTO archivist_exports (post_key, dirty_since, acked_at)
+      SELECT post_key, last_seen_at, NULL FROM posts WHERE state = 'archived'
+    `).run();
+    db.pragma('user_version = 2');
+  }
 }
 
 function createLibrary(db) {
@@ -111,6 +133,11 @@ function createLibrary(db) {
   const getPost = db.prepare('SELECT * FROM posts WHERE post_key = ?');
   const getPostKeyByVersion = db.prepare('SELECT post_key FROM versions WHERE id_str = ?');
   const setState = db.prepare('UPDATE posts SET state = ? WHERE post_key = ?');
+  const markExportDirty = db.prepare(`
+    INSERT INTO archivist_exports (post_key, dirty_since, acked_at)
+    VALUES (?, ?, NULL)
+    ON CONFLICT(post_key) DO UPDATE SET dirty_since = excluded.dirty_since, acked_at = NULL
+  `);
   const latestRecordForPost = db.prepare(`
     SELECT raw_record_json FROM versions
     WHERE post_key = ? AND raw_record_json IS NOT NULL
@@ -157,6 +184,7 @@ function createLibrary(db) {
   `);
   const deleteVersionsForPost = db.prepare('DELETE FROM versions WHERE post_key = ?');
   const deletePostFts = db.prepare('DELETE FROM posts_fts WHERE post_key = ?');
+  const deleteExportForPost = db.prepare('DELETE FROM archivist_exports WHERE post_key = ?');
   const deletePost = db.prepare('DELETE FROM posts WHERE post_key = ?');
 
   function recordForPost(post_key) {
@@ -173,6 +201,7 @@ function createLibrary(db) {
     const fileRows = [];
     for (const post_key of postKeys) {
       fileRows.push(...filesForPost.all(post_key));
+      deleteExportForPost.run(post_key);
       deleteFilesForPost.run(post_key);
       deleteMediaForPost.run(post_key);
       deleteVersionsForPost.run(post_key);
@@ -253,6 +282,7 @@ function createLibrary(db) {
 
     setPostState(post_key, state) {
       setState.run(state, post_key);
+      if (state === 'archived') markExportDirty.run(post_key, Date.now());
     },
 
     queuePost(post_key) {
@@ -313,12 +343,22 @@ function createLibrary(db) {
       return db.prepare('SELECT * FROM versions WHERE post_key = ? ORDER BY id_str').all(post_key);
     },
 
+    getExportVersions(post_key) {
+      return db
+        .prepare('SELECT * FROM versions WHERE post_key = ? AND raw_record_json IS NOT NULL ORDER BY captured_at_ms, id_str')
+        .all(post_key);
+    },
+
     getMedia(id_str) {
       return db.prepare('SELECT * FROM media WHERE id_str = ? ORDER BY position').all(id_str);
     },
 
     findFileBySha(sha256) {
       return fileBySha.get(sha256) ?? null;
+    },
+
+    filesForPost(post_key) {
+      return filesForPost.all(post_key);
     },
 
     recordFile({ media_key, path, bytes, sha256, downloaded_at = Date.now() }) {
@@ -347,6 +387,31 @@ function createLibrary(db) {
         archive_failed: row("SELECT COUNT(*) AS n FROM posts WHERE state = 'archive_failed'").n,
         deleted: row('SELECT COUNT(*) AS n FROM posts WHERE deleted = 1').n,
       };
+    },
+
+    exportStats() {
+      const row = (sql) => db.prepare(sql).get();
+      return {
+        dirty: row('SELECT COUNT(*) AS n FROM archivist_exports WHERE acked_at IS NULL').n,
+        acked: row('SELECT COUNT(*) AS n FROM archivist_exports WHERE acked_at IS NOT NULL').n,
+        last_success_at: row('SELECT MAX(acked_at) AS n FROM archivist_exports WHERE acked_at IS NOT NULL').n,
+      };
+    },
+
+    dirtyExports(limit = 20) {
+      return db
+        .prepare(
+          `SELECT e.*, p.state FROM archivist_exports e
+           JOIN posts p ON p.post_key = e.post_key
+           WHERE e.acked_at IS NULL
+           ORDER BY e.dirty_since ASC, e.post_key
+           LIMIT ?`,
+        )
+        .all(limit);
+    },
+
+    markExportAcked(post_key, ackedAt = Date.now()) {
+      return db.prepare('UPDATE archivist_exports SET acked_at = ? WHERE post_key = ?').run(ackedAt, post_key).changes > 0;
     },
 
     close() {

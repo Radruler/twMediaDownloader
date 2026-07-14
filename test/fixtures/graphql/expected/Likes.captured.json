@@ -14,10 +14,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "2074285269436809704",
       "edit_initial_id_str": "2074285269436809704",
+      "viewer": {
+        "liked": true,
+        "bookmarked": false
+      },
       "counts": {
         "replies": 36,
         "retweets": 2,

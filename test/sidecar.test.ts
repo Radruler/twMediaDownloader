@@ -28,6 +28,7 @@ function photo(overrides: Partial<MediaRecord> = {}): MediaRecord {
     width: 1080,
     height: 867,
     duration_ms: null,
+    tagged_users: [],
     ...overrides,
   };
 }
@@ -43,10 +44,12 @@ function record(overrides: Partial<TweetRecord> = {}): TweetRecord {
     hashtags: [],
     mentions: [],
     in_reply_to_status_id_str: null,
+    in_reply_to_user_id_str: null,
     quoted_status_id_str: null,
     retweeted_status_id_str: null,
     conversation_id_str: '1234567890123456789',
     edit_initial_id_str: '1234567890123456789',
+    viewer: { liked: null, bookmarked: null },
     counts: { replies: 12, retweets: 345, likes: 6789, quotes: 10, bookmarks: 22, views: 123456 },
     is_sensitive: false,
     media: [photo()],

@@ -237,7 +237,7 @@ function renderOverlay() {
   const header = document.createElement('div');
   const ops = [...state.payloadsByOp.entries()].map(([op, n]) => `${op}:${n}`).join(' ');
   header.textContent =
-    `twMD capture — cache ${stats.size} (hitRate ${stats.hitRate.toFixed(2)})\n` +
+    `Archivist Client capture — cache ${stats.size} (hitRate ${stats.hitRate.toFixed(2)})\n` +
     `payloads: ${ops || '(none yet — scroll a timeline)'}\n` +
     `tombstones: ${state.tombstones.length}  parse errors: ${state.parseErrors}`;
   root.appendChild(header);

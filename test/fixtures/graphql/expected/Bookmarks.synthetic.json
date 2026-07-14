@@ -21,10 +21,15 @@
       ],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000040",
       "edit_initial_id_str": "1800000000000000040",
+      "viewer": {
+        "liked": null,
+        "bookmarked": true
+      },
       "counts": {
         "replies": 12,
         "retweets": 45,
@@ -44,7 +49,8 @@
           "video_variants": [],
           "width": 1200,
           "height": 675,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "Bookmarks",

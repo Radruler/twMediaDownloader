@@ -132,10 +132,15 @@ export function normalizePayload(
         .map((m) => asStringOrNull(m?.screen_name))
         .filter((s): s is string => s !== null),
       in_reply_to_status_id_str: asStringOrNull(legacy.in_reply_to_status_id_str),
+      in_reply_to_user_id_str: asStringOrNull(legacy.in_reply_to_user_id_str),
       quoted_status_id_str: asStringOrNull(legacy.quoted_status_id_str) ?? quotedInnerId,
       retweeted_status_id_str: retweetedId,
       conversation_id_str: asStringOrNull(legacy.conversation_id_str),
       edit_initial_id_str: editInitialId(result),
+      viewer: {
+        liked: asBooleanOrNull(legacy.favorited),
+        bookmarked: asBooleanOrNull(legacy.bookmarked),
+      },
       counts: {
         replies: asNumber(legacy.reply_count),
         retweets: asNumber(legacy.retweet_count),
@@ -196,9 +201,34 @@ function normalizeMedia(result: Json, legacy: Json): MediaRecord[] {
       width: asNumberOrNull(m.original_info?.width),
       height: asNumberOrNull(m.original_info?.height),
       duration_ms: asNumberOrNull(videoInfo.duration_millis),
+      tagged_users: normalizeTaggedUsers(m),
     });
   }
   return records;
+}
+
+function normalizeTaggedUsers(media: Json): { id_str: string | null; screen_name: string | null }[] {
+  // Fixture search on 2026-07-14 found ext_media_availability but no observed
+  // tagged-users payload. Keep the contract additive and default-empty until a
+  // live capture proves the current field path.
+  const candidates = [
+    media.tagged_users,
+    media.mediaTagsResults?.result,
+    media.media_tags,
+    media.user_tags,
+  ];
+  const source = candidates.find((value) => asArray(value).length > 0);
+  return (asArray(source) as Json[]).map((u) => ({
+    id_str:
+      asStringOrNull(u.id_str) ??
+      asStringOrNull(u.rest_id) ??
+      asStringOrNull(u.user_id_str) ??
+      asStringOrNull(u.user_results?.result?.rest_id),
+    screen_name:
+      asStringOrNull(u.screen_name) ??
+      asStringOrNull(u.user_results?.result?.core?.screen_name) ??
+      asStringOrNull(u.user_results?.result?.legacy?.screen_name),
+  }));
 }
 
 /**
@@ -308,4 +338,8 @@ function asNumber(value: unknown): number {
 
 function asNumberOrNull(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function asBooleanOrNull(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null;
 }

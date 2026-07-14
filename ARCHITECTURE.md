@@ -1,6 +1,8 @@
 # Architecture — current state (2026-07)
 
-How the rebuilt system works today. For what remains to be built, see
+Archivist Client is the rebuilt twMediaDownloader extension plus local
+content manager: it captures and downloads archived content for the
+future Archivist library service. How the rebuilt system works today. For what remains to be built, see
 `docs/plans/00-overview.md` (its Decisions section is binding). Historical
 plans/handoffs are in `archive/` — reference, not instructions.
 
@@ -45,7 +47,7 @@ extension/            plain JS, bundled by esbuild
   content/ui-buttons.js        button-injection skeleton (flag-gated, inert)
   background/save-worker.js    'twmd-save' port → chrome.downloads
   background/request-template.js observation-only webRequest header capture
-app/                  plain JS Node service ("content manager")
+app/                  plain JS Node service (Archivist Client content manager)
   src/config.js  src/server.js  src/db.js  src/downloader.js
   src/disk-writer.js  src/cli.js  src/main.js
 src/                  LEGACY extension — untouched by design until cleanup
@@ -62,7 +64,10 @@ per tweet id: author, `full_text` (note_tweet long text when present, t.co
 expanded), entities, counts, `media[]` (type photo/video/animated_gif,
 `image_url` base, `video_variants`, alt text, dims), reply/quote/RT links,
 `edit_initial_id_str` (logical-post key: `edit_initial_id_str ?? id_str`),
-`source_op`, `captured_at_ms`. Field rules:
+`source_op`, `captured_at_ms`. Viewer relationship fields are recorded as
+`viewer.liked` / `viewer.bookmarked` (`null` when absent from the payload),
+reply author id is recorded as `in_reply_to_user_id_str`, and per-media
+tagged users ride as `media[].tagged_users` (empty when absent). Field rules:
 
 - `created_at_ms` is `number | null` (snowflake-derived fallback; null only
   for pre-2010 ids) — treat null as "unknown", don't crash.
@@ -150,6 +155,10 @@ with runtime env overrides:
 - `db_path` / `TWMD_DB_PATH`
 - `log_level` / `TWMD_LOG_LEVEL`
 - `token` (pairing secret; generated on first run)
+- `own_accounts` (operator-declared owned X/Twitter accounts; used by
+  Archivist export to attach viewer relations without guessing identity)
+- `archivist_url` / `TWMD_ARCHIVIST_URL` and `archivist_token` /
+  `TWMD_ARCHIVIST_TOKEN` (empty disables opportunistic push export)
 
 After `npm run build`, the service binary also exposes operator CLI
 commands that read the same config:

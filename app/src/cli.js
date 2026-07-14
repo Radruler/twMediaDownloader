@@ -5,11 +5,12 @@ import { loadConfig } from './config.js';
 import { openDb } from './db.js';
 import { createDownloader } from './downloader.js';
 import { createDiskWriter } from './disk-writer.js';
+import { createArchivistPusher } from './pusher.js';
 
 const STATES = new Set(['seen', 'queued', 'archived', 'archive_failed']);
 
 function printUsage() {
-  console.log(`twMediaDownloader content-manager commands
+  console.log(`Archivist Client content-manager commands
 
 Usage:
   node app/dist/main.mjs status
@@ -17,6 +18,8 @@ Usage:
   node app/dist/main.mjs archive <tweet_id|post_key>
   node app/dist/main.mjs purge [--author X] [--before YYYY-MM-DD] [--state S] [--yes]
   node app/dist/main.mjs verify
+  node app/dist/main.mjs push-status
+  node app/dist/main.mjs push --now
 
 Config: $TWMD_APP_DIR/config.json, with env overrides documented in README.md.`);
 }
@@ -61,7 +64,7 @@ export async function runCli(
   { dir = /** @type {any} */ (undefined), fetchImpl = globalThis.fetch } = {},
 ) {
   const args = minimist(argv, {
-    boolean: ['all-failed', 'yes', 'help'],
+    boolean: ['all-failed', 'yes', 'help', 'now'],
     string: ['author', 'before', 'state'],
     alias: { h: 'help' },
   });
@@ -76,6 +79,22 @@ export async function runCli(
     if (cmd === 'status') {
       const stats = db.stats();
       console.log(JSON.stringify({ ...stats, queue_depth: stats.queued, failures: db.failedPosts() }, null, 2));
+      return 0;
+    }
+
+    if (cmd === 'push-status') {
+      console.log(JSON.stringify(db.exportStats(), null, 2));
+      return 0;
+    }
+
+    if (cmd === 'push') {
+      if (!args.now) throw new Error('push currently requires --now');
+      if (!config.archivist_url || !config.archivist_token) {
+        throw new Error('Archivist push is disabled; set archivist_url and archivist_token');
+      }
+      const pusher = createArchivistPusher({ db, config, log, fetchImpl, autoStart: false });
+      const result = await pusher.sweep();
+      console.log(JSON.stringify(result, null, 2));
       return 0;
     }
 

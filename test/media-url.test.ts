@@ -119,6 +119,7 @@ function mediaRecord(overrides: Partial<MediaRecord>): MediaRecord {
     width: null,
     height: null,
     duration_ms: null,
+    tagged_users: [],
     ...overrides,
   };
 }

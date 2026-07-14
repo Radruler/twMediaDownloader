@@ -14,10 +14,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000020",
       "edit_initial_id_str": "1800000000000000020",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 1,
         "retweets": 2,
@@ -43,7 +48,8 @@
           ],
           "width": 480,
           "height": 270,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "UserMedia",
@@ -63,10 +69,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000021",
       "edit_initial_id_str": "1800000000000000021",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 0,
@@ -86,7 +97,8 @@
           "video_variants": [],
           "width": 4096,
           "height": 4096,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "UserMedia",

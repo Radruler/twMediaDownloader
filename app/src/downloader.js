@@ -48,6 +48,7 @@ export function createDownloader({
   gapMs = () => 500 + Math.floor(Math.random() * 1000),
   maxRetries = 3,
   retryBaseMs = 1000,
+  onArchived = () => {},
 }) {
   const queue = [];
   const runs = new Map(); // run_id -> { label, started_at }
@@ -150,7 +151,10 @@ export function createDownloader({
     if (savedBasenames.length > 0 || record.media.length === 0) {
       await writer.writeSidecars({ record, savedBasenames, run });
       db.setPostState(post_key, failures === 0 ? 'archived' : 'archive_failed');
-      if (failures === 0) archivedCount += 1;
+      if (failures === 0) {
+        archivedCount += 1;
+        onArchived(post_key);
+      }
     } else {
       db.setPostState(post_key, 'archive_failed');
     }

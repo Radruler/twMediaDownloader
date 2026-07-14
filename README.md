@@ -1,5 +1,5 @@
-twMediaDownloader
-=================
+Archivist Client (twMediaDownloader)
+====================================
 
 - License: The MIT license
 - Copyright (c) 2016 風柳(furyu) — original author; this fork is a rebuild
@@ -9,7 +9,8 @@ twMediaDownloader
 
 The original extension targeted APIs and UIs that no longer exist
 (twitter.com REST endpoints, TweetDeck, the pre-2019 web UI). This fork is
-rebuilding it as a **personal, passive X/Twitter archiving system**:
+rebuilding it as **Archivist Client**, the capture and download producer
+for the future Archivist library service designed in `docs/plans/archivist/`:
 
 - **Capture** (done): a MAIN-world interceptor observes the page's *own*
   GraphQL responses — no request is ever sent to x.com by this project —
@@ -25,6 +26,11 @@ rebuilding it as a **personal, passive X/Twitter archiving system**:
   posts to disk — polite CDN-only downloads, content-hash dedupe,
   edit-history, passive deleted-flagging, restart-resumed queueing, and
   operator CLI controls.
+
+The presentation name is Archivist Client. The repo name, `TWMD_*` env
+vars, `twmd_*` localStorage keys, `@twmd/core`, extension port names, and
+the frozen save folder `Downloads/twMediaDownloader/<screen_name>/` are
+kept for compatibility.
 
 How it works: `ARCHITECTURE.md`. Decisions and remaining work:
 `docs/plans/00-overview.md`. How to verify: `docs/VERIFICATION.md`.
@@ -75,10 +81,14 @@ Docker). Keys:
 | `archive_root` | `<config-dir>/archive` | Archived media + sidecars. |
 | `db_path` | `<config-dir>/library.sqlite3` | SQLite library. |
 | `log_level` | `info` | `quiet`, `error`, `warn`, `info`, or `debug` (`info`/`debug` currently log service events). |
+| `own_accounts` | `[]` | Operator-declared X/Twitter accounts owned by the user, as `{ "service_account_id": "...", "screen_name": "..." }`; used by Archivist export to attach viewer relations without guessing identity. |
+| `archivist_url` | `""` | Optional Archivist base URL for opportunistic push export. Empty disables push. |
+| `archivist_token` | `""` | Bearer token for Archivist push export. Empty disables push. |
 
 Environment overrides are runtime-only and do not rewrite `config.json`:
 `TWMD_APP_HOST`/`TWMD_BIND_HOST`, `TWMD_APP_PORT`,
-`TWMD_ARCHIVE_ROOT`, `TWMD_DB_PATH`, `TWMD_LOG_LEVEL`.
+`TWMD_ARCHIVE_ROOT`, `TWMD_DB_PATH`, `TWMD_LOG_LEVEL`,
+`TWMD_ARCHIVIST_URL`, `TWMD_ARCHIVIST_TOKEN`.
 
 Extension-side connected mode uses:
 
@@ -104,6 +114,8 @@ node app/dist/main.mjs requeue --all-failed
 node app/dist/main.mjs purge --author <screen_name> [--yes]
 node app/dist/main.mjs purge --before 2026-07-01 [--state archive_failed] [--yes]
 node app/dist/main.mjs verify
+node app/dist/main.mjs push-status
+node app/dist/main.mjs push --now
 ```
 
 `purge` is dry-run by default and requires `--yes` to delete matched

@@ -30,6 +30,8 @@ export interface MediaRecord {
   width: number | null;
   height: number | null;
   duration_ms: number | null;
+  /** Users tagged on this media item, as captured; [] when absent. */
+  tagged_users: { id_str: string | null; screen_name: string | null }[];
 }
 
 export interface UrlEntity {
@@ -70,6 +72,8 @@ export interface TweetRecord {
   /** Mentioned screen_names, without the leading @. */
   mentions: string[];
   in_reply_to_status_id_str: string | null;
+  /** Author id of the tweet this replies to, when X includes it. */
+  in_reply_to_user_id_str: string | null;
   quoted_status_id_str: string | null;
   /**
    * Set on the outer retweet record; the inner tweet is cached under its own
@@ -84,6 +88,8 @@ export interface TweetRecord {
    * null when edit_control is absent from the payload.
    */
   edit_initial_id_str: string | null;
+  /** Viewer-relationship flags as X sent them; null = absent from payload. */
+  viewer: { liked: boolean | null; bookmarked: boolean | null };
   counts: TweetCounts;
   is_sensitive: boolean;
   media: MediaRecord[];

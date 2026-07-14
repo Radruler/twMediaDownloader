@@ -14,10 +14,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000060",
       "edit_initial_id_str": "1800000000000000060",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 1,
@@ -45,10 +50,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000061",
       "edit_initial_id_str": "1800000000000000061",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 0,

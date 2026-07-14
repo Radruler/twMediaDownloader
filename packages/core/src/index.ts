@@ -11,6 +11,7 @@ export type {
 } from './tweet-record.ts';
 export { normalizePayload, tweetIdFromEntryId } from './graphql-normalize.ts';
 export type { MediaPrefix, SidecarFormat, TweetNameParts } from './filename.ts';
+export type { ArchivistFileRef, ArchivistOwnAccount, ArchivistPost } from './archivist-post.ts';
 export type { MediaDownloadPlan } from './media-url.ts';
 export type { SidecarJson, SidecarOptions } from './sidecar.ts';
 export {
@@ -41,3 +42,4 @@ export {
   standaloneRelativePath,
   tweetFileStem,
 } from './filename.ts';
+export { postKeyForArchivist, toArchivistPost } from './archivist-post.ts';

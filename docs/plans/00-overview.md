@@ -1,4 +1,4 @@
-# twMediaDownloader — Overview: Decisions & Remaining Work
+# Archivist Client (twMediaDownloader) — Overview: Decisions & Remaining Work
 
 **Status:** 2026-07-10 consolidation. Everything here is current and binding;
 each remaining piece of work has its own plan doc sized for a fresh session.
@@ -7,8 +7,9 @@ Completed work is described in `ARCHITECTURE.md`; superseded plans are in
 
 ## What this project is
 
-A ground-up rebuild of the (defunct) twMediaDownloader extension into a
-personal, passive X/Twitter archiving system with two parts:
+Archivist Client is a ground-up rebuild of the (defunct)
+twMediaDownloader extension into a personal, passive X/Twitter archiving
+producer with two parts:
 
 1. **Extension** (Chrome, unpacked): a MAIN-world interceptor observes the
    page's *own* GraphQL responses and normalizes every tweet the user

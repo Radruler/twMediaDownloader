@@ -19,10 +19,15 @@
       "hashtags": [],
       "mentions": [],
       "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id_str": null,
       "quoted_status_id_str": null,
       "retweeted_status_id_str": null,
       "conversation_id_str": "1800000000000000080",
       "edit_initial_id_str": "1800000000000000080",
+      "viewer": {
+        "liked": null,
+        "bookmarked": null
+      },
       "counts": {
         "replies": 0,
         "retweets": 0,
@@ -42,7 +47,8 @@
           "video_variants": [],
           "width": 800,
           "height": 418,
-          "duration_ms": null
+          "duration_ms": null,
+          "tagged_users": []
         }
       ],
       "source_op": "TweetDetail",

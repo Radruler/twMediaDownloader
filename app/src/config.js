@@ -28,6 +28,9 @@ export function defaultConfig(dir) {
     archive_root: path.join(dir, 'archive'),
     db_path: path.join(dir, 'library.sqlite3'),
     log_level: DEFAULT_LOG_LEVEL,
+    own_accounts: [],
+    archivist_url: '',
+    archivist_token: '',
   };
 }
 
@@ -39,6 +42,8 @@ function applyEnvOverrides(config) {
     archive_root: process.env.TWMD_ARCHIVE_ROOT || config.archive_root,
     db_path: process.env.TWMD_DB_PATH || config.db_path,
     log_level: process.env.TWMD_LOG_LEVEL || config.log_level,
+    archivist_url: process.env.TWMD_ARCHIVIST_URL || config.archivist_url,
+    archivist_token: process.env.TWMD_ARCHIVIST_TOKEN || config.archivist_token,
   };
 }
 

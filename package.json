@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "app"
+    "app",
+    "archivist"
   ],
   "scripts": {
     "build": "node build.mjs",
@@ -11,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "app": "node app/dist/main.mjs",
+    "archivist": "node archivist/dist/main.mjs",
     "typecheck": "tsc --noEmit",
     "update-expected": "node scripts/update-expected.mjs"
   },
