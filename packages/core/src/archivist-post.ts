@@ -21,7 +21,8 @@ export interface ArchivistPost {
     service_account_id: string | null;
     screen_name: string | null;
     display_name: string | null;
-    status: 'active';
+    /** Always 'unknown': capture carries no evidence of account standing. */
+    status: 'unknown';
   };
   created_at_ms: number | null;
   text: string;
@@ -110,7 +111,7 @@ export function toArchivistPost(
       service_account_id: latest.user.id_str,
       screen_name: latest.user.screen_name,
       display_name: latest.user.name,
-      status: 'active',
+      status: 'unknown',
     },
     created_at_ms: latest.created_at_ms,
     text: latest.full_text,
@@ -146,7 +147,11 @@ export function toArchivistPost(
         original_basename: basename(file?.path),
       };
     }),
-    relations: ownAccounts.flatMap((account) =>
+    // Viewer flags identify the viewer only as "some logged-in own account".
+    // With exactly one configured own account the attribution is certain;
+    // with zero or several we must not guess (client plan §C-3), so no
+    // relations are emitted.
+    relations: (ownAccounts.length === 1 ? ownAccounts : []).flatMap((account) =>
       relationPairs
         .filter(([, active]) => active !== null && active !== undefined)
         .map(([key, active]) => ({

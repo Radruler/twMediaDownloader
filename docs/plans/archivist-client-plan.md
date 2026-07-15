@@ -98,7 +98,11 @@ fetched as *some* logged-in user, but payloads identify the viewer only
 indirectly — never guess identity. Add client config
 `own_accounts: [{ service_account_id, screen_name }]`
 (operator-declared; documented in the README config table). This is what
-the Archivist mapper uses as the relation subject.
+the Archivist mapper uses as the relation subject — and only when exactly
+ONE own account is configured: with several, the payload cannot say which
+account was the viewer, so no relation is emitted (never guess).
+Per-session viewer identity is future capture work if multi-account
+matters.
 
 **C-4 — Media tagged-users capture (additive, supports Archivist credit
 suggestions):** where observed payloads carry per-media tagged users

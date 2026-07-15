@@ -1,7 +1,8 @@
 # Project State Recap for Future Agents
 
-Last updated: 2026-07-14 after commit `8d8cdb3`
-(`Implement Archivist client and service foundations`).
+Last updated: 2026-07-15 after the post-review hardening pass (review of
+`8d8cdb3` found and fixed correctness bugs; see "Review fixes (2026-07-15)"
+below).
 
 This file is a handoff document for agents reviewing the current repo
 state before plans are archived. It summarizes what exists now, which
@@ -47,7 +48,7 @@ docker compose -f .devcontainer/docker-compose.yml run --rm app \
 
 Result at handoff:
 
-- `162` tests passed
+- `171` tests passed
 - `npm run typecheck` passed
 - `npm run build` passed
 - Build outputs include `dist/`, `app/dist/main.mjs`, and
@@ -91,7 +92,9 @@ Notes for future agents:
 - The mapper accepts one or more TweetRecord versions and emits a v1
   Archivist envelope.
 - Relation output depends on both viewer flags and configured
-  `own_accounts`.
+  `own_accounts`, and is emitted ONLY when exactly one own account is
+  configured — the payloads don't identify which logged-in account was
+  the viewer, and we never guess (client plan §C-3).
 - Older records without viewer fields naturally produce no relations.
 - Do not rename existing TweetRecord fields. Add null-safe fields only.
 
@@ -163,6 +166,9 @@ Push export:
 - Service wakeup:
   - archive completion calls `pusher.wake()`
   - background timer runs when push config is present
+- Error policy: HTTP 4xx = poison post, warned once and skipped until the
+  service restarts (never blocks the queue); network/5xx = abandon sweep,
+  the timer is the retry; 30 s / 10 min timeouts on post/file requests
 - CLI:
   - `node app/dist/main.mjs push-status`
   - `node app/dist/main.mjs push --now`
@@ -224,9 +230,17 @@ createIngest(library, { archiveRoot, log })
   - `ingestPost(envelope, fileProvider)`
   - `rebuildFts()`
   - `rebuildThreads()`
-- It verifies sha256 before storing bytes.
-- It is idempotent for duplicate envelopes.
-- It refuses `archivist` service relations through ingest.
+- It verifies sha256 before storing bytes, and validates the envelope
+  BEFORE any bytes are written (a rejected envelope leaves nothing behind).
+- It is idempotent for duplicate envelopes, including media row ids:
+  media are upserted by `(post_id, position)` so media-level curation
+  survives re-ingest.
+- It refuses the entire reserved `archivist` service at the envelope
+  level (`service: "archivist"` → HTTP 403 `refused`).
+- Basename collisions with different content get a `-<sha8>` suffix
+  (never a silent overwrite); mime is derived from the basename.
+- Push-uploaded files stage at `_uploads/<sha256>` and are relocated into
+  `<service>/<screen_name>/<basename>` when their post envelope arrives.
 
 Snapshot transport:
 
@@ -295,6 +309,49 @@ State:
   owner hardware.
 
 Do not build full Mosaic until the P-0 hardware evidence exists.
+
+## Review fixes (2026-07-15)
+
+A supervision review of `8d8cdb3` found and fixed (all with regression
+tests, which the plans had specified from the start):
+
+1. Re-ingest reassigned `media_items` ids (DELETE+reinsert), orphaning
+   media-level tags/relations/credits → media upserted by
+   `(post_id, position)`.
+2. `service: "archivist"` envelopes were ingestable (the relation guard
+   checked a field that doesn't exist), letting ingest write curation
+   relations → refused at validation, mapped to 403.
+3. Pusher aborted the whole sweep on ANY error with oldest-first retry —
+   one poison post permanently blocked the queue → 4xx posts are warned
+   once and skipped for the process lifetime, network errors abandon the
+   sweep (timer retries), and both request kinds have timeouts.
+4. Files were written before envelope validation → validate first.
+5. Upload endpoint buffered whole bodies in RAM and stranded files at
+   `_uploads/` forever → streamed to temp with incremental hashing;
+   ingest relocates staged files into the Decision-4 tree.
+6. `toArchivistPost` hardcoded `author.status: 'active'` → `'unknown'`
+   (capture has no evidence of account standing).
+7. Viewer relations were attributed to EVERY configured own account →
+   attributed only when exactly one own account is configured.
+8. `/api/works` used `GROUP BY` with bare columns (arbitrary row per
+   group) and hardcoded `missing_parts: 0` → deterministic earliest-part
+   roots, real missing-part computation, quoted-post resolution, credits
+   aggregation, and suggestions on the detail route.
+9. Snapshot ingest never recorded `ingest_runs` (silent optional-chain
+   no-op), never ingested relations (client config not read), and never
+   counted `new` → all fixed; own accounts are read from the snapshot's
+   `config.json`.
+10. API polish per `API.md`: keyset cursor pagination on `/api/posts`
+    and `/api/works`, `GET /api/accounts/:id` with name history, real
+    persona/tag/account counts, HTTP Range on `/files`, mime fallback,
+    `db_bytes`/`archive_bytes` in stats, HttpError → correct status
+    codes (403 for captured-service relation writes — was 400).
+
+Still open from the review (feature work, tracked by the plans, not
+bugs): `/api/posts`/`/api/works` filter vocabulary (q/author/tag/
+relation/rating/type/sort), real thumbnails (`/thumbs` still serves
+originals), the Preact frontend, and multi-account relation attribution
+(needs per-session viewer identity, a client capture question).
 
 ## Incomplete or Gated Work
 

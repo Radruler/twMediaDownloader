@@ -1,8 +1,24 @@
 import { createHash } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { sanitizeForFilename } from '@twmd/core';
 import { upsertAccount } from './db.js';
+
+/** Staging area for push-uploaded files until their post links them. */
+export const UPLOAD_STAGING_DIR = '_uploads';
+
+const MIME_BY_EXT = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+  '.mp4': 'video/mp4',
+};
+
+export function mimeForBasename(basename) {
+  return MIME_BY_EXT[path.extname(String(basename ?? '')).toLowerCase()] ?? null;
+}
 
 function sha256Hex(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
@@ -15,18 +31,33 @@ function json(value) {
 function assertEnvelope(envelope) {
   if (!envelope || envelope.v !== 1) throw new Error('bad ArchivistPost: v must be 1');
   if (!envelope.service || !envelope.post_key) throw new Error('bad ArchivistPost: service and post_key required');
+  if (envelope.service === 'archivist') {
+    // Decision 8: the reserved local service is curation-only; nothing may
+    // ingest posts or relations under it.
+    throw new Error("bad ArchivistPost: the reserved 'archivist' service cannot be ingested");
+  }
   if (!envelope.author?.service_account_id) throw new Error('bad ArchivistPost: author.service_account_id required');
   if (!Array.isArray(envelope.versions) || envelope.versions.length === 0) {
     throw new Error('bad ArchivistPost: versions required');
+  }
+  if (envelope.versions.some((v) => !v?.service_version_id)) {
+    throw new Error('bad ArchivistPost: every version needs service_version_id');
+  }
+  const positions = (envelope.media ?? []).map((m) => m?.position);
+  if (positions.some((p) => !Number.isInteger(p) || p < 1) || new Set(positions).size !== positions.length) {
+    throw new Error('bad ArchivistPost: media positions must be unique positive integers');
+  }
+}
+
+function validateEnvelope(db, envelope) {
+  assertEnvelope(envelope);
+  if (!db.prepare('SELECT 1 FROM services WHERE service = ?').get(envelope.service)) {
+    throw new Error(`unknown service: ${envelope.service}`);
   }
 }
 
 function relationType(db, service, key) {
   return db.prepare('SELECT * FROM relation_types WHERE service = ? AND key = ?').get(service, key) ?? null;
-}
-
-function registeredService(db, service) {
-  return !!db.prepare('SELECT 1 FROM services WHERE service = ?').get(service);
 }
 
 function deriveThreadKey(db, envelope, authorAccountId) {
@@ -68,9 +99,8 @@ function refreshFts(db, postId) {
   );
 }
 
-function upsertPostRows(db, envelope) {
-  assertEnvelope(envelope);
-  if (!registeredService(db, envelope.service)) throw new Error(`unknown service: ${envelope.service}`);
+function upsertPostRows(db, envelope, log) {
+  validateEnvelope(db, envelope);
   const now = Date.now();
   const freshest = [...envelope.versions].sort(
     (a, b) => (b.captured_at_ms ?? 0) - (a.captured_at_ms ?? 0) || String(b.service_version_id).localeCompare(String(a.service_version_id)),
@@ -139,14 +169,30 @@ function upsertPostRows(db, envelope) {
   for (const version of envelope.versions) {
     upsertVersion.run(post.id, version.service_version_id, version.captured_at_ms ?? null, json(version.raw));
   }
-  db.prepare('DELETE FROM media_items WHERE post_id = ?').run(post.id);
-  const insertMedia = db.prepare(`
+  // Media rows are upserted by (post_id, position) so their ids stay stable
+  // across re-ingest — media-level curation (tags/relations/credits keyed by
+  // media id) must survive the duplicate deliveries that are this pipeline's
+  // normal case. Only positions that vanished from the envelope are removed.
+  const positions = (envelope.media ?? []).map((m) => m.position);
+  const deleteGone = positions.length
+    ? db.prepare(`DELETE FROM media_items WHERE post_id = ? AND position NOT IN (${positions.map(() => '?').join(',')})`)
+    : db.prepare('DELETE FROM media_items WHERE post_id = ?');
+  deleteGone.run(post.id, ...positions);
+  const upsertMedia = db.prepare(`
     INSERT INTO media_items (post_id, position, type, sha256, source_url, alt_text, width, height, duration_ms)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(post_id, position) DO UPDATE SET
+      type = excluded.type,
+      sha256 = COALESCE(excluded.sha256, media_items.sha256),
+      source_url = excluded.source_url,
+      alt_text = excluded.alt_text,
+      width = excluded.width,
+      height = excluded.height,
+      duration_ms = excluded.duration_ms
   `);
   for (const media of envelope.media ?? []) {
     const haveFile = media.sha256 ? db.prepare('SELECT 1 FROM files WHERE sha256 = ?').get(media.sha256) : null;
-    insertMedia.run(
+    upsertMedia.run(
       post.id,
       media.position,
       media.type,
@@ -167,9 +213,11 @@ function upsertPostRows(db, envelope) {
       revoked_at = excluded.revoked_at
   `);
   for (const relation of envelope.relations ?? []) {
-    if (relation.service === 'archivist') throw new Error('ingest refuses archivist-service relations');
     const type = relationType(db, envelope.service, relation.key);
-    if (!type) continue;
+    if (!type) {
+      log(`skipping unknown relation key '${relation.key}' for service '${envelope.service}'`);
+      continue;
+    }
     const subject = upsertAccount(db, {
       service: envelope.service,
       service_account_id: relation.subject.service_account_id,
@@ -187,30 +235,67 @@ function upsertPostRows(db, envelope) {
   return post;
 }
 
+/**
+ * Decision-4 resting place for a media file, with the pinned collision
+ * policy: same basename recorded for DIFFERENT content gets a -<sha8>
+ * suffix instead of silently overwriting.
+ */
+function targetRelpath(db, envelope, media) {
+  const screen = sanitizeForFilename(envelope.author.screen_name ?? 'unknown');
+  const base = sanitizeForFilename(media.original_basename ?? `${media.sha256}`);
+  let relpath = path.join(envelope.service, screen, base);
+  const clash = db.prepare('SELECT sha256 FROM files WHERE relpath = ?').get(relpath);
+  if (clash && clash.sha256 !== media.sha256) {
+    const ext = path.extname(base);
+    relpath = path.join(envelope.service, screen, `${base.slice(0, base.length - ext.length)}-${media.sha256.slice(0, 8)}${ext}`);
+  }
+  return relpath;
+}
+
 async function storeFile({ db, archiveRoot, envelope, media, bytes }) {
   const actual = sha256Hex(bytes);
   if (actual !== media.sha256) return { ok: false, reason: 'hash_mismatch', actual };
-  const screen = sanitizeForFilename(envelope.author.screen_name ?? 'unknown');
-  const base = sanitizeForFilename(media.original_basename ?? `${media.sha256}`);
-  const relpath = path.join(envelope.service, screen, base);
+  const relpath = targetRelpath(db, envelope, media);
   const fullPath = path.join(archiveRoot, relpath);
   await mkdir(path.dirname(fullPath), { recursive: true });
   await writeFile(fullPath, bytes);
   db.prepare(`
     INSERT OR IGNORE INTO files (sha256, relpath, bytes, mime, ingested_at, verified_at)
     VALUES (?, ?, ?, ?, ?, ?)
-  `).run(media.sha256, relpath, bytes.length, null, Date.now(), Date.now());
+  `).run(media.sha256, relpath, bytes.length, mimeForBasename(relpath), Date.now(), Date.now());
   return { ok: true, relpath };
+}
+
+/**
+ * Push uploads land in `_uploads/<sha256>` (staging — the upload endpoint
+ * doesn't know the post yet). When the post envelope arrives, move the file
+ * to its Decision-4 place and backfill mime from the real basename.
+ */
+async function placeStagedFile({ db, archiveRoot, envelope, media }) {
+  const row = db.prepare('SELECT * FROM files WHERE sha256 = ?').get(media.sha256);
+  if (!row || !row.relpath.startsWith(UPLOAD_STAGING_DIR + path.sep) ) return;
+  const relpath = targetRelpath(db, envelope, media);
+  const fullPath = path.join(archiveRoot, relpath);
+  await mkdir(path.dirname(fullPath), { recursive: true });
+  await rename(path.join(archiveRoot, row.relpath), fullPath);
+  db.prepare('UPDATE files SET relpath = ?, mime = ? WHERE sha256 = ?').run(relpath, mimeForBasename(relpath), media.sha256);
 }
 
 export function createIngest(library, { archiveRoot, log = () => {} } = {}) {
   const db = library.raw;
-  const upsertTx = db.transaction((envelope) => upsertPostRows(db, envelope));
+  const upsertTx = db.transaction((envelope) => upsertPostRows(db, envelope, log));
 
   async function ingestPost(envelope, fileProvider = async () => null) {
+    // Validate BEFORE any bytes are written: a rejected envelope must leave
+    // no orphan files or rows behind.
+    validateEnvelope(db, envelope);
     const missingFiles = [];
     for (const media of envelope.media ?? []) {
-      if (!media.sha256 || db.prepare('SELECT 1 FROM files WHERE sha256 = ?').get(media.sha256)) continue;
+      if (!media.sha256) continue;
+      if (db.prepare('SELECT 1 FROM files WHERE sha256 = ?').get(media.sha256)) {
+        await placeStagedFile({ db, archiveRoot, envelope, media });
+        continue;
+      }
       const provided = await fileProvider(media.sha256, media);
       const bytes = provided?.bytes ? Buffer.from(provided.bytes) : null;
       if (!bytes) {
@@ -246,5 +331,5 @@ export function createIngest(library, { archiveRoot, log = () => {} } = {}) {
     return rows.length;
   }
 
-  return { ingestPost, rebuildFts, rebuildThreads };
+  return { library, ingestPost, rebuildFts, rebuildThreads };
 }

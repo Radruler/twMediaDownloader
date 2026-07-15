@@ -113,4 +113,66 @@ describe('Archivist Client pusher', () => {
     expect(client.exportStats()).toMatchObject({ dirty: 0, acked: 1 });
     expect(archivist.stats()).toMatchObject({ posts: 1, files: 1, relations: 1 });
   });
+
+  it('skips a 4xx poison post and still pushes the rest of the queue', async () => {
+    const clientDir = tempDir();
+    const client = openClientDb(path.join(clientDir, 'library.sqlite3'));
+    const mkRecord = (id: string, capturedAt: number) => ({ ...record(), id_str: id, edit_initial_id_str: id, conversation_id_str: id, media: [], captured_at_ms: capturedAt });
+    // 'a-poison' sorts first on the (dirty_since, post_key) queue order, so it
+    // is the head-of-line post that must not block 'b-good'.
+    client.ingestSeen(mkRecord('a-poison', 1));
+    client.setPostState('a-poison', 'archived');
+    client.ingestSeen(mkRecord('b-good', 2));
+    client.setPostState('b-good', 'archived');
+    cleanups.push(async () => client.close());
+
+    const calls: string[] = [];
+    const fetchImpl = async (_url: string, opts: { body: string }) => {
+      const envelope = JSON.parse(opts.body);
+      calls.push(envelope.post_key);
+      if (envelope.post_key === 'a-poison') return { ok: false, status: 400, json: async () => ({}) };
+      return { ok: true, status: 200, json: async () => ({ ok: true, post_id: 1, missing_files: [] }) };
+    };
+    const pusher = createArchivistPusher({
+      db: client,
+      config: { archivist_url: 'http://nas.test:8470', archivist_token: 't', own_accounts: [] },
+      fetchImpl: fetchImpl as any,
+      autoStart: false,
+    });
+
+    await expect(pusher.sweep()).resolves.toEqual({ pushed: 1, skipped: 1 });
+    expect(client.exportStats()).toMatchObject({ dirty: 1, acked: 1 });
+
+    // Second sweep: the poisoned post is not retried this process lifetime.
+    await expect(pusher.sweep()).resolves.toEqual({ pushed: 0, skipped: 1 });
+    expect(calls.filter((k) => k === 'a-poison')).toHaveLength(1);
+  });
+
+  it('abandons the sweep on network failure without acking anything', async () => {
+    const clientDir = tempDir();
+    const client = openClientDb(path.join(clientDir, 'library.sqlite3'));
+    client.ingestSeen({ ...record(), media: [] });
+    client.setPostState('push-1', 'archived');
+    cleanups.push(async () => client.close());
+
+    let attempts = 0;
+    const fetchImpl = async () => {
+      attempts += 1;
+      throw new TypeError('fetch failed'); // NAS asleep — the normal case
+    };
+    const pusher = createArchivistPusher({
+      db: client,
+      config: { archivist_url: 'http://nas.test:8470', archivist_token: 't', own_accounts: [] },
+      fetchImpl: fetchImpl as any,
+      autoStart: false,
+    });
+
+    await expect(pusher.sweep()).resolves.toEqual({ pushed: 0, skipped: 1 });
+    expect(client.exportStats()).toMatchObject({ dirty: 1, acked: 0 });
+    expect(attempts).toBe(1);
+
+    // Not poisoned: the next sweep (the timer's retry) tries again.
+    await pusher.sweep();
+    expect(attempts).toBe(2);
+  });
 });

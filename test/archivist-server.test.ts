@@ -115,9 +115,19 @@ describe('Archivist HTTP API', () => {
     expect(await response.json()).toMatchObject({ ok: true, missing_files: [] });
     expect(library.stats()).toMatchObject({ posts: 1, files: 1, media: 1 });
 
+    // The staged upload was relocated into the Decision-4 tree with mime.
+    const fileRow = library.raw.prepare('SELECT * FROM files WHERE sha256 = ?').get(hash);
+    expect(fileRow).toMatchObject({ relpath: path.join('twitter', 'api_artist', 'file.jpg'), mime: 'image/jpeg' });
+
     response = await fetch(`${base}/files/${hash}?token=secret`);
     expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toBe('image/jpeg');
     expect(Buffer.from(await response.arrayBuffer()).toString('utf8')).toBe('api image bytes');
+
+    // Range serving (video seeking).
+    response = await fetch(`${base}/files/${hash}?token=secret`, { headers: { range: 'bytes=4-8' } });
+    expect(response.status).toBe(206);
+    expect(Buffer.from(await response.arrayBuffer()).toString('utf8')).toBe('image');
   });
 
   it('round-trips curation writes and refuses captured-service relation writes', async () => {
@@ -150,7 +160,7 @@ describe('Archivist HTTP API', () => {
       headers,
       body: JSON.stringify({ active: true }),
     });
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(403);
 
     response = await fetch(`${base}/api/items/post/${post.id}/credits`, {
       method: 'PUT',
@@ -161,5 +171,55 @@ describe('Archivist HTTP API', () => {
     });
     const credits = await response.json();
     expect(credits.credits[0]).toMatchObject({ role: 'subject', item_kind: 'post', item_id: post.id });
+  });
+
+  it('lists works with deterministic roots, missing-part honesty, and cursor pagination', async () => {
+    const { base } = await start();
+    const headers = { authorization: 'Bearer secret', 'content-type': 'application/json' };
+    const envelope = (key: string, createdAt: number, replyTo: string | null = null) => ({
+      v: 1,
+      service: 'twitter',
+      post_key: key,
+      author: { service_account_id: '9', screen_name: 'threader', display_name: 'Threader', status: 'unknown' },
+      created_at_ms: createdAt,
+      text: `post ${key}`,
+      lang: 'en',
+      url: null,
+      is_sensitive: false,
+      deleted: false,
+      counts: {},
+      reply_to: { key: replyTo, author_service_account_id: replyTo ? '9' : null },
+      quoted_key: null,
+      versions: [{ service_version_id: key, captured_at_ms: createdAt, raw: {} }],
+      media: [],
+      relations: [],
+    });
+    const post = (body: unknown) =>
+      fetch(`${base}/api/ingest/post`, { method: 'POST', headers, body: JSON.stringify(body) });
+
+    // Child arrives first; its parent A is not archived yet → missing part.
+    await post(envelope('B', 2, 'A'));
+    let works = await fetch(`${base}/api/works?token=secret`).then((r) => r.json());
+    expect(works.items).toHaveLength(1);
+    expect(works.items[0]).toMatchObject({ thread_key: 'A', missing_parts: 1 });
+
+    // Parent arrives → one work, two parts, root is the earliest part, honest again.
+    await post(envelope('A', 1));
+    works = await fetch(`${base}/api/works?token=secret`).then((r) => r.json());
+    expect(works.items).toHaveLength(1);
+    expect(works.items[0].parts.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['A', 'B']);
+    expect(works.items[0].missing_parts).toBe(0);
+
+    // Two more standalone posts → cursor pagination walks everything once.
+    await post(envelope('C', 3));
+    await post(envelope('D', 4));
+    const page1 = await fetch(`${base}/api/works?limit=2&token=secret`).then((r) => r.json());
+    expect(page1.items).toHaveLength(2);
+    expect(page1.next_cursor).toBeTruthy();
+    const page2 = await fetch(`${base}/api/works?limit=2&cursor=${page1.next_cursor}&token=secret`).then((r) => r.json());
+    expect(page2.items).toHaveLength(1);
+    expect(page2.next_cursor).toBeNull();
+    const seen = [...page1.items, ...page2.items].map((w: { thread_key: string }) => w.thread_key);
+    expect(new Set(seen).size).toBe(3);
   });
 });

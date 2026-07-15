@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -149,8 +149,177 @@ describe('Archivist ingest core', () => {
     const ingest = createIngest(library, { archiveRoot: path.join(root, 'archive') } as any);
     const result = await ingestClientDir(ingest, clientDir);
 
-    expect(result).toMatchObject({ updated: 1, errors: 0 });
+    expect(result).toMatchObject({ new: 1, updated: 0, errors: 0 });
     expect(library.stats()).toMatchObject({ posts: 1, files: 1 });
+    expect(library.raw.prepare('SELECT COUNT(*) AS n FROM ingest_runs').get().n).toBe(1);
     library.close();
+  });
+
+  it('snapshot reads own_accounts from the client config and ingests relations', async () => {
+    const clientDir = tempDir();
+    writeFileSync(
+      path.join(clientDir, 'config.json'),
+      JSON.stringify({ own_accounts: [{ service_account_id: 'me-1', screen_name: 'me' }] }),
+    );
+    const client = openClientDb(path.join(clientDir, 'library.sqlite3'));
+    client.ingestSeen(record({ media: [] }));
+    client.setPostState('100', 'archived');
+    client.close();
+
+    const root = tempDir();
+    const library = openArchivistDb(path.join(root, 'library.sqlite3'));
+    const ingest = createIngest(library, { archiveRoot: path.join(root, 'archive') } as any);
+    const result = await ingestClientDir(ingest, clientDir);
+    expect(result).toMatchObject({ new: 1, errors: 0 });
+    // record() has viewer { liked: true, bookmarked: false } → 2 relations
+    expect(library.stats()).toMatchObject({ relations: 2 });
+    library.close();
+  });
+});
+
+describe('Archivist ingest regressions', () => {
+  function envelopeFor(overrides: Record<string, unknown> = {}) {
+    return {
+      v: 1,
+      service: 'twitter',
+      post_key: 'A',
+      author: { service_account_id: '9', screen_name: 'artist', display_name: 'Artist', status: 'unknown' },
+      created_at_ms: 1,
+      text: 'hi',
+      lang: 'en',
+      url: null,
+      is_sensitive: false,
+      deleted: false,
+      counts: {},
+      reply_to: { key: null, author_service_account_id: null },
+      quoted_key: null,
+      versions: [{ service_version_id: 'A', captured_at_ms: 1, raw: {} }],
+      media: [
+        {
+          position: 1,
+          type: 'photo',
+          sha256: null,
+          source_url: null,
+          alt_text: null,
+          width: 1,
+          height: 1,
+          duration_ms: null,
+          original_basename: null,
+        },
+      ],
+      relations: [],
+      ...overrides,
+    };
+  }
+
+  function openIngest() {
+    const root = tempDir();
+    const library = openArchivistDb(path.join(root, 'library.sqlite3'));
+    const ingest = createIngest(library, { archiveRoot: path.join(root, 'archive') } as any);
+    return { root, library, ingest, db: library.raw };
+  }
+
+  it('re-ingest keeps media ids stable so media-level curation survives', async () => {
+    const { library, ingest, db } = openIngest();
+    await ingest.ingestPost(envelopeFor({ post_key: 'A', versions: [{ service_version_id: 'A', captured_at_ms: 1, raw: {} }] }));
+    await ingest.ingestPost(envelopeFor({ post_key: 'B', versions: [{ service_version_id: 'B', captured_at_ms: 1, raw: {} }] }));
+    const mediaA = db
+      .prepare("SELECT m.id FROM media_items m JOIN posts p ON p.id = m.post_id WHERE p.service_post_key = 'A'")
+      .get();
+    db.prepare("INSERT INTO tags (name) VALUES ('cool')").run();
+    db.prepare("INSERT INTO tag_items (tag_id, item_kind, item_id, tagged_at) VALUES (1, 'media', ?, 1)").run(mediaA.id);
+
+    await ingest.ingestPost(envelopeFor({ post_key: 'A', versions: [{ service_version_id: 'A', captured_at_ms: 1, raw: {} }] }));
+
+    const mediaA2 = db
+      .prepare("SELECT m.id FROM media_items m JOIN posts p ON p.id = m.post_id WHERE p.service_post_key = 'A'")
+      .get();
+    expect(mediaA2.id).toBe(mediaA.id);
+    expect(db.prepare("SELECT COUNT(*) AS n FROM tag_items WHERE item_kind = 'media' AND item_id = ?").get(mediaA.id).n).toBe(1);
+    library.close();
+  });
+
+  it("refuses envelopes for the reserved 'archivist' service (Decision 8)", async () => {
+    const { library, ingest, db } = openIngest();
+    const evil = envelopeFor({
+      service: 'archivist',
+      post_key: 'evil',
+      versions: [{ service_version_id: 'evil', captured_at_ms: 1, raw: {} }],
+      media: [],
+      relations: [{ subject: { service_account_id: 'me', screen_name: 'me' }, key: 'rating', value: '5', observed_at: 1, active: true }],
+    });
+    await expect(ingest.ingestPost(evil)).rejects.toThrow(/reserved 'archivist'/);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM posts').get().n).toBe(0);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM relations').get().n).toBe(0);
+    library.close();
+  });
+
+  it('rejects invalid envelopes before storing any file bytes', async () => {
+    const { library, ingest, db } = openIngest();
+    const bytes = Buffer.from('orphan bytes');
+    const bad = envelopeFor({
+      post_key: '', // invalid
+      media: [
+        {
+          position: 1,
+          type: 'photo',
+          sha256: sha256(bytes),
+          source_url: null,
+          alt_text: null,
+          width: 1,
+          height: 1,
+          duration_ms: null,
+          original_basename: 'x.jpg',
+        },
+      ],
+    });
+    await expect(ingest.ingestPost(bad, (async () => ({ bytes })) as any)).rejects.toThrow(/post_key/);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM files').get().n).toBe(0);
+    library.close();
+  });
+
+  it('same basename with different content gets a sha suffix instead of overwriting', async () => {
+    const { root, library, ingest, db } = openIngest();
+    const bytes1 = Buffer.from('first bytes');
+    const bytes2 = Buffer.from('second, different bytes');
+    const mediaFor = (bytes: Buffer) => [
+      {
+        position: 1,
+        type: 'photo',
+        sha256: sha256(bytes),
+        source_url: null,
+        alt_text: null,
+        width: 1,
+        height: 1,
+        duration_ms: null,
+        original_basename: 'same-name.jpg',
+      },
+    ];
+    await ingest.ingestPost(
+      envelopeFor({ post_key: 'A', versions: [{ service_version_id: 'A', captured_at_ms: 1, raw: {} }], media: mediaFor(bytes1) }),
+      (async () => ({ bytes: bytes1 })) as any,
+    );
+    await ingest.ingestPost(
+      envelopeFor({ post_key: 'B', versions: [{ service_version_id: 'B', captured_at_ms: 1, raw: {} }], media: mediaFor(bytes2) }),
+      (async () => ({ bytes: bytes2 })) as any,
+    );
+    const rows = db.prepare('SELECT sha256, relpath FROM files ORDER BY ingested_at, relpath').all();
+    expect(rows).toHaveLength(2);
+    expect(rows[0].relpath).not.toBe(rows[1].relpath);
+    for (const row of rows) {
+      expect(existsSync(path.join(root, 'archive', row.relpath))).toBe(true);
+    }
+    library.close();
+  });
+
+  it('toArchivistPost: unknown author status; ambiguous own accounts emit no relations', () => {
+    const single = toArchivistPost(record(), [], [{ service_account_id: 'me-1', screen_name: 'me' }]);
+    expect(single.author.status).toBe('unknown');
+    expect(single.relations).toHaveLength(2);
+    const ambiguous = toArchivistPost(record(), [], [
+      { service_account_id: 'me-1', screen_name: 'me' },
+      { service_account_id: 'me-2', screen_name: 'alt' },
+    ]);
+    expect(ambiguous.relations).toEqual([]);
   });
 });

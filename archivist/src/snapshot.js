@@ -20,11 +20,29 @@ function resolveRecordedPath(clientDir, row) {
   return candidatePaths(clientDir, archiveRoot, row.path).find((candidate) => existsSync(candidate)) ?? null;
 }
 
+/**
+ * Relation subjects come from the CLIENT's config (archivist-client-plan
+ * §C-3: own accounts are operator-declared there, never guessed). A
+ * snapshot dir carries that config.json alongside the library.
+ */
+async function readOwnAccounts(clientDir, log) {
+  try {
+    const raw = await readFile(path.join(clientDir, 'config.json'), 'utf8');
+    const accounts = JSON.parse(raw)?.own_accounts;
+    return Array.isArray(accounts) ? accounts : [];
+  } catch (error) {
+    log(`snapshot: no readable client config.json (${String(error?.message ?? error)}); ingesting without relations`);
+    return [];
+  }
+}
+
 export async function ingestClientDir(ingest, clientDir, { log = () => {} } = {}) {
   const dbPath = path.join(clientDir, 'library.sqlite3');
   const client = new Database(dbPath, { readonly: true, fileMustExist: true });
+  const archivistDb = ingest.library.raw;
   const started = Date.now();
   const result = { new: 0, updated: 0, skipped: 0, missing_files: 0, errors: 0 };
+  const ownAccounts = await readOwnAccounts(clientDir, log);
   try {
     const posts = client.prepare("SELECT * FROM posts WHERE state = 'archived' ORDER BY last_seen_at, post_key").all();
     const versionsForPost = client.prepare('SELECT * FROM versions WHERE post_key = ? ORDER BY captured_at_ms, id_str');
@@ -35,6 +53,7 @@ export async function ingestClientDir(ingest, clientDir, { log = () => {} } = {}
       WHERE v.post_key = ?
       ORDER BY m.position
     `);
+    const existsInArchivist = archivistDb.prepare('SELECT 1 FROM posts WHERE service = ? AND service_post_key = ?');
     for (const post of posts) {
       try {
         const records = versionsForPost
@@ -46,8 +65,9 @@ export async function ingestClientDir(ingest, clientDir, { log = () => {} } = {}
           continue;
         }
         const files = filesForPost.all(post.post_key);
-        const envelope = toArchivistPost(records, files, []);
+        const envelope = toArchivistPost(records, files, ownAccounts);
         envelope.deleted = post.deleted === 1;
+        const preexisting = !!existsInArchivist.get(envelope.service, envelope.post_key);
         await ingest.ingestPost(envelope, async (sha256) => {
           const file = files.find((row) => row.sha256 === sha256);
           const resolved = resolveRecordedPath(clientDir, file ?? {});
@@ -57,7 +77,8 @@ export async function ingestClientDir(ingest, clientDir, { log = () => {} } = {}
           }
           return { bytes: await readFile(resolved) };
         });
-        result.updated += 1;
+        if (preexisting) result.updated += 1;
+        else result.new += 1;
       } catch (error) {
         result.errors += 1;
         log(`snapshot ingest failed for ${post.post_key}: ${String(error?.message ?? error)}`);
@@ -66,8 +87,8 @@ export async function ingestClientDir(ingest, clientDir, { log = () => {} } = {}
     return result;
   } finally {
     client.close();
-    ingest.library?.raw
-      ?.prepare?.('INSERT INTO ingest_runs (source, started_at, finished_at, posts_n, files_n, notes) VALUES (?, ?, ?, ?, ?, ?)')
-      ?.run?.('client-snapshot', started, Date.now(), result.updated, null, JSON.stringify(result));
+    archivistDb
+      .prepare('INSERT INTO ingest_runs (source, started_at, finished_at, posts_n, files_n, notes) VALUES (?, ?, ?, ?, ?, ?)')
+      .run('client-snapshot', started, Date.now(), result.new + result.updated, null, JSON.stringify(result));
   }
 }
