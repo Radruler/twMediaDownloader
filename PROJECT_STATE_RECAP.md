@@ -374,8 +374,8 @@ tests, which the plans had specified from the start):
 Still open from the review/plans (feature work, not correctness bugs):
 real thumbnails (`/thumbs` still serves originals), the Preact frontend,
 full write-payload validation/conflict coverage, account search/
-pagination, and multi-account relation attribution (needs per-session
-viewer identity, a client capture question).
+pagination, `relations=all`, and multi-account relation attribution
+(needs per-session viewer identity, a client capture question).
 
 ## Incomplete or Gated Work
 
@@ -385,8 +385,8 @@ Keep these plans active until their gates are cleared:
   - Plan references:
     - `docs/plans/archivist/02-api-and-frontend-plan.md`
     - `docs/plans/archivist/04-media-viewer-plan.md`
-  - Current API is usable and tested, including the shared read-filter
-    surface, but frontend is minimal and thumbnail generation is
+  - Current API is usable and tested, including HTTP coverage for the
+    shared read-filter surface, but frontend is minimal and thumbnail generation is
     placeholder-level.
 - **Mosaic**
   - Plan references: `docs/plans/mosaic/`

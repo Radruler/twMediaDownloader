@@ -182,6 +182,7 @@ describe('Archivist HTTP API', () => {
       mediaType: string,
       author: { id: string; screen: string },
       replyTo: string | null = null,
+      overrides: Record<string, unknown> = {},
     ) => ({
       v: 1,
       service: 'twitter',
@@ -197,8 +198,9 @@ describe('Archivist HTTP API', () => {
       reply_to: { key: replyTo, author_service_account_id: replyTo ? author.id : null },
       quoted_key: null,
       versions: [{ service_version_id: key, captured_at_ms: Number(key), raw: { full_text: text, mentions: [] } }],
-      media: [{ position: 1, type: mediaType, sha256: null, source_url: null, alt_text: null, width: 1, height: 1, duration_ms: null }],
+      media: [{ position: 1, type: mediaType, sha256: null, source_url: null, alt_text: `altword${key}`, width: 1, height: 1, duration_ms: null }],
       relations: [],
+      ...overrides,
     });
     const ingest = (body: unknown) =>
       fetch(`${base}/api/ingest/post`, { method: 'POST', headers, body: JSON.stringify(body) });
@@ -206,11 +208,18 @@ describe('Archivist HTTP API', () => {
     await ingest(envelope('10', 'alpha needle', 'photo', { id: 'a1', screen: 'artist_one' }));
     await ingest(envelope('11', 'beta haystack', 'video', { id: 'a2', screen: 'artist_two' }));
     await ingest(envelope('12', 'thread child marker', 'photo', { id: 'a1', screen: 'artist_one' }, '10'));
+    await ingest(envelope('13', 'deleted root', 'photo', { id: 'a3', screen: 'artist_three' }, null, { deleted: true }));
+    await ingest(envelope('14', 'live child of deleted root', 'photo', { id: 'a3', screen: 'artist_three' }, '13'));
+    await ingest(envelope('15', 'sensitive post', 'photo', { id: 'a4', screen: 'artist_four' }, null, { is_sensitive: true }));
+    await ingest(envelope('16', 'tie one', 'photo', { id: 'a5', screen: 'tie_author' }, null, { created_at_ms: 20 }));
+    await ingest(envelope('17', 'tie two', 'photo', { id: 'a5', screen: 'tie_author' }, null, { created_at_ms: 20 }));
 
     const allPosts = await fetch(`${base}/api/posts?token=secret&deleted=include`).then((r) => r.json());
     const root = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '10');
     const child = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '12');
     const video = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '11');
+    const deletedChild = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '14');
+    const tiePost = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '17');
 
     await fetch(`${base}/api/items/post/${child.id}/tags`, {
       method: 'PUT',
@@ -233,18 +242,51 @@ describe('Archivist HTTP API', () => {
       body: JSON.stringify({ credits: [{ new_account: { service: 'twitter', screen_name: 'featured' }, role: 'subject' }] }),
     }).then((r) => r.json());
     const creditedId = creditResponse.credits[0].account.id;
+    const persona = await fetch(`${base}/api/personas`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ name: 'Persona One' }),
+    }).then((r) => r.json());
+    await fetch(`${base}/api/personas/${persona.id}/accounts/${root.author.id}`, { method: 'PUT', headers });
+    const creditedPersona = await fetch(`${base}/api/personas`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ name: 'Featured Persona' }),
+    }).then((r) => r.json());
+    await fetch(`${base}/api/personas/${creditedPersona.id}/accounts/${creditedId}`, { method: 'PUT', headers });
 
     const byAuthor = await fetch(`${base}/api/posts?token=secret&author=${root.author.id}`).then((r) => r.json());
     expect(byAuthor.items.map((p: { service_post_key: string }) => p.service_post_key).sort()).toEqual(['10', '12']);
 
+    const byPersona = await fetch(`${base}/api/posts?token=secret&persona=${persona.id}`).then((r) => r.json());
+    expect(byPersona.items.map((p: { service_post_key: string }) => p.service_post_key).sort()).toEqual(['10', '12']);
+
     const byText = await fetch(`${base}/api/posts?token=secret&q=needle`).then((r) => r.json());
     expect(byText.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['10']);
+
+    const byAltText = await fetch(`${base}/api/posts?token=secret&q=altword10`).then((r) => r.json());
+    expect(byAltText.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['10']);
+
+    const byAuthorName = await fetch(`${base}/api/posts?token=secret&q=artist_one`).then((r) => r.json());
+    expect(byAuthorName.items.map((p: { service_post_key: string }) => p.service_post_key).sort()).toEqual(['10', '12']);
 
     const byType = await fetch(`${base}/api/posts?token=secret&type=video`).then((r) => r.json());
     expect(byType.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['11']);
 
+    const byMediaPresence = await fetch(`${base}/api/posts?token=secret&has_media=1`).then((r) => r.json());
+    expect(byMediaPresence.items.length).toBeGreaterThanOrEqual(7);
+
     const byFavoriteRating = await fetch(`${base}/api/posts?token=secret&favorite=1&rating_min=3`).then((r) => r.json());
     expect(byFavoriteRating.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['11']);
+
+    const byFavoriteRelation = await fetch(`${base}/api/posts?token=secret&relation=archivist:favorite`).then((r) => r.json());
+    expect(byFavoriteRelation.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['11']);
+
+    const byRatingRelation = await fetch(`${base}/api/posts?token=secret&relation=archivist:rating:4`).then((r) => r.json());
+    expect(byRatingRelation.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['11']);
+
+    const withoutSensitive = await fetch(`${base}/api/posts?token=secret&sensitive=exclude`).then((r) => r.json());
+    expect(withoutSensitive.items.some((p: { service_post_key: string }) => p.service_post_key === '15')).toBe(false);
 
     const worksByChildTag = await fetch(`${base}/api/works?token=secret&tag=thread-filter`).then((r) => r.json());
     expect(worksByChildTag.items).toHaveLength(1);
@@ -252,6 +294,38 @@ describe('Archivist HTTP API', () => {
 
     const worksByMediaCredit = await fetch(`${base}/api/works?token=secret&credited=${creditedId}&role=subject`).then((r) => r.json());
     expect(worksByMediaCredit.items.map((w: { thread_key: string }) => w.thread_key)).toEqual(['11']);
+
+    const worksByCreditedPersona = await fetch(`${base}/api/works?token=secret&credited_persona=${creditedPersona.id}&role=subject`).then((r) => r.json());
+    expect(worksByCreditedPersona.items.map((w: { thread_key: string }) => w.thread_key)).toEqual(['11']);
+
+    await fetch(`${base}/api/items/post/${deletedChild.id}/tags`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ names: ['deleted-thread-live-child'] }),
+    });
+    const worksWithDeletedRoot = await fetch(`${base}/api/works?token=secret&tag=deleted-thread-live-child`).then((r) => r.json());
+    expect(worksWithDeletedRoot.items).toHaveLength(1);
+    expect(worksWithDeletedRoot.items[0].parts.map((p: { service_post_key: string; deleted: boolean }) => [p.service_post_key, p.deleted])).toEqual([
+      ['13', true],
+      ['14', false],
+    ]);
+
+    const createdTiePage1 = await fetch(`${base}/api/posts?token=secret&limit=1&author=${encodeURIComponent(String(tiePost.author.id))}`).then((r) => r.json());
+    expect(createdTiePage1.items).toHaveLength(1);
+    expect(createdTiePage1.next_cursor).toBeTruthy();
+    const createdTiePage2 = await fetch(`${base}/api/posts?token=secret&limit=1&cursor=${encodeURIComponent(createdTiePage1.next_cursor)}&author=${encodeURIComponent(String(tiePost.author.id))}`).then((r) => r.json());
+    expect(createdTiePage2.items).toHaveLength(1);
+    expect(new Set([...createdTiePage1.items, ...createdTiePage2.items].map((p: { service_post_key: string }) => p.service_post_key))).toEqual(new Set(['16', '17']));
+
+    const tiedPage1 = await fetch(`${base}/api/posts?token=secret&limit=1&author=${encodeURIComponent(String(root.author.id))}&sort=ingested`).then((r) => r.json());
+    expect(tiedPage1.items).toHaveLength(1);
+    expect(tiedPage1.next_cursor).toBeTruthy();
+    const tiedPage2 = await fetch(`${base}/api/posts?token=secret&limit=1&cursor=${encodeURIComponent(tiedPage1.next_cursor)}&author=${encodeURIComponent(String(root.author.id))}&sort=ingested`).then((r) => r.json());
+    expect(tiedPage2.items).toHaveLength(1);
+    expect(new Set([...tiedPage1.items, ...tiedPage2.items].map((p: { service_post_key: string }) => p.service_post_key))).toEqual(new Set(['10', '12']));
+
+    const badFts = await fetch(`${base}/api/posts?token=secret&q=${encodeURIComponent('"')}`);
+    expect(badFts.status).toBe(400);
   });
 
   it('lists works with deterministic roots, missing-part honesty, and cursor pagination', async () => {

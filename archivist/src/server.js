@@ -482,7 +482,8 @@ function listWorks(db, url) {
   const where = [
     `NOT EXISTS (
       SELECT 1 FROM posts q
-      WHERE q.service = p.service AND q.thread_key = p.thread_key
+      WHERE q.service = p.service
+        AND COALESCE(q.thread_key, q.service_post_key) = COALESCE(p.thread_key, p.service_post_key)
         AND (COALESCE(q.created_at_ms, 0) < COALESCE(p.created_at_ms, 0)
              OR (COALESCE(q.created_at_ms, 0) = COALESCE(p.created_at_ms, 0) AND q.id < p.id)))`,
     `EXISTS (

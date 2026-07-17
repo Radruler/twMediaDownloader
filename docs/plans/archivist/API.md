@@ -112,6 +112,8 @@ GET /api/works?…            → list of Work           (plan V-1)
     cursor=…  limit=…
   /api/works only: a non-root thread part matching the filters surfaces
   its whole work; each work appears at most once per page set.
+  With sort=ingested, works sort by the root post's last_ingested_at;
+  newly ingested replies do not currently bubble an existing work.
 
 GET /api/posts/:id           → Post  (404 not_found)
 GET /api/works/:post_id      → Work for the post's thread root

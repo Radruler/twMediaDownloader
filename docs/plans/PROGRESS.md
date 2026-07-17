@@ -18,10 +18,11 @@ for the plans.
   HTTP server/auth, core read endpoints, curation writes, push ingest,
   byte serving/range support, and some V-shaped credit/works endpoints are
   present. The documented read-filter surface for `/api/posts` and
-  `/api/works` is now implemented and tested. Remaining B work includes
-  thumbnail generation, static Preact frontend, fuller write validation,
-  account search/pagination, documented conflict cases, and TrueNAS
-  deployment walkthrough completion.
+  `/api/works` is implemented with HTTP-level regression coverage.
+  Remaining B work includes thumbnail generation, static Preact frontend,
+  fuller write validation, account search/pagination, `relations=all`,
+  documented conflict cases, and TrueNAS deployment walkthrough
+  completion.
 - **Plan V: Media Viewer MVP** is partially seeded:
   `/api/works`, credits, credit roles, and suggestion extraction exist.
   Remaining V work is the richer viewer UI, person/feed browse shell,
@@ -75,8 +76,8 @@ provided the working dependency environment.
 ## Remaining Reasonable Next Steps
 
 1. Finish Plan B endpoint parity against `docs/plans/archivist/API.md`:
-   validate write payloads, account search/pagination, relation value
-   validation, and documented 409 cases.
+   validate write payloads, account search/pagination, `relations=all`,
+   relation value validation, and documented 409 cases.
 2. Implement thumbnails (`archivist/src/thumbs.js`) and tests for width
    whitelist, cache reuse, unknown sha, and placeholder behavior.
 3. Build the Preact frontend MVP once the API surface is stable enough
