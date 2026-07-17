@@ -85,6 +85,7 @@ reflects the owner's priorities.
 | 2 | **Extension buttons** — add buttons to the few missing surfaces (details from owner pending), then rewrite ALL buttons onto the shared save path | `extension-buttons-plan.md` | phase 1 partially blocked on owner details |
 | 3 | **Cleanup** — delete dead legacy code, write CLAUDE.md, final README refresh | `cleanup-plan.md` | blocked on 1 (and 2 for button code) |
 | 4 | **Archivist Client** — rename, viewer-relation capture, push export to Archivist | `archivist-client-plan.md` | rename/§C ready; §D after Archivist plan A/B |
+| 5 | **Security hardening** — audit findings S1–S8 (localStorage token, WS Origin, empty-token guard, path/header hardening) | `security-hardening-plan.md` | S1–S3 gate any non-localhost/NAS deployment; S4–S8 doable now |
 
 Recently completed and archived: content-manager queue restart resume,
 service-shaped config/deployment docs, extension-side service host
