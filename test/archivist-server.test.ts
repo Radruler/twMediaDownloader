@@ -173,6 +173,87 @@ describe('Archivist HTTP API', () => {
     expect(credits.credits[0]).toMatchObject({ role: 'subject', item_kind: 'post', item_id: post.id });
   });
 
+  it('applies documented post and work filters through the HTTP API', async () => {
+    const { base } = await start();
+    const headers = { authorization: 'Bearer secret', 'content-type': 'application/json' };
+    const envelope = (
+      key: string,
+      text: string,
+      mediaType: string,
+      author: { id: string; screen: string },
+      replyTo: string | null = null,
+    ) => ({
+      v: 1,
+      service: 'twitter',
+      post_key: key,
+      author: { service_account_id: author.id, screen_name: author.screen, display_name: author.screen, status: 'unknown' },
+      created_at_ms: Number(key),
+      text,
+      lang: 'en',
+      url: null,
+      is_sensitive: false,
+      deleted: false,
+      counts: {},
+      reply_to: { key: replyTo, author_service_account_id: replyTo ? author.id : null },
+      quoted_key: null,
+      versions: [{ service_version_id: key, captured_at_ms: Number(key), raw: { full_text: text, mentions: [] } }],
+      media: [{ position: 1, type: mediaType, sha256: null, source_url: null, alt_text: null, width: 1, height: 1, duration_ms: null }],
+      relations: [],
+    });
+    const ingest = (body: unknown) =>
+      fetch(`${base}/api/ingest/post`, { method: 'POST', headers, body: JSON.stringify(body) });
+
+    await ingest(envelope('10', 'alpha needle', 'photo', { id: 'a1', screen: 'artist_one' }));
+    await ingest(envelope('11', 'beta haystack', 'video', { id: 'a2', screen: 'artist_two' }));
+    await ingest(envelope('12', 'thread child marker', 'photo', { id: 'a1', screen: 'artist_one' }, '10'));
+
+    const allPosts = await fetch(`${base}/api/posts?token=secret&deleted=include`).then((r) => r.json());
+    const root = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '10');
+    const child = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '12');
+    const video = allPosts.items.find((p: { service_post_key: string }) => p.service_post_key === '11');
+
+    await fetch(`${base}/api/items/post/${child.id}/tags`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ names: ['thread-filter'] }),
+    });
+    await fetch(`${base}/api/items/post/${video.id}/relations/archivist/favorite`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ active: true }),
+    });
+    await fetch(`${base}/api/items/post/${video.id}/relations/archivist/rating`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ active: true, value: '4' }),
+    });
+    const creditResponse = await fetch(`${base}/api/items/media/${video.media[0].id}/credits`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ credits: [{ new_account: { service: 'twitter', screen_name: 'featured' }, role: 'subject' }] }),
+    }).then((r) => r.json());
+    const creditedId = creditResponse.credits[0].account.id;
+
+    const byAuthor = await fetch(`${base}/api/posts?token=secret&author=${root.author.id}`).then((r) => r.json());
+    expect(byAuthor.items.map((p: { service_post_key: string }) => p.service_post_key).sort()).toEqual(['10', '12']);
+
+    const byText = await fetch(`${base}/api/posts?token=secret&q=needle`).then((r) => r.json());
+    expect(byText.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['10']);
+
+    const byType = await fetch(`${base}/api/posts?token=secret&type=video`).then((r) => r.json());
+    expect(byType.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['11']);
+
+    const byFavoriteRating = await fetch(`${base}/api/posts?token=secret&favorite=1&rating_min=3`).then((r) => r.json());
+    expect(byFavoriteRating.items.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['11']);
+
+    const worksByChildTag = await fetch(`${base}/api/works?token=secret&tag=thread-filter`).then((r) => r.json());
+    expect(worksByChildTag.items).toHaveLength(1);
+    expect(worksByChildTag.items[0].parts.map((p: { service_post_key: string }) => p.service_post_key)).toEqual(['10', '12']);
+
+    const worksByMediaCredit = await fetch(`${base}/api/works?token=secret&credited=${creditedId}&role=subject`).then((r) => r.json());
+    expect(worksByMediaCredit.items.map((w: { thread_key: string }) => w.thread_key)).toEqual(['11']);
+  });
+
   it('lists works with deterministic roots, missing-part honesty, and cursor pagination', async () => {
     const { base } = await start();
     const headers = { authorization: 'Bearer secret', 'content-type': 'application/json' };

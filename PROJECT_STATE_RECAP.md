@@ -1,12 +1,27 @@
 # Project State Recap for Future Agents
 
-Last updated: 2026-07-15 after the post-review hardening pass (review of
-`8d8cdb3` found and fixed correctness bugs; see "Review fixes (2026-07-15)"
-below).
+Last updated: 2026-07-17 after the Archivist API filter pass and plan
+archive consolidation.
 
 This file is a handoff document for agents reviewing the current repo
-state before plans are archived. It summarizes what exists now, which
-plans it came from, and what remains incomplete or owner-gated.
+state. It summarizes what exists now, where to go next, and what remains
+incomplete or owner-gated.
+
+## Progressive Context Map
+
+Start with this order and stop as soon as you have enough context:
+
+1. `docs/plans/PROGRESS.md` — compact current status and next executable
+   work.
+2. `ARCHITECTURE.md` — how the implemented Archivist Client pipeline
+   works today.
+3. `docs/plans/00-overview.md` — binding client decisions and active
+   client-side work sequence.
+4. `docs/plans/archivist/00-archivist-overview.md` plus
+   `docs/plans/archivist/API.md` — only for Archivist work.
+5. Specific active plan docs only when executing that plan.
+
+Archived plans under `archive/` are historical context, not instructions.
 
 ## High-Level State
 
@@ -24,18 +39,22 @@ The repo now contains three related tracks:
 3. **Mosaic**: still plan-only. No Mosaic code exists yet because the
    Flutter/media_kit stack remains gated by a Windows 10 hardware spike.
 
-The key plan sources are:
+The key current plan sources are:
 
+- Active progress handoff: `docs/plans/PROGRESS.md`
 - Top-level decisions: `docs/plans/00-overview.md`
 - Archivist Client work: `docs/plans/archivist-client-plan.md`
 - Archivist overview: `docs/plans/archivist/00-archivist-overview.md`
-- Archivist Plan A: `docs/plans/archivist/01-library-and-ingest-plan.md`
 - Archivist Plan B: `docs/plans/archivist/02-api-and-frontend-plan.md`
 - Archivist HTTP contract: `docs/plans/archivist/API.md`
 - Archivist viewer Plan V: `docs/plans/archivist/04-media-viewer-plan.md`
 - Mosaic plans: `docs/plans/mosaic/`
 - Extension buttons: `docs/plans/extension-buttons-plan.md`
 - Cleanup gate: `docs/plans/cleanup-plan.md`
+
+Completed plan source now in the archive:
+
+- Archivist Plan A: `archive/plans/archivist/01-library-and-ingest-plan.md`
 
 ## Verification Baseline
 
@@ -48,7 +67,7 @@ docker compose -f .devcontainer/docker-compose.yml run --rm app \
 
 Result at handoff:
 
-- `171` tests passed
+- `172` tests passed
 - `npm run typecheck` passed
 - `npm run build` passed
 - Build outputs include `dist/`, `app/dist/main.mjs`, and
@@ -274,6 +293,11 @@ HTTP API:
   - `/api/credit-roles`
   - `/files/:sha256`
   - `/thumbs/:sha256` currently serves original bytes as a placeholder
+- `/api/posts` and `/api/works` share the documented filter vocabulary for
+  service, author, persona, tags, active relations, favorite/rating, FTS
+  query, media presence/type, credited account/persona, deleted/sensitive,
+  and created/ingested sorting. `/api/works` preserves collapse semantics:
+  a matching non-root thread part surfaces the complete work.
 - Implemented write/curation routes include:
   - personas CRUD basics
   - persona account assignment
@@ -347,11 +371,11 @@ tests, which the plans had specified from the start):
     `db_bytes`/`archive_bytes` in stats, HttpError → correct status
     codes (403 for captured-service relation writes — was 400).
 
-Still open from the review (feature work, tracked by the plans, not
-bugs): `/api/posts`/`/api/works` filter vocabulary (q/author/tag/
-relation/rating/type/sort), real thumbnails (`/thumbs` still serves
-originals), the Preact frontend, and multi-account relation attribution
-(needs per-session viewer identity, a client capture question).
+Still open from the review/plans (feature work, not correctness bugs):
+real thumbnails (`/thumbs` still serves originals), the Preact frontend,
+full write-payload validation/conflict coverage, account search/
+pagination, and multi-account relation attribution (needs per-session
+viewer identity, a client capture question).
 
 ## Incomplete or Gated Work
 
@@ -361,8 +385,9 @@ Keep these plans active until their gates are cleared:
   - Plan references:
     - `docs/plans/archivist/02-api-and-frontend-plan.md`
     - `docs/plans/archivist/04-media-viewer-plan.md`
-  - Current API is usable and tested, but frontend is minimal and
-    thumbnail generation is placeholder-level.
+  - Current API is usable and tested, including the shared read-filter
+    surface, but frontend is minimal and thumbnail generation is
+    placeholder-level.
 - **Mosaic**
   - Plan references: `docs/plans/mosaic/`
   - Hardware-gated by P-0.

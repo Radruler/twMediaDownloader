@@ -41,6 +41,12 @@ function pageParams(url) {
   };
 }
 
+function sortSpec(url, alias) {
+  const sort = url.searchParams.get('sort') ?? 'created';
+  if (sort === 'ingested') return { expr: `COALESCE(${alias}.last_ingested_at, 0)`, field: 'last_ingested_at' };
+  return { expr: `COALESCE(${alias}.created_at_ms, 0)`, field: 'created_at_ms' };
+}
+
 function json(res, status, body, headers = {}) {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', ...headers });
   res.end(JSON.stringify(body));
@@ -172,6 +178,110 @@ function itemService(db, kind, id) {
   return db
     .prepare('SELECT p.service FROM media_items m JOIN posts p ON p.id = m.post_id WHERE m.id = ?')
     .get(id)?.service ?? null;
+}
+
+function buildPostFilters(url, alias = 'p') {
+  const where = [];
+  const args = [];
+  const deleted = url.searchParams.get('deleted') ?? 'exclude';
+  if (deleted === 'exclude') where.push(`${alias}.deleted = 0`);
+  if (deleted === 'only') where.push(`${alias}.deleted = 1`);
+  if (url.searchParams.get('sensitive') === 'exclude') where.push(`${alias}.is_sensitive = 0`);
+
+  const service = url.searchParams.get('service');
+  if (service) {
+    where.push(`${alias}.service = ?`);
+    args.push(service);
+  }
+  const author = url.searchParams.get('author');
+  if (author) {
+    where.push(`${alias}.author_account_id = ?`);
+    args.push(Number(author));
+  }
+  const persona = url.searchParams.get('persona');
+  if (persona) {
+    where.push(`EXISTS (SELECT 1 FROM persona_accounts pa WHERE pa.account_id = ${alias}.author_account_id AND pa.persona_id = ?)`);
+    args.push(Number(persona));
+  }
+  for (const rawTag of url.searchParams.getAll('tag')) {
+    where.push(`
+      EXISTS (
+        SELECT 1 FROM tag_items ti JOIN tags t ON t.id = ti.tag_id
+        WHERE ti.item_kind = 'post' AND ti.item_id = ${alias}.id AND t.name = ? COLLATE NOCASE
+      )`);
+    args.push(rawTag);
+  }
+  for (const rawRelation of url.searchParams.getAll('relation')) {
+    const [relationService, relationKey, ...valueParts] = rawRelation.split(':');
+    if (!relationService || !relationKey) continue;
+    where.push(`
+      EXISTS (
+        SELECT 1 FROM relations r JOIN relation_types rt ON rt.id = r.relation_type_id
+        WHERE r.item_kind = 'post' AND r.item_id = ${alias}.id
+          AND r.revoked_at IS NULL AND rt.service = ? AND rt.key = ?
+          ${valueParts.length ? 'AND r.value = ?' : ''}
+      )`);
+    args.push(relationService, relationKey);
+    if (valueParts.length) args.push(valueParts.join(':'));
+  }
+  if (url.searchParams.get('favorite') === '1') {
+    where.push(`
+      EXISTS (
+        SELECT 1 FROM relations r JOIN relation_types rt ON rt.id = r.relation_type_id
+        WHERE r.item_kind = 'post' AND r.item_id = ${alias}.id
+          AND r.revoked_at IS NULL AND rt.service = 'archivist' AND rt.key = 'favorite'
+      )`);
+  }
+  const ratingMin = url.searchParams.get('rating_min');
+  if (ratingMin) {
+    where.push(`
+      EXISTS (
+        SELECT 1 FROM relations r JOIN relation_types rt ON rt.id = r.relation_type_id
+        WHERE r.item_kind = 'post' AND r.item_id = ${alias}.id
+          AND r.revoked_at IS NULL AND rt.service = 'archivist' AND rt.key = 'rating'
+          AND CAST(r.value AS INTEGER) >= ?
+      )`);
+    args.push(Number(ratingMin));
+  }
+  const query = url.searchParams.get('q');
+  if (query) {
+    where.push(`${alias}.id IN (SELECT post_id FROM posts_fts WHERE posts_fts MATCH ?)`);
+    args.push(query);
+  }
+  if (url.searchParams.get('has_media') === '1') {
+    where.push(`EXISTS (SELECT 1 FROM media_items m WHERE m.post_id = ${alias}.id)`);
+  }
+  const mediaType = url.searchParams.get('type');
+  if (mediaType) {
+    where.push(`EXISTS (SELECT 1 FROM media_items m WHERE m.post_id = ${alias}.id AND m.type = ?)`);
+    args.push(mediaType);
+  }
+  const creditRole = url.searchParams.get('role');
+  const credited = url.searchParams.get('credited');
+  if (credited) {
+    where.push(`
+      EXISTS (
+        SELECT 1 FROM credits c
+        WHERE c.account_id = ? AND ${creditRole ? 'c.role = ? AND' : ''}
+          ((c.item_kind = 'post' AND c.item_id = ${alias}.id)
+           OR (c.item_kind = 'media' AND c.item_id IN (SELECT m.id FROM media_items m WHERE m.post_id = ${alias}.id)))
+      )`);
+    args.push(Number(credited));
+    if (creditRole) args.push(creditRole);
+  }
+  const creditedPersona = url.searchParams.get('credited_persona');
+  if (creditedPersona) {
+    where.push(`
+      EXISTS (
+        SELECT 1 FROM credits c JOIN persona_accounts pa ON pa.account_id = c.account_id
+        WHERE pa.persona_id = ? AND ${creditRole ? 'c.role = ? AND' : ''}
+          ((c.item_kind = 'post' AND c.item_id = ${alias}.id)
+           OR (c.item_kind = 'media' AND c.item_id IN (SELECT m.id FROM media_items m WHERE m.post_id = ${alias}.id)))
+      )`);
+    args.push(Number(creditedPersona));
+    if (creditRole) args.push(creditRole);
+  }
+  return { where, args };
 }
 
 function setItemTags(db, kind, id, names) {
@@ -344,22 +454,19 @@ function postShape(db, row) {
 
 function listPosts(db, url) {
   const { limit, cursor } = pageParams(url);
-  const deleted = url.searchParams.get('deleted') ?? 'exclude';
-  const where = [];
-  const args = [];
-  if (deleted === 'exclude') where.push('deleted = 0');
-  if (deleted === 'only') where.push('deleted = 1');
+  const { expr, field } = sortSpec(url, 'p');
+  const { where, args } = buildPostFilters(url, 'p');
   if (cursor) {
-    where.push('(COALESCE(created_at_ms, 0) < ? OR (COALESCE(created_at_ms, 0) = ? AND id < ?))');
+    where.push(`(${expr} < ? OR (${expr} = ? AND p.id < ?))`);
     args.push(cursor.k, cursor.k, cursor.id);
   }
-  const sql = `SELECT * FROM posts ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
-    ORDER BY COALESCE(created_at_ms, 0) DESC, id DESC LIMIT ?`;
+  const sql = `SELECT p.* FROM posts p ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
+    ORDER BY ${expr} DESC, p.id DESC LIMIT ?`;
   const rows = db.prepare(sql).all(...args, limit);
   const last = rows[rows.length - 1];
   return {
     items: rows.map((row) => postShape(db, row)),
-    next_cursor: rows.length === limit ? encodeCursor(last.created_at_ms ?? 0, last.id) : null,
+    next_cursor: rows.length === limit ? encodeCursor(last[field] ?? 0, last.id) : null,
   };
 }
 
@@ -370,28 +477,36 @@ function listPosts(db, url) {
  */
 function listWorks(db, url) {
   const { limit, cursor } = pageParams(url);
+  const { expr, field } = sortSpec(url, 'p');
+  const filters = buildPostFilters(url, 'fp');
   const where = [
     `NOT EXISTS (
       SELECT 1 FROM posts q
       WHERE q.service = p.service AND q.thread_key = p.thread_key
         AND (COALESCE(q.created_at_ms, 0) < COALESCE(p.created_at_ms, 0)
              OR (COALESCE(q.created_at_ms, 0) = COALESCE(p.created_at_ms, 0) AND q.id < p.id)))`,
+    `EXISTS (
+      SELECT 1 FROM posts fp
+      WHERE fp.service = p.service
+        AND COALESCE(fp.thread_key, fp.service_post_key) = COALESCE(p.thread_key, p.service_post_key)
+        ${filters.where.length ? `AND ${filters.where.join(' AND ')}` : ''}
+    )`,
   ];
-  const args = [];
+  const args = [...filters.args];
   if (cursor) {
-    where.push('(COALESCE(p.created_at_ms, 0) < ? OR (COALESCE(p.created_at_ms, 0) = ? AND p.id < ?))');
+    where.push(`(${expr} < ? OR (${expr} = ? AND p.id < ?))`);
     args.push(cursor.k, cursor.k, cursor.id);
   }
   const rows = db
     .prepare(
       `SELECT p.* FROM posts p WHERE ${where.join(' AND ')}
-       ORDER BY COALESCE(p.created_at_ms, 0) DESC, p.id DESC LIMIT ?`,
+       ORDER BY ${expr} DESC, p.id DESC LIMIT ?`,
     )
     .all(...args, limit);
   const last = rows[rows.length - 1];
   return {
     items: rows.map((row) => workShape(db, row)),
-    next_cursor: rows.length === limit ? encodeCursor(last.created_at_ms ?? 0, last.id) : null,
+    next_cursor: rows.length === limit ? encodeCursor(last[field] ?? 0, last.id) : null,
   };
 }
 

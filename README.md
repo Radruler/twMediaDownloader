@@ -32,9 +32,12 @@ vars, `twmd_*` localStorage keys, `@twmd/core`, extension port names, and
 the frozen save folder `Downloads/twMediaDownloader/<screen_name>/` are
 kept for compatibility.
 
-How it works: `ARCHITECTURE.md`. Decisions and remaining work:
-`docs/plans/00-overview.md`. How to verify: `docs/VERIFICATION.md`.
-Historical plans: `archive/`.
+For current context, read progressively:
+`PROJECT_STATE_RECAP.md` for the short state map,
+`docs/plans/PROGRESS.md` for active plan status,
+`ARCHITECTURE.md` for implemented behavior, then only the specific plan
+needed for the task. How to verify: `docs/VERIFICATION.md`. Historical
+plans: `archive/`.
 
 The legacy extension code in `src/` still ships inside the built
 extension and stays untouched until the rebuilt paths are verified live

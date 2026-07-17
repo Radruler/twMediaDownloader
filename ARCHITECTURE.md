@@ -2,8 +2,9 @@
 
 Archivist Client is the rebuilt twMediaDownloader extension plus local
 content manager: it captures and downloads archived content for the
-future Archivist library service. How the rebuilt system works today. For what remains to be built, see
-`docs/plans/00-overview.md` (its Decisions section is binding). Historical
+Archivist library service. This document describes implemented behavior.
+For current plan status, start with `docs/plans/PROGRESS.md`; for binding
+client decisions, see `docs/plans/00-overview.md`. Historical
 plans/handoffs are in `archive/` — reference, not instructions.
 
 ## System shape
@@ -50,8 +51,11 @@ extension/            plain JS, bundled by esbuild
 app/                  plain JS Node service (Archivist Client content manager)
   src/config.js  src/server.js  src/db.js  src/downloader.js
   src/disk-writer.js  src/cli.js  src/main.js
+archivist/            plain JS Node service (NAS-side library)
+  src/config.js  src/db.js  src/ingest.js  src/snapshot.js
+  src/server.js  src/cli.js  src/main.js
 src/                  LEGACY extension — untouched by design until cleanup
-build.mjs             builds dist/ (loadable extension) + app/dist/main.mjs
+build.mjs             builds dist/ + app/dist/main.mjs + archivist/dist/main.mjs
 scripts/fake-extension.mjs  replays fixtures over real ws against the service
 test/                 vitest suite (see docs/VERIFICATION.md)
 docs/CAPTURE_FIXTURES.md    how the owner captures real GraphQL fixtures

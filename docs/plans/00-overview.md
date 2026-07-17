@@ -1,6 +1,6 @@
 # Archivist Client (twMediaDownloader) — Overview: Decisions & Remaining Work
 
-**Status:** 2026-07-10 consolidation. Everything here is current and binding;
+**Status:** 2026-07-17 consolidation. Everything here is current and binding;
 each remaining piece of work has its own plan doc sized for a fresh session.
 Completed work is described in `ARCHITECTURE.md`; superseded plans are in
 `archive/` and must not be treated as instructions.
@@ -84,7 +84,7 @@ reflects the owner's priorities.
 | 1 | **Live verification** — first real-Chrome run of capture, standalone save, service pairing | `docs/VERIFICATION.md` (walkthrough) | owner-driven; blocks cleanup |
 | 2 | **Extension buttons** — add buttons to the few missing surfaces (details from owner pending), then rewrite ALL buttons onto the shared save path | `extension-buttons-plan.md` | phase 1 partially blocked on owner details |
 | 3 | **Cleanup** — delete dead legacy code, write CLAUDE.md, final README refresh | `cleanup-plan.md` | blocked on 1 (and 2 for button code) |
-| 4 | **Archivist Client** — rename, viewer-relation capture, push export to Archivist | `archivist-client-plan.md` | rename/§C ready; §D after Archivist plan A/B |
+| 4 | **Archivist Client** — rename, viewer-relation capture, push export to Archivist | `archivist-client-plan.md` | partially reflected in code; re-audit before marking complete |
 | 5 | **Security hardening** — audit findings S1–S8 (localStorage token, WS Origin, empty-token guard, path/header hardening) | `security-hardening-plan.md` | S1–S3 gate any non-localhost/NAS deployment; S4–S8 doable now |
 
 Recently completed and archived: content-manager queue restart resume,
@@ -101,12 +101,14 @@ The future-components ideation above is now a designed sibling project:
 **Archivist**, the service-agnostic library service (NAS-deployed) that
 ingests this system's archived output and serves frontends. This repo's
 extension+content-manager pipeline is the **Archivist Client** in that
-design. Plans live in `docs/plans/archivist/` (own overview, own binding
-decisions). The archiver-side work for that workstream — the Archivist
-Client rename, viewer-relation capture, opportunistic push export — is
-its own plan, `archivist-client-plan.md` (row 4 above), and is bound by
-THIS doc's decisions and ground rules as well: passive capture only, no
-new requests to any content service, ever.
+design. Current Archivist progress lives in `docs/plans/PROGRESS.md`;
+active Archivist plans live in `docs/plans/archivist/`, and completed
+Archivist Plan A lives in `archive/plans/archivist/`. The archiver-side
+work for that workstream — the Archivist Client rename, viewer-relation
+capture, opportunistic push export — is its own plan,
+`archivist-client-plan.md` (row 4 above), and is bound by THIS doc's
+decisions and ground rules as well: passive capture only, no new requests
+to any content service, ever.
 
 ## Ground rules for all work
 

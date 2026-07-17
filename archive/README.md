@@ -9,6 +9,7 @@ Current documentation lives at:
 - `README.md` — project state and how to build/run
 - `ARCHITECTURE.md` — how the rebuilt system works today
 - `docs/plans/00-overview.md` — binding decisions + remaining work sequence
+- `docs/plans/PROGRESS.md` — compact current-plan handoff
 - `docs/plans/*.md` — one plan per remaining piece of work
 
 Contents:
@@ -22,6 +23,7 @@ Contents:
 | `plans/04-metadata-sidecar.md` | Save layer / filenames / sidecars plan | **Done** (save layer shipped); bulk-ZIP section descoped with the bulk feature |
 | `plans/05-alternative-architectures.md` | Architecture research (FSA, CDP, native messaging) | Research concluded; decisions absorbed |
 | `plans/06-local-companion-app.md` | Companion app plan (protocol, DB, downloader, Electron UI) | M1/M2 **done**; UI milestones descoped — superseded by `plans/content-manager-plan.md`, now also archived |
+| `plans/archivist/01-library-and-ingest-plan.md` | Archivist library core: schema, ingest core, snapshot CLI, Dockerfile | **Done**; Plan B/V remain active in `docs/plans/archivist/` |
 | `plans/content-manager-plan.md` | Content-manager hardening plan (restart queue, config/deploy, CLI; legacy import deferred) | M-1/M-2/M-3 **done** in `f6125d8`; M-4 deferred as a future import idea |
 | `plans/discussion-02-vs-05.md` | Architecture discussion record | Historical |
 | `plans/step-2-handoff.md` | Capture-layer handoff notes | Content absorbed into `ARCHITECTURE.md` |

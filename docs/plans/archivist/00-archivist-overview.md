@@ -1,10 +1,11 @@
 # Archivist — Overview: Decisions & Work Plan
 
-**Status:** 2026-07-11 initial design, agreed with the owner. Everything in
-this doc is current and binding for the Archivist workstream; each work
-item has its own plan doc sized for a fresh session. The archiver-side
-plans in `docs/plans/00-overview.md` remain binding for the archiver; where
-this workstream touches archiver code, both apply.
+**Status:** 2026-07-17 consolidation. Everything in this doc is current
+and binding for the Archivist workstream. Completed implementation plans
+are archived under `archive/plans/`; active implementation plans remain
+in this directory. The archiver-side plans in `docs/plans/00-overview.md`
+remain binding for the archiver; where this workstream touches archiver
+code, both apply.
 
 ## What Archivist is
 
@@ -137,19 +138,20 @@ Division of responsibility, agreed 2026-07-11:
 
 | # | Work | Plan | Status / gate |
 |---|---|---|---|
-| A | **Library core** — schema, ingest core, snapshot ingest CLI, Dockerfile | `01-library-and-ingest-plan.md` | ready to start |
-| B | **API + frontend MVP** — HTTP API, ingest endpoints, thumbnails, media-grid/people UI, TrueNAS deploy notes | `02-api-and-frontend-plan.md` | after A |
+| A | **Library core** — schema, ingest core, snapshot ingest CLI, Dockerfile | `archive/plans/archivist/01-library-and-ingest-plan.md` | **done; archived** |
+| B | **API + frontend MVP** — HTTP API, ingest endpoints, thumbnails, media-grid/people UI, TrueNAS deploy notes | `02-api-and-frontend-plan.md` | active; API partially implemented, thumbnails/frontend remain |
 | V | **Media viewer** — the consumer-grade viewing frontend (universal post view, threads, credits) | `04-media-viewer-plan.md` | after B |
 | — | Viewer roadmap — principled feature exploration, NOT scoped work | `05-media-viewer-roadmap.md` | ideation |
 
-A then B is the critical path to a usable MVP (snapshot-ingest a copy of
-the client's data, browse it on the NAS).
+B then V is now the critical path to a usable owner-facing Archivist
+experience: the library can ingest data, but the built-in browsing UI and
+thumbnail path still need completion.
 
 **Client-side work is a separate workstream** (own doc, own session):
 `docs/plans/archivist-client-plan.md` — the Archivist Client rename,
 relation capture (viewer flags, tagged users, own-account config), and
 the opportunistic push export. Its §C is independent and can run any
-time; its §D needs plan A/B's ingest surface.
+time; its §D targets the Plan B ingest/API surface.
 
 ## Ground rules
 
